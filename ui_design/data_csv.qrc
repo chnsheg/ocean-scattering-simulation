@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Fizeau_spectrum.csv</file>
+        <file>L_bc.csv</file>
+        <file>L_mc.csv</file>
+        <file>L_rc.csv</file>
+        <file>laser_data.csv</file>
+        <file>PMT_Energy.csv</file>
+        <file>PMT_Sign.csv</file>
+        <file>RF.csv</file>
+        <file>Spectrum1.csv</file>
+        <file>SpectrumAfterFizeau.csv</file>
+    </qresource>
+</RCC>
