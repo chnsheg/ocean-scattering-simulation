@@ -156,8 +156,6 @@ void MainWindow::loadHomeScreen()
     });
 }
 
-static int times = 0;
-
 void MainWindow::loadFunctionButton()
 {
     ui->show1->setEnabled(true);
