@@ -120,6 +120,11 @@ void myTracer::setVisible(bool visible)
     arrow->setVisible(visible);
 }
 
+bool myTracer::getVisible()
+{
+    return visible;
+}
+
 void myTracer::updatePosition(double xValue, double yValue)
 {
     if (!visible) {

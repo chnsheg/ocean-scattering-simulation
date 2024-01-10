@@ -23,6 +23,7 @@ public:
     void updatePosition(double xValue, double yValue);
 
     void setVisible(bool visible);
+    bool getVisible();
 
 protected:
     QCustomPlot *plot;     //传入实例化的QcustomPlot

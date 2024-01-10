@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "QDebug"
+#include "pageplot.h"
 #include "ui_mainwindow.h"
+#include "viewcontroller.h"
 
 void qt_read_csv_test(QVector<double> *data, QString filename)
 {
@@ -30,6 +32,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // 挂载视图层
+    ViewController::getViewControllerInstance(ui);
+    // 挂载控制层
+    PagePlot::getPagePlotInstance(1);
+
     loadHomeScreen();
     // int index = ui->stackedWidget->currentIndex();
     // customPlot = ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot%1").arg(index));
@@ -116,19 +123,22 @@ void MainWindow::loadHomeScreen()
 {
     connect(ui->homeButton_1, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(1);
-        customPlot = ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot1"));
-        if (customPlot != nullptr) {
-            InitializePlot(customPlot);
-            loadFunctionButton();
-        }
+        // customPlot = ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot1"));
+        // if (customPlot != nullptr) {
+        //     PagePlot::switchPage();
+        // }
+        PagePlot::getPagePlotInstance()->switchPage();
+        loadFunctionButton();
     });
     connect(ui->homeButton_2, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(2);
-        customPlot = ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot2"));
-        if (customPlot != nullptr) {
-            InitializePlot(customPlot);
-            loadFunctionButton();
-        }
+        // customPlot = ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot2"));
+        // if (customPlot != nullptr) {
+        //     InitializePlot(customPlot);
+        //     loadFunctionButton();
+        // }
+        PagePlot::getPagePlotInstance()->switchPage();
+        loadFunctionButton();
     });
     connect(ui->homeButton_3, &QPushButton::clicked, this, [=]() {
         ui->stackedWidget->setCurrentIndex(3);
@@ -158,13 +168,14 @@ void MainWindow::loadHomeScreen()
 
 void MainWindow::loadFunctionButton()
 {
+    PagePlot *pagePlot = PagePlot::getPagePlotInstance();
     ui->show1->setEnabled(true);
     ui->show2->setEnabled(true);
     ui->show3->setEnabled(true);
     ui->show4->setEnabled(true);
     ui->show5->setEnabled(true);
-    connect(ui->show1, &QPushButton::clicked, this, &MainWindow::start_plot, Qt::UniqueConnection);
-    connect(ui->show2, &QPushButton::clicked, this, &MainWindow::start_plot, Qt::UniqueConnection);
+    connect(ui->show1, &QPushButton::clicked, pagePlot, &PagePlot::startPlot, Qt::UniqueConnection);
+    connect(ui->show2, &QPushButton::clicked, pagePlot, &PagePlot::startPlot, Qt::UniqueConnection);
     connect(ui->show3, &QPushButton::clicked, this, &MainWindow::start_plot, Qt::UniqueConnection);
     connect(ui->show4, &QPushButton::clicked, this, &MainWindow::start_plot, Qt::UniqueConnection);
     connect(ui->show5, &QPushButton::clicked, this, &MainWindow::start_plot, Qt::UniqueConnection);
@@ -174,8 +185,8 @@ void MainWindow::loadFunctionButton()
     ui->clear3->setEnabled(false);
     ui->clear4->setEnabled(false);
     ui->clear5->setEnabled(false);
-    connect(ui->clear1, &QPushButton::clicked, this, &MainWindow::clear_plot, Qt::UniqueConnection);
-    connect(ui->clear2, &QPushButton::clicked, this, &MainWindow::clear_plot, Qt::UniqueConnection);
+    connect(ui->clear1, &QPushButton::clicked, pagePlot, &PagePlot::clearPlot, Qt::UniqueConnection);
+    connect(ui->clear2, &QPushButton::clicked, pagePlot, &PagePlot::clearPlot, Qt::UniqueConnection);
     connect(ui->clear3, &QPushButton::clicked, this, &MainWindow::clear_plot, Qt::UniqueConnection);
     connect(ui->clear4, &QPushButton::clicked, this, &MainWindow::clear_plot, Qt::UniqueConnection);
     connect(ui->clear5, &QPushButton::clicked, this, &MainWindow::clear_plot, Qt::UniqueConnection);

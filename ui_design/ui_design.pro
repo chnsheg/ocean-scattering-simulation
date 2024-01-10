@@ -9,17 +9,29 @@ CONFIG += c++15.9
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    buttongroup.cpp \
+    customplotmanager.cpp \
+    frequencedatagenerator.cpp \
     main.cpp \
     mainwindow.cpp \
     mycombobox.cpp \
     mytracer.cpp \
-    qcustomplot.cpp
+    pagedatagenerator.cpp \
+    pageplot.cpp \
+    qcustomplot.cpp \
+    viewcontroller.cpp
 
 HEADERS += \
+    buttongroup.h \
+    customplotmanager.h \
+    frequencedatagenerator.h \
     mainwindow.h \
     mycombobox.h \
     mytracer.h \
-    qcustomplot.h
+    pagedatagenerator.h \
+    pageplot.h \
+    qcustomplot.h \
+    viewcontroller.h
 
 FORMS += \
     mainwindow.ui
