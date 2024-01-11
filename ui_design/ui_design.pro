@@ -23,6 +23,7 @@ SOURCES += \
     qcustomplot.cpp \
     readfiledata.cpp \
     spectrumdatagenerator.cpp \
+    tracermanager.cpp \
     viewcontroller.cpp
 
 HEADERS += \
@@ -39,6 +40,7 @@ HEADERS += \
     qcustomplot.h \
     readfiledata.h \
     spectrumdatagenerator.h \
+    tracermanager.h \
     viewcontroller.h
 
 FORMS += \

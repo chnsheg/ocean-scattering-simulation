@@ -89,6 +89,11 @@ myTracer::~myTracer()
         plot->removeItem(label);
 }
 
+QCustomPlot *myTracer::getCustomPlot()
+{
+    return plot;
+}
+
 void myTracer::setPen(const QPen &pen)
 {
     tracer->setPen(pen);

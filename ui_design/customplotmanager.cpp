@@ -1,4 +1,5 @@
 #include "customplotmanager.h"
+#include "tracermanager.h"
 
 CustomPlotManager *CustomPlotManager::customPlotManagerInstance = nullptr;
 
@@ -12,6 +13,14 @@ CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot)
 {
     // 初始化 QCustomPlot 样式
     initCustomPlotStyle();
+    //挂载轨迹管理器
+    TracerManager::getTracerManagerInstance(_customPlot);
+    // connect(customPlot, SIGNAL(mouseMove(QMouseEvent *)), this, SLOT(showTracer(QMouseEvent *)));
+    connect(customPlot, SIGNAL(mouseMove(QMouseEvent *)), this, &CustomPlotManager::handleMouseMove);
+    connect(this,
+            SIGNAL(mouseMoveSignal(QMouseEvent *, QVector<QColor>)),
+            TracerManager::getTracerManagerInstance(),
+            SLOT(showTracer(QMouseEvent *, QVector<QColor>)));
 }
 
 /**
@@ -89,6 +98,19 @@ void CustomPlotManager::initCustomPlotStyle()
 void CustomPlotManager::setCustomPlot(QCustomPlot *newCustomPlot)
 {
     customPlot = newCustomPlot;
+    TracerManager::getTracerManagerInstance()->setTracerCustomPlot(newCustomPlot);
+    // void (QCustomPlot::*mouseMoveSignal)(QMouseEvent *) = &QCustomPlot::mouseMove;
+    // void (CustomPlotManager::*handleMouseMove)(QMouseEvent *) = &CustomPlotManager::handleMouseMove;
+    // connect(newCustomPlot, mouseMoveSignal, this, handleMouseMove);
+    // void (CustomPlotManager::*mouseMoveSignal2)(QMouseEvent *, QVector<QColor>)
+    //     = &CustomPlotManager::mouseMoveSignal;
+    // void (TracerManager::*showTracer)(QMouseEvent *, QVector<QColor>) = &TracerManager::showTracer;
+    // connect(newCustomPlot, mouseMoveSignal2, TracerManager::getTracerManagerInstance(), showTracer);
+    connect(newCustomPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
+    connect(this,
+            &CustomPlotManager::mouseMoveSignal,
+            TracerManager::getTracerManagerInstance(),
+            &TracerManager::showTracer);
 }
 
 /**
@@ -100,9 +122,9 @@ QCustomPlot *CustomPlotManager::getCustomPlot()
     return customPlot;
 }
 
-void CustomPlotManager::plotGraph(const QVector<double> *xData,
-                                  const QVector<double> *yData,
-                                  int curve_num)
+void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
+                                          const QVector<double> *yData,
+                                          int curve_index)
 {
     // 绘制曲线
     customPlot->addGraph();
@@ -112,9 +134,27 @@ void CustomPlotManager::plotGraph(const QVector<double> *xData,
     //对横坐标范围进行限定，下界向下取整，上界向上取整
     customPlot->xAxis->setRange(floor(*xData->begin()), ceil(*xData->end()));
     customPlot->yAxis->setRange(0, *maxElement);
-    customPlot->graph(curve_num)->setPen(QPen(colorContainer.at(curve_num), 3)); //设置曲线颜色
-    customPlot->graph(curve_num)->setData(*xData, *yData);
+    customPlot->graph(curve_index)->setPen(QPen(colorContainer.at(curve_index), 3)); //设置曲线颜色
+    customPlot->graph(curve_index)->setData(*xData, *yData);
     customPlot->replot(); //重绘 每次改变完以后都要调用这个进行重新绘制
+}
+
+void CustomPlotManager::plotGraph(const QVector<double> *xData,
+                                  const QVector<double> *yData,
+                                  int curve_index)
+{
+    plotGraphToBuffer(xData, yData, curve_index);
+    refreshPlot();
+}
+
+void CustomPlotManager::setLegendName(const QString &name, int curve_index)
+{
+    customPlot->graph(curve_index)->setName(name);
+}
+
+void CustomPlotManager::refreshPlot()
+{
+    customPlot->replot();
 }
 
 /**
@@ -147,4 +187,9 @@ void CustomPlotManager::switchToSecondAxis(int index)
 {
     // 切换到第二个坐标轴
     customPlot->graph(index)->setValueAxis(customPlot->yAxis2);
+}
+
+void CustomPlotManager::handleMouseMove(QMouseEvent *event)
+{
+    emit mouseMoveSignal(event, colorContainer);
 }

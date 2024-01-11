@@ -67,7 +67,16 @@ void PagePlot::handleDataGenerated(const QVector<QVector<double> *> *xDataVector
     for (int i = 0; i < curve_num; ++i) {
         yData = yDataVector->at(i);
         view->updateViewCurveSlot(xData, yData, i);
+        //释放内存，如果每次开始绘图导致系统卡顿，可以不释放内存，仅在切换页面时释放内存
+        delete yData;
+        yData = nullptr;
     }
+    delete xData;
+    xData = nullptr;
+    delete xDataVector;
+    xDataVector = nullptr;
+    delete yDataVector;
+    yDataVector = nullptr;
 }
 
 void PagePlot::switchPage()

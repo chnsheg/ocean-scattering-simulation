@@ -35,7 +35,9 @@ signals:
     void startButtonClicked(const InputDataListManager &inputDataList);
 
 public slots:
-    void updateViewCurveSlot(const QVector<double> *xData, const QVector<double> *yData, int count);
+    void updateViewCurveSlot(const QVector<double> *xData,
+                             const QVector<double> *yData,
+                             int curve_index);
 
 private slots:
     void startButtonClicked();

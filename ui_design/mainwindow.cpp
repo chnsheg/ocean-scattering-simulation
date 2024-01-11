@@ -115,7 +115,7 @@ void MainWindow::loadTracer(QCustomPlot *CustomPlot)
         CustomPlot,
         CustomPlot->graph(0),
         DataTracer)); //这行代码是关键，设置鼠标跟踪器，DataTracer是枚举类型，可以设置为XAxisTracer，YAxisTracer，DataTracer
-    //m_TraserX = QSharedPointer<myTracer> (new myTracer(CustomPlot, CustomPlot->graph(0), XAxisTracer));
+    //m_TracerX = QSharedPointer<myTracer> (new myTracer(CustomPlot, CustomPlot->graph(0), XAxisTracer));
     // connect(CustomPlot, SIGNAL(mouseMove(QMouseEvent *)), this, SLOT(showTracer(QMouseEvent *)));
 }
 

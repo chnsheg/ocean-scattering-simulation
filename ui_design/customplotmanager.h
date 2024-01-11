@@ -23,9 +23,20 @@ public:
     void setCustomPlot(QCustomPlot *newCustomPlot);
     QCustomPlot *getCustomPlot();
     void initCustomPlotStyle();
-    void plotGraph(const QVector<double> *xData, const QVector<double> *yData, int curve_num);
+    void plotGraphToBuffer(const QVector<double> *xData,
+                           const QVector<double> *yData,
+                           int curve_index);
+    void plotGraph(const QVector<double> *xData, const QVector<double> *yData, int curve_index);
+    void refreshPlot();
+    void setLegendName(const QString &name, int curve_index);
     void createSecondAxis(double lower, double upper, QString label);
     void switchToSecondAxis(int index);
+public slots:
+    void handleMouseMove(QMouseEvent *event);
+
+public:
+signals:
+    void mouseMoveSignal(QMouseEvent *event, QVector<QColor> colorVector);
 
 private:
     CustomPlotManager(QCustomPlot *_customPlot);

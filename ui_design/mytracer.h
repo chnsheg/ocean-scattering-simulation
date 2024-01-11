@@ -24,6 +24,7 @@ public:
 
     void setVisible(bool visible);
     bool getVisible();
+    QCustomPlot *getCustomPlot();
 
 protected:
     QCustomPlot *plot;     //传入实例化的QcustomPlot

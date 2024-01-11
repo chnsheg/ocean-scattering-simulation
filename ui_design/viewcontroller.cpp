@@ -83,15 +83,46 @@ void ViewController::updateViewStyle()
 
 void ViewController::updateViewCurveSlot(const QVector<double> *xData,
                                          const QVector<double> *yData,
-                                         int curve_num)
+                                         int curve_index)
 {
     // Update view curve accordingly
     int index = ui->stackedWidget->currentIndex();
-    CustomPlotManager::getCustomPlotManagerInstance()->plotGraph(xData, yData, curve_num);
+    CustomPlotManager::getCustomPlotManagerInstance()->plotGraphToBuffer(xData, yData, curve_index);
     //根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
     switch (index) {
-    case 0:
-        customPlot->graph(0)->setName("激光光谱");
+    case 1:
+        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("激光光谱", 0);
+        CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+        break;
+    case 2:
+        if (curve_index == 2) {
+            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("布里渊散射曲线", 0);
+            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("米散射曲线", 1);
+            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("瑞利散射曲线", 2);
+            CustomPlotManager::getCustomPlotManagerInstance()
+                ->refreshPlot(); //在最后一条曲线绘制完毕后刷新
+        }
+        break;
+    case 3:
+        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("水下散射光谱", 0);
+        CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+        break;
+    case 4:
+        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("Fizeau仪器函数", 0);
+        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("通过Fizeau后的光谱", 1);
+        //判断是否需要创建第二个坐标轴
+        if (curve_index == 0) {
+            CustomPlotManager::getCustomPlotManagerInstance()->createSecondAxis(0, 1, "y2");
+            CustomPlotManager::getCustomPlotManagerInstance()->switchToSecondAxis(0);
+        } else if (curve_index == 1) {
+            CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+        }
+        break;
+    case 5:
+        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("PMT能谱", 0);
+        CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+        break;
+    default:
         break;
     }
 }
