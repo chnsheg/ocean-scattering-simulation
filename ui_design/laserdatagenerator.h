@@ -2,12 +2,13 @@
 #define LASERDATAGENERATOR_H
 
 #include <QVector>
+#include "inputdatalistmanager.h"
 
 class LaserDataGenerator
 {
 public:
     LaserDataGenerator();
-    static void generateLaserData(QVector<double> *data);
+    static QVector<double> *generateLaserData(InputDataListManager *inputDataList);
 };
 
 #endif // LASERDATAGENERATOR_H

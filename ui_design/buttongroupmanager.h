@@ -69,6 +69,9 @@ public:
     // 更新按钮状态
     void updateButtonStatus(int index, const ButtonStatus &status);
     void updateTracerButtonText(int index, bool isVisible);
+
+    //获取buttonGroups
+    QVector<ButtonGroup> *getButtonGroups();
 };
 
 #endif // BUTTONGROUPMANAGER_H

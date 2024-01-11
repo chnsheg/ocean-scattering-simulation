@@ -3,16 +3,29 @@
 
 ViewController *ViewController::viewControllerInstance = nullptr;
 
-ViewController::ViewController(Ui::MainWindow *_ui)
+ViewController::ViewController(Ui::MainWindow *_ui, QWidget *parent)
+    : QWidget(parent)
 {
     ui = _ui;
+    // Connect start button clicked signal
+
+    for (int i = 0;
+         i < ButtonGroupsManager::getButtonGroupsManagerInstance()->getButtonGroups()->size();
+         i++) {
+        void (ViewController::*startButtonClicked)() = &ViewController::startButtonClicked;
+        connect(ButtonGroupsManager::getButtonGroupsManagerInstance()
+                    ->getButtonGroups()
+                    ->at(i)
+                    .showButton,
+                &QPushButton::clicked,
+                this,
+                startButtonClicked);
+    }
 }
 
 //在此挂载视图层
 ViewController *ViewController::getViewControllerInstance(Ui::MainWindow *_ui)
 {
-    if (viewControllerInstance == nullptr)
-        viewControllerInstance = new ViewController(_ui);
     //挂载ButtonGroups单例
     QVector<ButtonGroup> *buttonGroup = new QVector<ButtonGroup>;
     buttonGroup->push_back(ButtonGroup(_ui->show1, _ui->clear1, _ui->tracer1, _ui->back1));
@@ -22,9 +35,11 @@ ViewController *ViewController::getViewControllerInstance(Ui::MainWindow *_ui)
     buttonGroup->push_back(ButtonGroup(_ui->show5, _ui->clear5, _ui->tracer5, _ui->back5));
     ButtonGroupsManager::getButtonGroupsManagerInstance(buttonGroup);
 
+    if (viewControllerInstance == nullptr)
+        viewControllerInstance = new ViewController(_ui);
+
     //挂载CustomPlotManager单例
     CustomPlotManager::getCustomPlotManagerInstance(_ui->customPlot1);
-
     return viewControllerInstance;
 }
 
@@ -66,6 +81,21 @@ void ViewController::updateViewStyle()
     ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStatus(index);
 }
 
+void ViewController::updateViewCurveSlot(const QVector<double> *xData,
+                                         const QVector<double> *yData,
+                                         int curve_num)
+{
+    // Update view curve accordingly
+    int index = ui->stackedWidget->currentIndex();
+    CustomPlotManager::getCustomPlotManagerInstance()->plotGraph(xData, yData, curve_num);
+    //根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
+    switch (index) {
+    case 0:
+        customPlot->graph(0)->setName("激光光谱");
+        break;
+    }
+}
+
 void ViewController::updateButtonStatus(const ButtonStatus &status)
 {
     int page_index = ui->stackedWidget->currentIndex();
@@ -79,4 +109,21 @@ void ViewController::updateTracerButtonText(bool isVisible)
     // Update tracer button accordingly
     ButtonGroupsManager::getButtonGroupsManagerInstance()->updateTracerButtonText(page_index,
                                                                                   isVisible);
+}
+
+void ViewController::startButtonClicked()
+{
+    // Get input data from view
+    InputDataListManager inputDataList = InputDataListManager();
+    // for (int i = 0; i < ui.inputLineEdits.size(); ++i) {
+    //     inputData.inputDataList->append(ui.inputLineEdits[i]->text());
+    // }
+    // inputDataList.getInputDataList()->push_back("0.8");
+    // inputDataList.getInputDataList()->push_back("1000");
+    // inputDataList.getInputDataList()->push_back("model1");
+    inputDataList.setInputDataList("0.8");
+    inputDataList.setInputDataList("1000");
+    inputDataList.setInputDataList("model1");
+    // Send signal to controller
+    emit startButtonClicked(inputDataList);
 }

@@ -68,3 +68,9 @@ void ButtonGroupsManager::updateTracerButtonText(int index, bool isVisible)
     // Update tracer button accordingly
     buttonGroups->at(index - 1).tracerButton->setText(isVisible ? "隐藏光标" : "显示光标");
 }
+
+//获取buttonGroups
+QVector<ButtonGroup> *ButtonGroupsManager::getButtonGroups()
+{
+    return buttonGroups;
+}

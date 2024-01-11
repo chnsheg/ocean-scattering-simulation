@@ -100,6 +100,23 @@ QCustomPlot *CustomPlotManager::getCustomPlot()
     return customPlot;
 }
 
+void CustomPlotManager::plotGraph(const QVector<double> *xData,
+                                  const QVector<double> *yData,
+                                  int curve_num)
+{
+    // 绘制曲线
+    customPlot->addGraph();
+    auto maxElement = std::min_element(yData->begin(), yData->end(), [](double a, double b) {
+        return (a >= b); //此处决定了应该将最大值更大的曲线放在最后再绘制
+    });
+    //对横坐标范围进行限定，下界向下取整，上界向上取整
+    customPlot->xAxis->setRange(floor(*xData->begin()), ceil(*xData->end()));
+    customPlot->yAxis->setRange(0, *maxElement);
+    customPlot->graph(curve_num)->setPen(QPen(colorContainer.at(curve_num), 3)); //设置曲线颜色
+    customPlot->graph(curve_num)->setData(*xData, *yData);
+    customPlot->replot(); //重绘 每次改变完以后都要调用这个进行重新绘制
+}
+
 /**
  * @brief CustomPlotManager::createSecondAxis
  * @param lower 第二个坐标轴的下限

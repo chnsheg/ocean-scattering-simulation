@@ -12,6 +12,7 @@ SOURCES += \
     buttongroupmanager.cpp \
     customplotmanager.cpp \
     frequencedatagenerator.cpp \
+    inputdatalistmanager.cpp \
     laserdatagenerator.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     buttongroupmanager.h \
     customplotmanager.h \
     frequencedatagenerator.h \
+    inputdatalistmanager.h \
     laserdatagenerator.h \
     mainwindow.h \
     mycombobox.h \

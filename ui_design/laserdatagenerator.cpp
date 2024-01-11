@@ -1,11 +1,14 @@
 #include "laserdatagenerator.h"
+#include <QDebug>
 #include "readfiledata.h"
-LaserDataGenerator::LaserDataGenerator() {}
 
-void LaserDataGenerator::generateLaserData(QVector<double> *data)
+QVector<double> *LaserDataGenerator::generateLaserData(InputDataListManager *inputDataList)
 {
-    // Generate Laser data
-    // Assign x and y data accordingly
-    data->clear();
+    for (int i = 0; i < inputDataList->getInputDataList()->size(); i++) {
+        qDebug() << "[INFO]: " << inputDataList->getInputDataList()->at(i) << " ";
+    }
+    qDebug() << Qt::endl;
+    QVector<double> *data = new QVector<double>;
     ReadFileData::readCSV(data, "laser_data.csv");
+    return data;
 }

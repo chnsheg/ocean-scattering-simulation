@@ -1,16 +1,17 @@
 #include "pageplot.h"
-#include "QDebug"
 #include "customplotmanager.h"
-#include "pagedatagenerator.h"
-#include "viewcontroller.h"
 
 PagePlot *PagePlot::pagePlotInstance = nullptr;
 
-PagePlot::PagePlot(int _page_index, QObject *parent)
+PagePlot::PagePlot(ViewController *_view, PageDataGenerator *_model, QObject *parent)
     : QObject(parent)
+    , view(_view)
+    , model(_model)
 {
-    page_index = _page_index; //如果假如页面切换控制层，则应该在此处获取页面属性实例，然后调用其get方法
-    customPlot = CustomPlotManager::getCustomPlotManagerInstance()->getCustomPlot();
+    void (ViewController::*startButtonClicked)(const InputDataListManager &)
+        = &ViewController::startButtonClicked;
+    connect(view, startButtonClicked, this, &PagePlot::handleStartButtonClicked);
+    connect(model, &PageDataGenerator::dataGenerated, this, &PagePlot::handleDataGenerated);
 }
 
 // TODO: Add destructor
@@ -19,7 +20,8 @@ PagePlot::~PagePlot() {}
 PagePlot *PagePlot::getPagePlotInstance(int _page_index)
 {
     if (pagePlotInstance == nullptr) {
-        pagePlotInstance = new PagePlot(_page_index);
+        pagePlotInstance = new PagePlot(ViewController::getViewControllerInstance(),
+                                        PageDataGenerator::getPageDataGeneratorInstance());
     }
     return pagePlotInstance;
 }
@@ -38,6 +40,33 @@ void PagePlot::destroyPagePlotInstance()
     if (pagePlotInstance != nullptr) {
         delete pagePlotInstance;
         pagePlotInstance = nullptr;
+    }
+}
+
+void PagePlot::handleStartButtonClicked(const InputDataListManager &inputDataList)
+{
+    //获取当前页面索引
+    int page_index = ViewController::getViewControllerInstance()->getCurrentPageIndex();
+    //获取当前页面的数据
+    switch (page_index) {
+    case 1:
+        model->generateData(, inputDataList);
+        break;
+    }
+
+    // model->generateData(page_index, inputDataList);
+}
+
+void PagePlot::handleDataGenerated(const QVector<QVector<double> *> *xDataVector,
+                                   const QVector<QVector<double> *> *yDataVector,
+                                   const int curve_num)
+{
+    QVector<double> *xData;
+    QVector<double> *yData;
+    xData = xDataVector->at(0); //默认所有曲线的x轴数据都是一样的
+    for (int i = 0; i < curve_num; ++i) {
+        yData = yDataVector->at(i);
+        view->updateViewCurveSlot(xData, yData, i);
     }
 }
 

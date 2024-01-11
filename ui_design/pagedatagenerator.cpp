@@ -3,23 +3,49 @@
 #include "laserdatagenerator.h"
 #include "spectrumdatagenerator.h"
 
-void PageDataGenerator::generateData(DataType dataType, QVector<double> *data)
+PageDataGenerator *PageDataGenerator::pageDataGeneratorInstance = nullptr;
+
+PageDataGenerator::PageDataGenerator(QObject *parent)
+    : QObject(parent)
+{}
+
+PageDataGenerator *PageDataGenerator::getPageDataGeneratorInstance()
 {
+    if (pageDataGeneratorInstance == nullptr) {
+        pageDataGeneratorInstance = new PageDataGenerator();
+    }
+    return pageDataGeneratorInstance;
+}
+
+void PageDataGenerator::destroyPageDataGeneratorInstance()
+{
+    if (pageDataGeneratorInstance != nullptr) {
+        delete pageDataGeneratorInstance;
+        pageDataGeneratorInstance = nullptr;
+    }
+}
+
+PageDataGenerator::~PageDataGenerator() {}
+
+QVector<double> *PageDataGenerator::generateData(DataType dataType,
+                                                 InputDataListManager *inputDataList)
+{
+    QVector<double> *data = nullptr;
     switch (dataType) {
     case DataType::Frequence:
-        FrequenceDataGenerator::generateFrequenceData(data);
+        data = FrequenceDataGenerator::generateFrequenceData(inputDataList);
         break;
     case DataType::Laser:
-        LaserDataGenerator::generateLaserData(data);
+        data = LaserDataGenerator::generateLaserData(inputDataList);
         break;
     case DataType::MieScattering:
-        SpectrumDataGenerator::generateMieScatteringData(data);
+        data = SpectrumDataGenerator::generateMieScatteringData(inputDataList);
         break;
     case DataType::BriScattering:
-        SpectrumDataGenerator::generateBriScatteringData(data);
+        data = SpectrumDataGenerator::generateBriScatteringData(inputDataList);
         break;
     case DataType::RayScattering:
-        SpectrumDataGenerator::generateRayScatteringData(data);
+        data = SpectrumDataGenerator::generateRayScatteringData(inputDataList);
         break;
     // case DataType::UnderwaterScattering:
     //     UnderwaterScatteringDataGenerator::generateUnderwaterScatteringData(data);
@@ -38,6 +64,38 @@ void PageDataGenerator::generateData(DataType dataType, QVector<double> *data)
     //     break;
     // Add more cases for other page types
     default:
+        data = nullptr;
         break;
+    }
+
+    return data;
+}
+
+void PageDataGenerator::generatePairOfData(int page_index, InputDataListManager *inputDataList)
+{
+    QVector<QVector<double> *> *xDataVector;
+    QVector<QVector<double> *> *yDataVector;
+    xDataVector = new QVector<QVector<double> *>;
+    yDataVector = new QVector<QVector<double> *>;
+
+    switch (page_index) {
+    case 1:
+        xDataVector->append(generateData(DataType::Frequence, inputDataList));
+        yDataVector->append(generateData(DataType::Laser, inputDataList));
+        emit dataGenerated(xDataVector, yDataVector, 1);
+        break;
+    case 2:
+        xDataVector->append(generateData(DataType::Frequence, inputDataList));
+        yDataVector->append(generateData(DataType::MieScattering, inputDataList));
+        yDataVector->append(generateData(DataType::BriScattering, inputDataList));
+        yDataVector->append(generateData(DataType::RayScattering, inputDataList));
+        emit dataGenerated(xDataVector, yDataVector, 3);
+        break;
+        // case 3:
+        //     xDataVector->append(
+        //         PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
+        //     yDataVector->append(
+        //         PageDataGenerator::generateData(PageDataGenerator::DataType::MieScattering,
+        //                                         inputDataList));
     }
 }

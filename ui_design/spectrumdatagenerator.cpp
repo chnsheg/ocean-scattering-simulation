@@ -1,28 +1,42 @@
 #include "spectrumdatagenerator.h"
+#include <QDebug>
 #include "readfiledata.h"
 
-SpectrumDataGenerator::SpectrumDataGenerator() {}
-
-void SpectrumDataGenerator::generateBriScatteringData(QVector<double> *data)
+QVector<double> *SpectrumDataGenerator::generateBriScatteringData(InputDataListManager *inputDataList)
 {
     // Generate spectrum data
     // Assign x and y data accordingly
-    data->clear();
+    for (int i = 0; i < inputDataList->getInputDataList()->size(); i++) {
+        qDebug() << "[INFO]: " << inputDataList->getInputDataList()->at(i) << " ";
+    }
+    qDebug() << Qt::endl;
+    QVector<double> *data = new QVector<double>;
     ReadFileData::readCSV(data, "L_bc.csv");
+    return data;
 }
 
-void SpectrumDataGenerator::generateMieScatteringData(QVector<double> *data)
+QVector<double> *SpectrumDataGenerator::generateMieScatteringData(InputDataListManager *inputDataList)
 {
     // Generate spectrum data
     // Assign x and y data accordingly
-    data->clear();
+    for (int i = 0; i < inputDataList->getInputDataList()->size(); i++) {
+        qDebug() << "[INFO]: " << inputDataList->getInputDataList()->at(i) << " ";
+    }
+    qDebug() << Qt::endl;
+    QVector<double> *data = new QVector<double>;
     ReadFileData::readCSV(data, "L_mc.csv");
+    return data;
 }
 
-void SpectrumDataGenerator::generateRayScatteringData(QVector<double> *data)
+QVector<double> *SpectrumDataGenerator::generateRayScatteringData(InputDataListManager *inputDataList)
 {
     // Generate spectrum data
     // Assign x and y data accordingly
-    data->clear();
+    for (int i = 0; i < inputDataList->getInputDataList()->size(); i++) {
+        qDebug() << "[INFO]: " << inputDataList->getInputDataList()->at(i) << " ";
+    }
+    qDebug() << Qt::endl;
+    QVector<double> *data = new QVector<double>;
     ReadFileData::readCSV(data, "L_rc.csv");
+    return data;
 }

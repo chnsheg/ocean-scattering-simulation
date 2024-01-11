@@ -1,10 +1,14 @@
 #include "frequencedatagenerator.h"
+#include <QDebug>
 #include "readfiledata.h"
 
-void FrequenceDataGenerator::generateFrequenceData(QVector<double> *data)
+QVector<double> *FrequenceDataGenerator::generateFrequenceData(InputDataListManager *inputDataList)
 {
-    // Generate RF data
-    // Assign x and y data accordingly
-    data->clear();
+    for (int i = 0; i < inputDataList->getInputDataList()->size(); i++) {
+        qDebug() << "[INFO]: " << inputDataList->getInputDataList()->at(i) << " ";
+    }
+    qDebug() << Qt::endl;
+    QVector<double> *data = new QVector<double>;
     ReadFileData::readCSV(data, "RF.csv");
+    return data;
 }
