@@ -4,7 +4,7 @@
 /***************************控制层***************************/
 
 #include <QObject>
-#include "buttongroup.h"
+#include "buttongroupmanager.h"
 #include "mytracer.h"
 #include "qcustomplot.h"
 
@@ -19,7 +19,8 @@ public:
     void initializePlot();         //初始化绘图区
     void loadTracer();             //加载跟踪点
     void plotGraph(int count = 0); //绘制曲线
-    void freeData();               //释放数据
+    void freeData();               //释放数据，用于切换页面的时候
+    void clearData();              //清空数据，用于清空曲线的时候
     void switchPage();             //仅用在从主界面进入绘图界面的时候触发
 
 public slots:

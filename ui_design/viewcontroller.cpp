@@ -1,4 +1,5 @@
 #include "viewcontroller.h"
+#include "customplotmanager.h"
 
 ViewController *ViewController::viewControllerInstance = nullptr;
 
@@ -19,7 +20,7 @@ ViewController *ViewController::getViewControllerInstance(Ui::MainWindow *_ui)
     buttonGroup->push_back(ButtonGroup(_ui->show3, _ui->clear3, _ui->tracer3, _ui->back3));
     buttonGroup->push_back(ButtonGroup(_ui->show4, _ui->clear4, _ui->tracer4, _ui->back4));
     buttonGroup->push_back(ButtonGroup(_ui->show5, _ui->clear5, _ui->tracer5, _ui->back5));
-    ButtonGroups::getButtonGroupsInstance(buttonGroup);
+    ButtonGroupsManager::getButtonGroupsManagerInstance(buttonGroup);
 
     //挂载CustomPlotManager单例
     CustomPlotManager::getCustomPlotManagerInstance(_ui->customPlot1);
@@ -53,16 +54,29 @@ QCustomPlot *ViewController::getCurrentPageCustomPlot()
     return ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot%1").arg(index));
 }
 
+void ViewController::updateViewStyle()
+{
+    // Update view style accordingly
+    int index = ui->stackedWidget->currentIndex();
+    //更新视图层中CustomPlot的样式
+    CustomPlotManager::getCustomPlotManagerInstance()->setCustomPlot(getCurrentPageCustomPlot());
+    CustomPlotManager::getCustomPlotManagerInstance()->initCustomPlotStyle();
+    //更新视图层中ButtonGroups的样式和状态
+    ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStyle(index);
+    ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStatus(index);
+}
+
 void ViewController::updateButtonStatus(const ButtonStatus &status)
 {
     int page_index = ui->stackedWidget->currentIndex();
     // Update button status accordingly
-    ButtonGroups::getButtonGroupsInstance()->updateButtonStatus(page_index, status);
+    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateButtonStatus(page_index, status);
 }
 
 void ViewController::updateTracerButtonText(bool isVisible)
 {
     int page_index = ui->stackedWidget->currentIndex();
     // Update tracer button accordingly
-    ButtonGroups::getButtonGroupsInstance()->updateTracerButtonText(page_index, isVisible);
+    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateTracerButtonText(page_index,
+                                                                                  isVisible);
 }

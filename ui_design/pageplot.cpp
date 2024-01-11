@@ -43,10 +43,11 @@ void PagePlot::destroyPagePlotInstance()
 
 void PagePlot::switchPage()
 {
+    //更新视图层
+    ViewController::getViewControllerInstance()->updateViewStyle();
+    //更新控制层
     page_index = ViewController::getViewControllerInstance()->getCurrentPageIndex();
-    customPlot = ViewController::getViewControllerInstance()->getCurrentPageCustomPlot();
-    // 修改customPlotManager的customPlot
-    CustomPlotManager::getCustomPlotManagerInstance()->setCustomPlot(customPlot);
+    customPlot = CustomPlotManager::getCustomPlotManagerInstance()->getCustomPlot();
 }
 
 void PagePlot::plotGraph(int count)
@@ -80,7 +81,7 @@ void PagePlot::startPlot()
             //绘制曲线
             plotGraph();
             customPlot->graph(0)->setName("激光光谱");
-            freeData();
+            clearData();
             break;
         case 2:
             if ((xData->size() == 0 && yData->size() == 0)) {
@@ -89,7 +90,7 @@ void PagePlot::startPlot()
             }
             plotGraph();
             customPlot->graph(0)->setName("布里渊散射曲线");
-            freeData();
+            clearData();
 
             if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
@@ -97,7 +98,7 @@ void PagePlot::startPlot()
             }
             plotGraph(1);
             customPlot->graph(1)->setName("瑞利散射曲线");
-            freeData();
+            clearData();
 
             if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
@@ -105,7 +106,7 @@ void PagePlot::startPlot()
             }
             plotGraph(2);
             customPlot->graph(2)->setName("米散射曲线");
-            freeData();
+            clearData();
             break;
         case 3:
             if ((xData->size() == 0 && yData->size() == 0)) {
@@ -114,7 +115,7 @@ void PagePlot::startPlot()
             }
             plotGraph();
             customPlot->graph(0)->setName("水下散射光谱");
-            freeData();
+            clearData();
             break;
         case 4:
             if ((xData->size() == 0 && yData->size() == 0)) {
@@ -123,7 +124,7 @@ void PagePlot::startPlot()
             }
             plotGraph();
             customPlot->graph(0)->setName("Fizeau仪器函数");
-            freeData();
+            clearData();
             CustomPlotManager::getCustomPlotManagerInstance()->createSecondAxis(0, 1, "y");
             CustomPlotManager::getCustomPlotManagerInstance()->switchToSecondAxis(0);
             if ((xData->size() == 0 && yData->size() == 0)) {
@@ -132,7 +133,7 @@ void PagePlot::startPlot()
             }
             plotGraph(1);
             customPlot->graph(1)->setName("通过Fizeau后的光谱");
-            freeData();
+            clearData();
             break;
         case 5:
             if ((xData->size() == 0 && yData->size() == 0)) {
@@ -141,7 +142,7 @@ void PagePlot::startPlot()
             }
             plotGraph();
             customPlot->graph(0)->setName("PMT能谱");
-            freeData();
+            clearData();
             break;
         default:
             break;
@@ -155,15 +156,13 @@ void PagePlot::startPlot()
 
 void PagePlot::clearPlot()
 {
-    QDebug debug = qDebug();
-    if (customPlot != nullptr) {
-        customPlot->clearGraphs();
-        customPlot->replot();
-        //设置当前界面功能按键
-        ViewController::getViewControllerInstance()->updateButtonStatus(ButtonWaitForOpen);
-
-        debug << "clearPlot";
-    }
+    ViewController::getViewControllerInstance()->updateButtonStatus(ButtonWaitForOpen);
+    ViewController::getViewControllerInstance()->updateTracerButtonText(true);
+    disconnect(customPlot, SIGNAL(mouseMove(QMouseEvent *)), this, SLOT(showTracer(QMouseEvent *)));
+    m_TracerY->setVisible(false);
+    freeData();
+    customPlot->clearGraphs();
+    customPlot->replot();
 }
 
 void PagePlot::loadTracer()
@@ -286,12 +285,24 @@ void PagePlot::showTracer(QMouseEvent *event)
 /**
  * @brief 每次绘图完立即调用清除数据，避免内存泄漏
  */
-void PagePlot::freeData()
+void PagePlot::clearData()
 {
     if (xData != nullptr) {
         xData->clear();
     }
     if (yData != nullptr) {
         yData->clear();
+    }
+}
+
+void PagePlot::freeData()
+{
+    if (xData != nullptr) {
+        delete xData;
+        xData = nullptr;
+    }
+    if (yData != nullptr) {
+        delete yData;
+        yData = nullptr;
     }
 }

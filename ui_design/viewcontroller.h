@@ -1,8 +1,7 @@
 #ifndef VIEWCONTROLLER_H
 #define VIEWCONTROLLER_H
 
-#include "buttongroup.h"
-#include "customplotmanager.h"
+#include "buttongroupmanager.h"
 #include "ui_mainwindow.h"
 
 /***************************视图层***************************/
@@ -19,8 +18,11 @@ public:
     static ViewController *getViewControllerInstance(Ui::MainWindow *_ui);
     static ViewController *getViewControllerInstance();
     static void destroyViewControllerInstance();
+
+    // 管理视图层属性和样式
     int getCurrentPageIndex();
     QCustomPlot *getCurrentPageCustomPlot();
+    void updateViewStyle();
 
     // 集中管理按钮状态
     void updateButtonStatus(const ButtonStatus &status);

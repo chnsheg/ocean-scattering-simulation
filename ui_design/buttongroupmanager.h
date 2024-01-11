@@ -1,5 +1,5 @@
-#ifndef BUTTONGROUP_H
-#define BUTTONGROUP_H
+#ifndef BUTTONGROUPMANAGER_H
+#define BUTTONGROUPMANAGER_H
 
 #include <QDebug>
 #include <QPushButton>
@@ -10,6 +10,12 @@ struct ButtonStatus // 控制按钮组状态结构体 按键组：控制显示�
     bool showEnabled;
     bool clearEnabled;
     bool tracerEnabled;
+
+    ButtonStatus(bool show, bool clear, bool tracer)
+        : showEnabled(show)
+        , clearEnabled(clear)
+        , tracerEnabled(tracer)
+    {}
 };
 
 // 按键状态的结构体
@@ -37,27 +43,32 @@ public:
     {}
 };
 
-class ButtonGroups
+class ButtonGroupsManager
 {
 private:
     // 单例模式构造
-    static ButtonGroups *ButtonGroupsInstance;
-    ButtonGroups(QVector<ButtonGroup> *_buttonGroups);
+    static ButtonGroupsManager *ButtonGroupsManagerInstance;
+    ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups);
 
     // 存储每个页面的按钮状态
     QVector<ButtonGroup> *buttonGroups;
 
 public:
     // 单例模式获取实例
-    static ButtonGroups *getButtonGroupsInstance(QVector<ButtonGroup> *buttonGroups);
-    static ButtonGroups *getButtonGroupsInstance();
+    static ButtonGroupsManager *getButtonGroupsManagerInstance(QVector<ButtonGroup> *buttonGroups);
+    static ButtonGroupsManager *getButtonGroupsManagerInstance();
 
     // 释放实例
-    static void destroyButtonGroupsInstance();
+    static void destroyButtonGroupsManagerInstance();
+
+    //初始化按钮样式
+    void initButtonStyle(int index);
+    //初始化按钮状态
+    void initButtonStatus(int index);
 
     // 更新按钮状态
     void updateButtonStatus(int index, const ButtonStatus &status);
     void updateTracerButtonText(int index, bool isVisible);
 };
 
-#endif // BUTTONGROUP_H
+#endif // BUTTONGROUPMANAGER_H

@@ -9,7 +9,7 @@ CONFIG += c++15.9
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    buttongroup.cpp \
+    buttongroupmanager.cpp \
     customplotmanager.cpp \
     frequencedatagenerator.cpp \
     laserdatagenerator.cpp \
@@ -25,7 +25,7 @@ SOURCES += \
     viewcontroller.cpp
 
 HEADERS += \
-    buttongroup.h \
+    buttongroupmanager.h \
     customplotmanager.h \
     frequencedatagenerator.h \
     laserdatagenerator.h \
