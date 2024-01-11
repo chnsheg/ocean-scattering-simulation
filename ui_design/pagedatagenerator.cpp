@@ -1,5 +1,7 @@
 #include "pagedatagenerator.h"
 #include "frequencedatagenerator.h"
+#include "laserdatagenerator.h"
+#include "spectrumdatagenerator.h"
 
 void PageDataGenerator::generateData(DataType dataType, QVector<double> *data)
 {
@@ -7,18 +9,18 @@ void PageDataGenerator::generateData(DataType dataType, QVector<double> *data)
     case DataType::Frequence:
         FrequenceDataGenerator::generateFrequenceData(data);
         break;
-    // case DataType::Laser:
-    //     LaserDataGenerator::generateLaserData(data);
-    //     break;
-    // case DataType::MieScattering:
-    //     MieScatteringDataGenerator::generateMieScatteringData(data);
-    //     break;
-    // case DataType::BriScattering:
-    //     BriScatteringDataGenerator::generateBriScatteringData(data);
-    //     break;
-    // case DataType::RayScattering:
-    //     RayScatteringDataGenerator::generateRayScatteringData(data);
-    //     break;
+    case DataType::Laser:
+        LaserDataGenerator::generateLaserData(data);
+        break;
+    case DataType::MieScattering:
+        SpectrumDataGenerator::generateMieScatteringData(data);
+        break;
+    case DataType::BriScattering:
+        SpectrumDataGenerator::generateBriScatteringData(data);
+        break;
+    case DataType::RayScattering:
+        SpectrumDataGenerator::generateRayScatteringData(data);
+        break;
     // case DataType::UnderwaterScattering:
     //     UnderwaterScatteringDataGenerator::generateUnderwaterScatteringData(data);
     //     break;

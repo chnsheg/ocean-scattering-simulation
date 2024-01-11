@@ -20,13 +20,13 @@ public:
     void loadTracer();             //加载跟踪点
     void plotGraph(int count = 0); //绘制曲线
     void freeData();               //释放数据
+    void switchPage();             //仅用在从主界面进入绘图界面的时候触发
 
 public slots:
     void startPlot();
     void clearPlot();
     void showTracer(QMouseEvent *event);
     void changeTracerStatus();
-    void switchPage(); //仅用在从主界面进入绘图界面的时候触发
 
 private:
     explicit PagePlot(int _page_index, QObject *parent = nullptr);

@@ -89,6 +89,7 @@ void CustomPlotManager::initCustomPlotStyle()
 void CustomPlotManager::setCustomPlot(QCustomPlot *newCustomPlot)
 {
     customPlot = newCustomPlot;
+    initCustomPlotStyle();
 }
 
 /**

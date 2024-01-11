@@ -73,7 +73,7 @@ void PagePlot::startPlot()
         switch (page_index) {
         case 1:
             //读取数据
-            if (xData == nullptr && yData == nullptr) {
+            if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
                 PageDataGenerator::generateData(PageDataGenerator::Laser, yData);
             }
@@ -83,7 +83,7 @@ void PagePlot::startPlot()
             freeData();
             break;
         case 2:
-            if (xData == nullptr && yData == nullptr) {
+            if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
                 PageDataGenerator::generateData(PageDataGenerator::BriScattering, yData);
             }
@@ -91,7 +91,7 @@ void PagePlot::startPlot()
             customPlot->graph(0)->setName("布里渊散射曲线");
             freeData();
 
-            if (xData == nullptr && yData == nullptr) {
+            if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
                 PageDataGenerator::generateData(PageDataGenerator::RayScattering, yData);
             }
@@ -99,7 +99,7 @@ void PagePlot::startPlot()
             customPlot->graph(1)->setName("瑞利散射曲线");
             freeData();
 
-            if (xData == nullptr && yData == nullptr) {
+            if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
                 PageDataGenerator::generateData(PageDataGenerator::MieScattering, yData);
             }
@@ -108,7 +108,7 @@ void PagePlot::startPlot()
             freeData();
             break;
         case 3:
-            if (xData == nullptr && yData == nullptr) {
+            if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
                 PageDataGenerator::generateData(PageDataGenerator::UnderwaterScattering, yData);
             }
@@ -117,7 +117,7 @@ void PagePlot::startPlot()
             freeData();
             break;
         case 4:
-            if (xData == nullptr && yData == nullptr) {
+            if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
                 PageDataGenerator::generateData(PageDataGenerator::FizeauInstrument, yData);
             }
@@ -126,7 +126,7 @@ void PagePlot::startPlot()
             freeData();
             CustomPlotManager::getCustomPlotManagerInstance()->createSecondAxis(0, 1, "y");
             CustomPlotManager::getCustomPlotManagerInstance()->switchToSecondAxis(0);
-            if (xData == nullptr && yData == nullptr) {
+            if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::Frequence, xData);
                 PageDataGenerator::generateData(PageDataGenerator::FizeauSpectra, yData);
             }
@@ -135,7 +135,7 @@ void PagePlot::startPlot()
             freeData();
             break;
         case 5:
-            if (xData == nullptr && yData == nullptr) {
+            if ((xData->size() == 0 && yData->size() == 0)) {
                 PageDataGenerator::generateData(PageDataGenerator::PMTFrequency, xData);
                 PageDataGenerator::generateData(PageDataGenerator::PMTEnergy, yData);
             }
@@ -289,11 +289,9 @@ void PagePlot::showTracer(QMouseEvent *event)
 void PagePlot::freeData()
 {
     if (xData != nullptr) {
-        delete xData;
-        xData = nullptr;
+        xData->clear();
     }
     if (yData != nullptr) {
-        delete yData;
-        yData = nullptr;
+        yData->clear();
     }
 }

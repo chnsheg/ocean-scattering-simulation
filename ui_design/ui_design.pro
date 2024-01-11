@@ -12,6 +12,7 @@ SOURCES += \
     buttongroup.cpp \
     customplotmanager.cpp \
     frequencedatagenerator.cpp \
+    laserdatagenerator.cpp \
     main.cpp \
     mainwindow.cpp \
     mycombobox.cpp \
@@ -19,18 +20,23 @@ SOURCES += \
     pagedatagenerator.cpp \
     pageplot.cpp \
     qcustomplot.cpp \
+    readfiledata.cpp \
+    spectrumdatagenerator.cpp \
     viewcontroller.cpp
 
 HEADERS += \
     buttongroup.h \
     customplotmanager.h \
     frequencedatagenerator.h \
+    laserdatagenerator.h \
     mainwindow.h \
     mycombobox.h \
     mytracer.h \
     pagedatagenerator.h \
     pageplot.h \
     qcustomplot.h \
+    readfiledata.h \
+    spectrumdatagenerator.h \
     viewcontroller.h
 
 FORMS += \
