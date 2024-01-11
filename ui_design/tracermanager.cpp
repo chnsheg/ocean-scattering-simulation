@@ -2,7 +2,8 @@
 
 TracerManager *TracerManager::tracerManagerInstance = nullptr;
 
-TracerManager::TracerManager(QCustomPlot *customPlot)
+TracerManager::TracerManager(QCustomPlot *customPlot, QObject *parent)
+    : QObject(parent)
 {
     //在构造的过程中虽然有new，但是最后释放了，所以不需要手动释放
     //在构造的过程中虽然有new，但是最后释放了，所以不需要手动释放

@@ -6,7 +6,7 @@
 #include "mytracer.h"
 #include "qcustomplot.h"
 
-class TracerManager
+class TracerManager : public QObject
 {
     Q_OBJECT
 public:
@@ -21,7 +21,7 @@ public slots:
 private:
     //单例模式
     static TracerManager *tracerManagerInstance;
-    TracerManager(QCustomPlot *customPlot);
+    TracerManager(QCustomPlot *customPlot, QObject *parent = nullptr);
     virtual ~TracerManager();
     QSharedPointer<myTracer> m_TracerX;
     QSharedPointer<myTracer> m_TracerY;

@@ -8,19 +8,19 @@ CustomPlotManager *CustomPlotManager::customPlotManagerInstance = nullptr;
  * @param _customPlot
  * 构造函数
  */
-CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot)
-    : customPlot(_customPlot)
+CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot, QObject *parent)
+    : QObject(parent)
+    , customPlot(_customPlot)
 {
     // 初始化 QCustomPlot 样式
     initCustomPlotStyle();
     //挂载轨迹管理器
     TracerManager::getTracerManagerInstance(_customPlot);
-    // connect(customPlot, SIGNAL(mouseMove(QMouseEvent *)), this, SLOT(showTracer(QMouseEvent *)));
-    connect(customPlot, SIGNAL(mouseMove(QMouseEvent *)), this, &CustomPlotManager::handleMouseMove);
+    connect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
     connect(this,
-            SIGNAL(mouseMoveSignal(QMouseEvent *, QVector<QColor>)),
+            &CustomPlotManager::mouseMoveSignal,
             TracerManager::getTracerManagerInstance(),
-            SLOT(showTracer(QMouseEvent *, QVector<QColor>)));
+            &TracerManager::showTracer);
 }
 
 /**

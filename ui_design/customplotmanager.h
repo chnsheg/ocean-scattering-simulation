@@ -1,10 +1,12 @@
 #ifndef CUSTOMPLOTMANAGER_H
 #define CUSTOMPLOTMANAGER_H
 
+#include <QObject>
 #include "qcustomplot.h"
 
-class CustomPlotManager
+class CustomPlotManager : public QObject
 {
+    Q_OBJECT
 public:
     QVector<QColor> colorContainer = {QColor(226, 60, 255),
                                       QColor(64, 224, 208),
@@ -39,7 +41,7 @@ signals:
     void mouseMoveSignal(QMouseEvent *event, QVector<QColor> colorVector);
 
 private:
-    CustomPlotManager(QCustomPlot *_customPlot);
+    CustomPlotManager(QCustomPlot *_customPlot, QObject *parent = nullptr);
 
     static CustomPlotManager *customPlotManagerInstance;
     QCustomPlot *customPlot;
