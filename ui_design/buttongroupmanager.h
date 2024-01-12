@@ -2,6 +2,7 @@
 #define BUTTONGROUPMANAGER_H
 
 #include <QDebug>
+#include <QObject>
 #include <QPushButton>
 #include <QVector>
 
@@ -43,12 +44,13 @@ public:
     {}
 };
 
-class ButtonGroupsManager
+class ButtonGroupsManager : public QObject
 {
+    Q_OBJECT
 private:
     // 单例模式构造
     static ButtonGroupsManager *ButtonGroupsManagerInstance;
-    ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups);
+    ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups, QObject *parent = nullptr);
 
     // 存储每个页面的按钮状态
     QVector<ButtonGroup> *buttonGroups;
@@ -71,7 +73,24 @@ public:
     void updateTracerButtonText(int index, bool isVisible);
 
     //获取buttonGroups
-    QVector<ButtonGroup> *getButtonGroups();
+    // QVector<ButtonGroup> *getButtonGroups();
+
+public:
+signals:
+    void startButtonGroupClicked();
+    void clearButtonGroupClicked();
+    void tracerButtonGroupClicked();
+    void backButtonGroupClicked(int index);
+
+private slots:
+    void startButtonClicked();
+    void clearButtonClicked();
+    void tracerButtonClicked();
+    void back1ButtonClicked();
+    void back2ButtonClicked();
+    void back3ButtonClicked();
+    void back4ButtonClicked();
+    void back5ButtonClicked();
 };
 
 #endif // BUTTONGROUPMANAGER_H

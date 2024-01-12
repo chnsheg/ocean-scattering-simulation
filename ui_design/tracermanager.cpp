@@ -12,7 +12,8 @@ TracerManager::TracerManager(QCustomPlot *customPlot, QObject *parent)
         customPlot->graph(0),
         DataTracer)); //这行代码是关键，设置鼠标跟踪器，DataTracer是枚举类型，可以设置为XAxisTracer，YAxisTracer，DataTracer
     //m_TracerX = QSharedPointer<myTracer> (new myTracer(CustomPlot, CustomPlot->graph(0), XAxisTracer));
-    connect(customPlot, SIGNAL(mouseMove(QMouseEvent *)), this, SLOT(showTracer(QMouseEvent *)));
+    // connect(customPlot, SIGNAL(mouseMove(QMouseEvent *)), this, SLOT(showTracer(QMouseEvent *)));
+    m_TracerY->setVisible(false);
 }
 
 TracerManager *TracerManager::getTracerManagerInstance(QCustomPlot *customPlot)
@@ -54,11 +55,17 @@ void TracerManager::setTracerCustomPlot(QCustomPlot *customPlot)
         customPlot,
         customPlot->graph(0),
         DataTracer)); //这行代码是关键，设置鼠标跟踪器，DataTracer是枚举类型，可以设置为XAxisTracer，YAxisTracer，DataTracer
+    m_TracerY->setVisible(false);
 }
 
 void TracerManager::setTracerVisible(bool visible)
 {
     m_TracerY->setVisible(visible);
+}
+
+bool TracerManager::getTracerVisible()
+{
+    return m_TracerY->getVisible();
 }
 
 void TracerManager::showTracer(QMouseEvent *event, QVector<QColor> colorContainer)

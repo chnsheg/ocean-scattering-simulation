@@ -22,6 +22,7 @@ SOURCES += \
     pageplot.cpp \
     qcustomplot.cpp \
     readfiledata.cpp \
+    show1buttongroupmanager.cpp \
     spectrumdatagenerator.cpp \
     tracermanager.cpp \
     viewcontroller.cpp
@@ -39,6 +40,7 @@ HEADERS += \
     pageplot.h \
     qcustomplot.h \
     readfiledata.h \
+    show1buttongroupmanager.h \
     spectrumdatagenerator.h \
     tracermanager.h \
     viewcontroller.h

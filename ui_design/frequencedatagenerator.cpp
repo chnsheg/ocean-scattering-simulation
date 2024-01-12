@@ -2,7 +2,8 @@
 #include <QDebug>
 #include "readfiledata.h"
 
-QVector<double> *FrequenceDataGenerator::generateFrequenceData(InputDataListManager *inputDataList)
+QVector<double> *FrequenceDataGenerator::generateFrequenceData(
+    const InputDataListManager *inputDataList)
 {
     for (int i = 0; i < inputDataList->getInputDataList()->size(); i++) {
         qDebug() << "[INFO]: " << inputDataList->getInputDataList()->at(i) << " ";

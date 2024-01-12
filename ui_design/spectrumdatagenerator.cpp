@@ -2,7 +2,8 @@
 #include <QDebug>
 #include "readfiledata.h"
 
-QVector<double> *SpectrumDataGenerator::generateBriScatteringData(InputDataListManager *inputDataList)
+QVector<double> *SpectrumDataGenerator::generateBriScatteringData(
+    const InputDataListManager *inputDataList)
 {
     // Generate spectrum data
     // Assign x and y data accordingly
@@ -15,7 +16,8 @@ QVector<double> *SpectrumDataGenerator::generateBriScatteringData(InputDataListM
     return data;
 }
 
-QVector<double> *SpectrumDataGenerator::generateMieScatteringData(InputDataListManager *inputDataList)
+QVector<double> *SpectrumDataGenerator::generateMieScatteringData(
+    const InputDataListManager *inputDataList)
 {
     // Generate spectrum data
     // Assign x and y data accordingly
@@ -28,7 +30,8 @@ QVector<double> *SpectrumDataGenerator::generateMieScatteringData(InputDataListM
     return data;
 }
 
-QVector<double> *SpectrumDataGenerator::generateRayScatteringData(InputDataListManager *inputDataList)
+QVector<double> *SpectrumDataGenerator::generateRayScatteringData(
+    const InputDataListManager *inputDataList)
 {
     // Generate spectrum data
     // Assign x and y data accordingly

@@ -7,9 +7,9 @@
 class SpectrumDataGenerator
 {
 public:
-    static QVector<double> *generateBriScatteringData(InputDataListManager *inputDataList);
-    static QVector<double> *generateMieScatteringData(InputDataListManager *inputDataList);
-    static QVector<double> *generateRayScatteringData(InputDataListManager *inputDataList);
+    static QVector<double> *generateBriScatteringData(const InputDataListManager *inputDataList);
+    static QVector<double> *generateMieScatteringData(const InputDataListManager *inputDataList);
+    static QVector<double> *generateRayScatteringData(const InputDataListManager *inputDataList);
 };
 
 #endif // SPECTRUMDATAGENERATOR_H

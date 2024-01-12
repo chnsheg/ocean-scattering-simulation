@@ -8,7 +8,7 @@ class LaserDataGenerator
 {
 public:
     LaserDataGenerator();
-    static QVector<double> *generateLaserData(InputDataListManager *inputDataList);
+    static QVector<double> *generateLaserData(const InputDataListManager *inputDataList);
 };
 
 #endif // LASERDATAGENERATOR_H

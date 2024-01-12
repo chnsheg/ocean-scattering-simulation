@@ -2,7 +2,7 @@
 #include <QDebug>
 #include "readfiledata.h"
 
-QVector<double> *LaserDataGenerator::generateLaserData(InputDataListManager *inputDataList)
+QVector<double> *LaserDataGenerator::generateLaserData(const InputDataListManager *inputDataList)
 {
     for (int i = 0; i < inputDataList->getInputDataList()->size(); i++) {
         qDebug() << "[INFO]: " << inputDataList->getInputDataList()->at(i) << " ";

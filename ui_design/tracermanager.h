@@ -15,6 +15,7 @@ public:
     static void destroyTracerManagerInstance();
     void setTracerCustomPlot(QCustomPlot *customPlot);
     void setTracerVisible(bool visible);
+    bool getTracerVisible();
 public slots:
     void showTracer(QMouseEvent *event, QVector<QColor> colorVector);
 

@@ -28,7 +28,7 @@ void PageDataGenerator::destroyPageDataGeneratorInstance()
 PageDataGenerator::~PageDataGenerator() {}
 
 QVector<double> *PageDataGenerator::generateData(DataType dataType,
-                                                 InputDataListManager *inputDataList)
+                                                 const InputDataListManager *inputDataList)
 {
     QVector<double> *data = nullptr;
     switch (dataType) {
@@ -71,7 +71,7 @@ QVector<double> *PageDataGenerator::generateData(DataType dataType,
     return data;
 }
 
-void PageDataGenerator::generatePairOfData(int page_index, InputDataListManager *inputDataList)
+void PageDataGenerator::generatePairOfData(int page_index, const InputDataListManager *inputDataList)
 {
     QVector<QVector<double> *> *xDataVector;
     QVector<QVector<double> *> *yDataVector;
