@@ -7,6 +7,7 @@ TracerManager::TracerManager(QCustomPlot *customPlot, QObject *parent)
 {
     //在构造的过程中虽然有new，但是最后释放了，所以不需要手动释放
     //在构造的过程中虽然有new，但是最后释放了，所以不需要手动释放
+
     m_TracerY = QSharedPointer<myTracer>(new myTracer(
         customPlot,
         customPlot->graph(0),
@@ -60,12 +61,13 @@ void TracerManager::setTracerCustomPlot(QCustomPlot *customPlot)
 
 void TracerManager::setTracerVisible(bool visible)
 {
-    m_TracerY->setVisible(visible);
+    // m_TracerY->setVisible(visible);
+    m_TracerY.data()->setVisible(visible);
 }
 
 bool TracerManager::getTracerVisible()
 {
-    return m_TracerY->getVisible();
+    return m_TracerY.data()->getVisible();
 }
 
 void TracerManager::showTracer(QMouseEvent *event, QVector<QColor> colorContainer)

@@ -32,11 +32,16 @@ public:
     void refreshPlot();
     void clearPlot();
     void hidePlot();
+    void showPlot();
     int getCount();
+    bool getTracerStatus();
     void setLegendName(const QString &name, int curve_index);
     void createSecondAxis(double lower, double upper, QString label);
     void switchToSecondAxis(int index);
     bool changeTracerStatus();
+    void stopGenerateTracerEventSignal();
+    void startGenerateTracerEventSignal();
+
 public slots:
     void handleMouseMove(QMouseEvent *event);
 

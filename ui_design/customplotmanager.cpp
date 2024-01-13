@@ -16,14 +16,14 @@ CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot, QObject *parent)
     initCustomPlotStyle();
     //挂载轨迹管理器
     TracerManager::getTracerManagerInstance(_customPlot);
-    TracerManager::getTracerManagerInstance()->setTracerVisible(true);
-
-    connect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
-    void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector)
-        = &CustomPlotManager::mouseMoveSignal;
-    void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
-        = &TracerManager::showTracer;
-    connect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
+    TracerManager::getTracerManagerInstance()->setTracerVisible(false);
+    stopGenerateTracerEventSignal();
+    // connect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
+    // void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector)
+    //     = &CustomPlotManager::mouseMoveSignal;
+    // void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
+    //     = &TracerManager::showTracer;
+    // connect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
 }
 
 /**
@@ -105,11 +105,13 @@ void CustomPlotManager::setCustomPlot(QCustomPlot *newCustomPlot)
     // void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
     //     = &TracerManager::showTracer;
     // disconnect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
-    disconnect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
+    // disconnect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
+    TracerManager::getTracerManagerInstance()->setTracerVisible(false);
+    stopGenerateTracerEventSignal();
     customPlot = newCustomPlot;
     initCustomPlotStyle();
     TracerManager::getTracerManagerInstance()->setTracerCustomPlot(newCustomPlot);
-    connect(newCustomPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
+    // connect(newCustomPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
     // connect(this,
     //         &CustomPlotManager::mouseMoveSignal,
     //         TracerManager::getTracerManagerInstance(),
@@ -170,6 +172,7 @@ void CustomPlotManager::clearPlot()
 
 void CustomPlotManager::hidePlot()
 {
+    stopGenerateTracerEventSignal();
     //隐藏曲线显示
     for (int i = 0; i < customPlot->graphCount(); i++) {
         customPlot->graph(i)->setVisible(false);
@@ -178,12 +181,32 @@ void CustomPlotManager::hidePlot()
     customPlot->legend->setVisible(false);
     //隐藏跟踪点
     TracerManager::getTracerManagerInstance()->setTracerVisible(false);
+    stopGenerateTracerEventSignal();
+    customPlot->replot();
+}
+
+void CustomPlotManager::showPlot()
+{
+    //显示曲线显示
+    for (int i = 0; i < customPlot->graphCount(); i++) {
+        customPlot->graph(i)->setVisible(true);
+    }
+    //显示图例显示
+    customPlot->legend->setVisible(true);
+    //显示跟踪点
+    TracerManager::getTracerManagerInstance()->setTracerVisible(false);
+    stopGenerateTracerEventSignal();
     customPlot->replot();
 }
 
 int CustomPlotManager::getCount()
 {
     return customPlot->graphCount();
+}
+
+bool CustomPlotManager::getTracerStatus()
+{
+    return TracerManager::getTracerManagerInstance()->getTracerVisible();
 }
 
 /**
@@ -193,9 +216,35 @@ int CustomPlotManager::getCount()
  */
 bool CustomPlotManager::changeTracerStatus()
 {
-    bool visible = TracerManager::getTracerManagerInstance()->getTracerVisible();
+    bool visible = getTracerStatus();
     TracerManager::getTracerManagerInstance()->setTracerVisible(!visible);
-    return visible;
+    if (visible) {
+        stopGenerateTracerEventSignal();
+        refreshPlot();
+    } else {
+        startGenerateTracerEventSignal();
+    }
+    return !visible;
+}
+
+void CustomPlotManager::stopGenerateTracerEventSignal()
+{
+    disconnect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
+    void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector)
+        = &CustomPlotManager::mouseMoveSignal;
+    void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
+        = &TracerManager::showTracer;
+    disconnect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
+}
+
+void CustomPlotManager::startGenerateTracerEventSignal()
+{
+    connect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
+    void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector)
+        = &CustomPlotManager::mouseMoveSignal;
+    void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
+        = &TracerManager::showTracer;
+    connect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
 }
 
 /**

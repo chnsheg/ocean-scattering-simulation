@@ -96,21 +96,24 @@ QCustomPlot *ViewController::getCurrentPageCustomPlot()
 void ViewController::updateViewStyleSlot(int plotInterfaceIndex)
 {
     //判断plotInterfaceIndex是否为绘图界面,即是否在plotPageIndex中
-    if (std::find(std::begin(plotPageIndex), std::end(plotPageIndex), plotInterfaceIndex)) {
+    if (plotPageIndex.contains(plotInterfaceIndex)) {
+        ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
         //更新视图层中CustomPlot的样式
         CustomPlotManager::getCustomPlotManagerInstance()->setCustomPlot(getCurrentPageCustomPlot());
         CustomPlotManager::getCustomPlotManagerInstance()->initCustomPlotStyle();
         //更新视图层中ButtonGroups的样式和状态
         ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStyle(plotInterfaceIndex);
         ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStatus(plotInterfaceIndex);
+        //更新视图层中show1ButtonGroup的样式和状态
         Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()->initShow1ButtonGroupStyle();
         Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()->initShow1ButtonGroupStatus();
-    } else if (std::find(std::begin(showPageIndex), std::end(showPageIndex), plotInterfaceIndex)) {
+        CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+    } else if (showPageIndex.contains(plotInterfaceIndex)) {
         // Update view style accordingly
         ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
         //更新视图层中ButtonGroups的样式和状态
-        ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStyle(plotInterfaceIndex);
-        ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStatus(plotInterfaceIndex);
+        Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()->initShow1ButtonGroupStyle();
+        Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()->initShow1ButtonGroupStatus();
     }
 }
 
@@ -168,24 +171,26 @@ void ViewController::updateViewClearSlot()
     CustomPlotManager::getCustomPlotManagerInstance()->hidePlot();
     ButtonGroupsManager::getButtonGroupsManagerInstance()->updateButtonStatus(index,
                                                                               ButtonWaitForOpen);
+    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateTracerButtonText(index, false);
 }
 
 void ViewController::updateViewTracerSlot()
 {
     // Update tracer button accordingly
     int index = ui->stackedWidget->currentIndex();
-    bool isVisible = CustomPlotManager::getCustomPlotManagerInstance()->changeTracerStatus();
-    // Update tracer button accordingly
-    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateTracerButtonText(index, isVisible);
+    //更新Tracer状态s
+    bool isVisible = CustomPlotManager::getCustomPlotManagerInstance()->getTracerStatus();
+
+    // 更新按键状态
+    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateTracerButtonText(index, !isVisible);
+    CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+    CustomPlotManager::getCustomPlotManagerInstance()->changeTracerStatus();
 }
 
 void ViewController::updateViewPageSlot(int page_index)
 {
-    // Update view style accordingly
-    ui->stackedWidget->setCurrentIndex(page_index);
     // 更新视图层的样式
     updateViewStyleSlot(page_index);
-    // 更新视图层的按钮状态
 }
 
 void ViewController::startButtonClicked()
@@ -203,6 +208,9 @@ void ViewController::startButtonClicked()
         emit onStartButtonClicked(inputDataList);
     } else {
         // Update view style accordingly
+        CustomPlotManager::getCustomPlotManagerInstance()->showPlot();
+        bool visible = CustomPlotManager::getCustomPlotManagerInstance()->getTracerStatus();
+        qDebug() << "visible = " << visible;
     }
     int index = ui->stackedWidget->currentIndex();
     ButtonStatus ButtonWaitForClose = {false, true, true};

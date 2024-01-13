@@ -96,6 +96,7 @@ void ButtonGroupsManager::initButtonStatus(int index)
 {
     // Set button status accordingly
     updateButtonStatus(index, ButtonStatus(true, false, false));
+    updateTracerButtonText(index, false);
 }
 
 void ButtonGroupsManager::updateButtonStatus(int index, const ButtonStatus &status)

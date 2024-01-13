@@ -16,8 +16,8 @@ private:
     ViewController(Ui::MainWindow *_ui, QWidget *parent = nullptr);
 
 private:
-    const int plotPageIndex[5] = {1, 2, 3, 4, 5};
-    const int showPageIndex[1] = {0}; // 用于区分展示界面和绘图界面
+    const QList<int> plotPageIndex = {1, 2, 3, 4, 5};
+    const QList<int> showPageIndex = {0}; // 用于区分展示界面和绘图界面
 
 public:
     // 单例模式

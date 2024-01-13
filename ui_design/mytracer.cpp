@@ -120,6 +120,7 @@ void myTracer::setText(const QString &text, const QString &text1)
 }*/
 void myTracer::setVisible(bool visible)
 {
+    this->visible = visible;
     tracer->setVisible(visible);
     label->setVisible(visible);
     arrow->setVisible(visible);
@@ -127,7 +128,7 @@ void myTracer::setVisible(bool visible)
 
 bool myTracer::getVisible()
 {
-    return visible;
+    return this->visible;
 }
 
 void myTracer::updatePosition(double xValue, double yValue)
