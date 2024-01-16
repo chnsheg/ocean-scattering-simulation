@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QPushButton>
+#include "managerbase.h"
 
 class Show1ButtonGroup
 {
@@ -34,9 +35,12 @@ public:
     {}
 };
 
-class Show1ButtonGroupManager : public QObject
+enum ButtonId { ShowButton_1, ShowButton_2, ShowButton_3, ShowButton_4, ShowButton_5 };
+Q_DECLARE_METATYPE(ButtonId)
+class Show1ButtonGroupManager : public ManagerBase
 {
     Q_OBJECT
+
 private:
     static Show1ButtonGroupManager *Show1ButtonGroupManagerInstance;
     Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonGroup, QObject *parent = nullptr);
@@ -53,16 +57,18 @@ public:
     void initShow1ButtonGroupStatus();
 
     Show1ButtonGroup *getShow1ButtonGroup();
+    void onEventAction(const QString &event, int status, const QVariant &param);
 
 public:
 signals:
-    void show1ButtonGroupClicked(int index);
-private slots:
-    void show1ButtonClicked();
-    void show2ButtonClicked();
-    void show3ButtonClicked();
-    void show4ButtonClicked();
-    void show5ButtonClicked();
+    // void show1ButtonGroupClicked(int index);
+    void eventSignal(int param);
+    // private slots:
+    //     void show1ButtonClicked();
+    //     void show2ButtonClicked();
+    //     void show3ButtonClicked();
+    //     void show4ButtonClicked();
+    //     void show5ButtonClicked();
 };
 
 #endif // SHOW1BUTTONGROUPMANAGER_H

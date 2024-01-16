@@ -16,6 +16,7 @@ SOURCES += \
     laserdatagenerator.cpp \
     main.cpp \
     mainwindow.cpp \
+    managerbase.cpp \
     mycombobox.cpp \
     mytracer.cpp \
     pagedatagenerator.cpp \
@@ -34,6 +35,7 @@ HEADERS += \
     inputdatalistmanager.h \
     laserdatagenerator.h \
     mainwindow.h \
+    managerbase.h \
     mycombobox.h \
     mytracer.h \
     pagedatagenerator.h \

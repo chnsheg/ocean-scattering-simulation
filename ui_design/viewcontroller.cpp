@@ -33,10 +33,9 @@ ViewController::ViewController(Ui::MainWindow *_ui, QWidget *parent)
 
     void (ViewController::*switchShowPageButtonClicked)(int)
         = &ViewController::switchShowPageButtonClicked;
-    void (Show1ButtonGroupManager::*show1ButtonGroupClicked)(int)
-        = &Show1ButtonGroupManager::show1ButtonGroupClicked;
+    void (Show1ButtonGroupManager::*eventSignal)(int) = &Show1ButtonGroupManager::eventSignal;
     connect(Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance(),
-            show1ButtonGroupClicked,
+            eventSignal,
             this,
             switchShowPageButtonClicked);
 }
@@ -239,5 +238,5 @@ void ViewController::switchShowPageButtonClicked(int index)
 {
     // qDebug() << plotPageIndex[index - 1] << " ";
     //从当前展示界面退出
-    emit switchPageButtonClicked(plotPageIndex[index - 1]);
+    emit switchPageButtonClicked(plotPageIndex[index]);
 }

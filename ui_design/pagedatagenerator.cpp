@@ -98,4 +98,6 @@ void PageDataGenerator::generatePairOfData(int page_index, const InputDataListMa
         //         PageDataGenerator::generateData(PageDataGenerator::DataType::MieScattering,
         //                                         inputDataList));
     }
+    // 释放InputDataListManager内存
+    delete inputDataList;
 }
