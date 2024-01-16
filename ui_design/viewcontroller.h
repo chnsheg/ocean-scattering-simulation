@@ -2,7 +2,9 @@
 #define VIEWCONTROLLER_H
 
 #include <QWidget>
+#include "buttongroupmanager.h"
 #include "inputdatalistmanager.h"
+#include "show1buttongroupmanager.h"
 #include "ui_mainwindow.h"
 
 /***************************视图层***************************/
@@ -48,7 +50,9 @@ public slots:
     void updateViewClearSlot();
     void updateViewPageSlot(int page_index);
 
-private slots:
+private:
+    void handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId);
+    void handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId);
     void startButtonClicked();
     void clearButtonClicked();
     void tracerButtonClicked();

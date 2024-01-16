@@ -1,7 +1,7 @@
 #include "buttongroupmanager.h"
 
 ButtonGroupsManager::ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups, QObject *parent)
-    : QObject(parent)
+    : ManagerBase(parent)
     , buttonGroups(_buttonGroups)
 {
     buttonGroups = _buttonGroups;
@@ -9,39 +9,27 @@ ButtonGroupsManager::ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups, QO
     initButtonStatus(1);
 
     for (int i = 0; i < buttonGroups->size(); i++) {
-        connect(buttonGroups->at(i).showButton,
-                &QPushButton::clicked,
-                this,
-                &ButtonGroupsManager::startButtonClicked);
-        connect(buttonGroups->at(i).clearButton,
-                &QPushButton::clicked,
-                this,
-                &ButtonGroupsManager::clearButtonClicked);
-        connect(buttonGroups->at(i).tracerButton,
-                &QPushButton::clicked,
-                this,
-                &ButtonGroupsManager::tracerButtonClicked);
+        addEvent(QString("start%1ButtonClicked").arg(i + 1),
+                 QString("start%1ButtonClicked").arg(i + 1),
+                 buttonGroups->at(i).showButton,
+                 &QPushButton::clicked,
+                 ButtonGroupId::showButton);
+        addEvent(QString("clear%1ButtonClicked").arg(i + 1),
+                 QString("clear%1ButtonClicked").arg(i + 1),
+                 buttonGroups->at(i).clearButton,
+                 &QPushButton::clicked,
+                 ButtonGroupId::clearButton);
+        addEvent(QString("tracer%1ButtonClicked").arg(i + 1),
+                 QString("tracer%1ButtonClicked").arg(i + 1),
+                 buttonGroups->at(i).tracerButton,
+                 &QPushButton::clicked,
+                 ButtonGroupId::tracerButton);
+        addEvent(QString("back%1ButtonClicked").arg(i + 1),
+                 QString("back%1ButtonClicked").arg(i + 1),
+                 buttonGroups->at(i).backButton,
+                 &QPushButton::clicked,
+                 static_cast<ButtonGroupId>(static_cast<int>(ButtonGroupId::back1Button) + i));
     }
-    connect(buttonGroups->at(0).backButton,
-            &QPushButton::clicked,
-            this,
-            &ButtonGroupsManager::back1ButtonClicked);
-    connect(buttonGroups->at(1).backButton,
-            &QPushButton::clicked,
-            this,
-            &ButtonGroupsManager::back2ButtonClicked);
-    connect(buttonGroups->at(2).backButton,
-            &QPushButton::clicked,
-            this,
-            &ButtonGroupsManager::back3ButtonClicked);
-    connect(buttonGroups->at(3).backButton,
-            &QPushButton::clicked,
-            this,
-            &ButtonGroupsManager::back4ButtonClicked);
-    connect(buttonGroups->at(4).backButton,
-            &QPushButton::clicked,
-            this,
-            &ButtonGroupsManager::back5ButtonClicked);
 }
 
 ButtonGroupsManager *ButtonGroupsManager::ButtonGroupsManagerInstance = nullptr;
@@ -113,51 +101,60 @@ void ButtonGroupsManager::updateTracerButtonText(int index, bool isVisible)
     buttonGroups->at(index - 1).tracerButton->setText(isVisible ? "隐藏光标" : "显示光标");
 }
 
+void ButtonGroupsManager::onEventAction(const QString &event, int status, const QVariant &param)
+{
+    // ButtonGroupId buttonGroupId = static_cast<ButtonGroupId>(param.toInt());
+    ButtonGroupId buttonId = param.value<ButtonGroupId>();
+    emit eventSignal(buttonId);
+    // qDebug() << "ButtonGroupsManager::onEventAction \n";
+    // qDebug() << "event: " << event << "status: " << status << "param: " << param;
+}
+
 //获取buttonGroups
 // QVector<ButtonGroup> *ButtonGroupsManager::getButtonGroups()
 // {
 //     return buttonGroups;
 // }
 
-void ButtonGroupsManager::startButtonClicked()
-{
-    // qDebug() << "startButtonClicked";
-    emit startButtonGroupClicked();
-}
+// void ButtonGroupsManager::startButtonClicked()
+// {
+//     // qDebug() << "startButtonClicked";
+//     emit startButtonGroupClicked();
+// }
 
-void ButtonGroupsManager::clearButtonClicked()
-{
-    // qDebug() << "clearButtonClicked";
-    emit clearButtonGroupClicked();
-}
+// void ButtonGroupsManager::clearButtonClicked()
+// {
+//     // qDebug() << "clearButtonClicked";
+//     emit clearButtonGroupClicked();
+// }
 
-void ButtonGroupsManager::tracerButtonClicked()
-{
-    // qDebug() << "tracerButtonClicked";
-    emit tracerButtonGroupClicked();
-}
+// void ButtonGroupsManager::tracerButtonClicked()
+// {
+//     // qDebug() << "tracerButtonClicked";
+//     emit tracerButtonGroupClicked();
+// }
 
-void ButtonGroupsManager::back1ButtonClicked()
-{
-    emit backButtonGroupClicked(1); //第几个绘图界面的返回按键返回到第几个展示界面
-}
+// void ButtonGroupsManager::back1ButtonClicked()
+// {
+//     emit backButtonGroupClicked(1); //第几个绘图界面的返回按键返回到第几个展示界面
+// }
 
-void ButtonGroupsManager::back2ButtonClicked()
-{
-    emit backButtonGroupClicked(1);
-}
+// void ButtonGroupsManager::back2ButtonClicked()
+// {
+//     emit backButtonGroupClicked(1);
+// }
 
-void ButtonGroupsManager::back3ButtonClicked()
-{
-    emit backButtonGroupClicked(1);
-}
+// void ButtonGroupsManager::back3ButtonClicked()
+// {
+//     emit backButtonGroupClicked(1);
+// }
 
-void ButtonGroupsManager::back4ButtonClicked()
-{
-    emit backButtonGroupClicked(1);
-}
+// void ButtonGroupsManager::back4ButtonClicked()
+// {
+//     emit backButtonGroupClicked(1);
+// }
 
-void ButtonGroupsManager::back5ButtonClicked()
-{
-    emit backButtonGroupClicked(1);
-}
+// void ButtonGroupsManager::back5ButtonClicked()
+// {
+//     emit backButtonGroupClicked(1);
+// }

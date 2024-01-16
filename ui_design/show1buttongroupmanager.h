@@ -35,8 +35,8 @@ public:
     {}
 };
 
-enum ButtonId { ShowButton_1, ShowButton_2, ShowButton_3, ShowButton_4, ShowButton_5 };
-Q_DECLARE_METATYPE(ButtonId)
+enum Show1ButtonGroupId { ShowButton_1, ShowButton_2, ShowButton_3, ShowButton_4, ShowButton_5 };
+Q_DECLARE_METATYPE(Show1ButtonGroupId)
 class Show1ButtonGroupManager : public ManagerBase
 {
     Q_OBJECT
@@ -61,14 +61,7 @@ public:
 
 public:
 signals:
-    // void show1ButtonGroupClicked(int index);
-    void eventSignal(int param);
-    // private slots:
-    //     void show1ButtonClicked();
-    //     void show2ButtonClicked();
-    //     void show3ButtonClicked();
-    //     void show4ButtonClicked();
-    //     void show5ButtonClicked();
+    void eventSignal(Show1ButtonGroupId param);
 };
 
 #endif // SHOW1BUTTONGROUPMANAGER_H

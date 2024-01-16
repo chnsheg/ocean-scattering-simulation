@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QPushButton>
 #include <QVector>
+#include "managerbase.h"
 
 struct ButtonStatus // 控制按钮组状态结构体 按键组：控制显示状态的一组按键
 {
@@ -44,7 +45,19 @@ public:
     {}
 };
 
-class ButtonGroupsManager : public QObject
+enum ButtonGroupId {
+    showButton,
+    clearButton,
+    tracerButton,
+    back1Button,
+    back2Button,
+    back3Button,
+    back4Button,
+    back5Button,
+};
+Q_DECLARE_METATYPE(ButtonGroupId)
+
+class ButtonGroupsManager : public ManagerBase
 {
     Q_OBJECT
 private:
@@ -75,22 +88,11 @@ public:
     //获取buttonGroups
     // QVector<ButtonGroup> *getButtonGroups();
 
+    void onEventAction(const QString &event, int status, const QVariant &param);
+
 public:
 signals:
-    void startButtonGroupClicked();
-    void clearButtonGroupClicked();
-    void tracerButtonGroupClicked();
-    void backButtonGroupClicked(int index);
-
-private slots:
-    void startButtonClicked();
-    void clearButtonClicked();
-    void tracerButtonClicked();
-    void back1ButtonClicked();
-    void back2ButtonClicked();
-    void back3ButtonClicked();
-    void back4ButtonClicked();
-    void back5ButtonClicked();
+    void eventSignal(ButtonGroupId param); //用来区分返回按键索引的信号
 };
 
 #endif // BUTTONGROUPMANAGER_H

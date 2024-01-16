@@ -1,7 +1,5 @@
 #include "viewcontroller.h"
-#include "buttongroupmanager.h"
 #include "customplotmanager.h"
-#include "show1buttongroupmanager.h"
 
 ViewController *ViewController::viewControllerInstance = nullptr;
 
@@ -10,34 +8,23 @@ ViewController::ViewController(Ui::MainWindow *_ui, QWidget *parent)
     , ui(_ui)
 {
     //连接信号和槽
+    void (ButtonGroupsManager::*buttonGroupsManagerEventSignal)(ButtonGroupId)
+        = &ButtonGroupsManager::eventSignal;
+    void (ViewController::*handleButtonGroupManager)(ButtonGroupId)
+        = &ViewController::handleButtonGroupManagerEvent;
     connect(ButtonGroupsManager::getButtonGroupsManagerInstance(),
-            SIGNAL(startButtonGroupClicked()),
+            buttonGroupsManagerEventSignal,
             this,
-            SLOT(startButtonClicked()));
-    connect(ButtonGroupsManager::getButtonGroupsManagerInstance(),
-            &ButtonGroupsManager::clearButtonGroupClicked,
-            this,
-            &ViewController::clearButtonClicked);
-    connect(ButtonGroupsManager::getButtonGroupsManagerInstance(),
-            &ButtonGroupsManager::tracerButtonGroupClicked,
-            this,
-            &ViewController::tracerButtonClicked);
-    void (ViewController::*switchPlotPageButtonClicked)(int)
-        = &ViewController::switchPlotPageButtonClicked;
-    void (ButtonGroupsManager::*backButtonGroupClicked)(int)
-        = &ButtonGroupsManager::backButtonGroupClicked;
-    connect(ButtonGroupsManager::getButtonGroupsManagerInstance(),
-            backButtonGroupClicked,
-            this,
-            switchPlotPageButtonClicked);
+            handleButtonGroupManager);
 
-    void (ViewController::*switchShowPageButtonClicked)(int)
-        = &ViewController::switchShowPageButtonClicked;
-    void (Show1ButtonGroupManager::*eventSignal)(int) = &Show1ButtonGroupManager::eventSignal;
+    void (ViewController::*handleShow1ButtonGroupManagerEvent)(Show1ButtonGroupId)
+        = &ViewController::handleShow1ButtonGroupManagerEvent;
+    void (Show1ButtonGroupManager::*eventSignal)(Show1ButtonGroupId)
+        = &Show1ButtonGroupManager::eventSignal;
     connect(Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance(),
             eventSignal,
             this,
-            switchShowPageButtonClicked);
+            handleShow1ButtonGroupManagerEvent);
 }
 
 //在此挂载视图层
@@ -217,6 +204,36 @@ void ViewController::startButtonClicked()
                                                                               ButtonWaitForClose);
 }
 
+void ViewController::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
+{
+    switch (buttonGroupId) {
+    case showButton:
+        startButtonClicked();
+        break;
+    case clearButton:
+        clearButtonClicked();
+        break;
+    case tracerButton:
+        tracerButtonClicked();
+        break;
+    case back1Button:
+        switchPageButtonClicked(0);
+        break;
+    case back2Button:
+        switchPageButtonClicked(1);
+        break;
+    case back3Button:
+        switchPageButtonClicked(2);
+        break;
+    case back4Button:
+        switchPageButtonClicked(3);
+        break;
+    case back5Button:
+        switchPageButtonClicked(4);
+        break;
+    }
+}
+
 void ViewController::clearButtonClicked()
 {
     emit onClearButtonClicked();
@@ -231,7 +248,28 @@ void ViewController::switchPlotPageButtonClicked(int index)
     // 从当前绘图界面退出
     //清除customPlot数据
     CustomPlotManager::getCustomPlotManagerInstance()->clearPlot();
-    emit switchPageButtonClicked(showPageIndex[index - 1]);
+    emit switchPageButtonClicked(showPageIndex[index]);
+}
+
+void ViewController::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId)
+{
+    switch (buttonGroupId) {
+    case ShowButton_1:
+        switchShowPageButtonClicked(0);
+        break;
+    case ShowButton_2:
+        switchShowPageButtonClicked(0);
+        break;
+    case ShowButton_3:
+        switchShowPageButtonClicked(0);
+        break;
+    case ShowButton_4:
+        switchShowPageButtonClicked(0);
+        break;
+    case ShowButton_5:
+        switchShowPageButtonClicked(0);
+        break;
+    }
 }
 
 void ViewController::switchShowPageButtonClicked(int index)

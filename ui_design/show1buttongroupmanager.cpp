@@ -12,27 +12,27 @@ Show1ButtonGroupManager::Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonG
              "show1ButtonClicked",
              show1ButtonGroup->showButton_1,
              &QPushButton::clicked,
-             ButtonId::ShowButton_1);
+             Show1ButtonGroupId::ShowButton_1);
     addEvent("show2ButtonClicked",
              "show2ButtonClicked",
              show1ButtonGroup->showButton_2,
              &QPushButton::clicked,
-             ButtonId::ShowButton_2);
+             Show1ButtonGroupId::ShowButton_2);
     addEvent("show3ButtonClicked",
              "show3ButtonClicked",
              show1ButtonGroup->showButton_3,
              &QPushButton::clicked,
-             ButtonId::ShowButton_3);
+             Show1ButtonGroupId::ShowButton_3);
     addEvent("show4ButtonClicked",
              "show4ButtonClicked",
              show1ButtonGroup->showButton_4,
              &QPushButton::clicked,
-             ButtonId::ShowButton_4);
+             Show1ButtonGroupId::ShowButton_4);
     addEvent("show5ButtonClicked",
              "show5ButtonClicked",
              show1ButtonGroup->showButton_5,
              &QPushButton::clicked,
-             ButtonId::ShowButton_5);
+             Show1ButtonGroupId::ShowButton_5);
 }
 
 Show1ButtonGroupManager *Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance(
@@ -79,31 +79,6 @@ Show1ButtonGroup *Show1ButtonGroupManager::getShow1ButtonGroup()
 
 void Show1ButtonGroupManager::onEventAction(const QString &event, int status, const QVariant &param)
 {
-    int buttonId = param.toInt();
+    Show1ButtonGroupId buttonId = param.value<Show1ButtonGroupId>();
     emit eventSignal(buttonId);
 }
-
-// void Show1ButtonGroupManager::show1ButtonClicked()
-// {
-//     emit show1ButtonGroupClicked(2);
-// }
-
-// void Show1ButtonGroupManager::show2ButtonClicked()
-// {
-//     emit show1ButtonGroupClicked(2);
-// }
-
-// void Show1ButtonGroupManager::show3ButtonClicked()
-// {
-//     emit show1ButtonGroupClicked(3);
-// }
-
-// void Show1ButtonGroupManager::show4ButtonClicked()
-// {
-//     emit show1ButtonGroupClicked(4);
-// }
-
-// void Show1ButtonGroupManager::show5ButtonClicked()
-// {
-//     emit show1ButtonGroupClicked(5);
-// }
