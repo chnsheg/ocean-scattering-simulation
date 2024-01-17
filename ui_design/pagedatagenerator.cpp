@@ -1,4 +1,5 @@
 #include "pagedatagenerator.h"
+#include "fizeaudatagenerator.h"
 #include "frequencedatagenerator.h"
 #include "laserdatagenerator.h"
 #include "spectrumdatagenerator.h"
@@ -50,12 +51,12 @@ QVector<double> *PageDataGenerator::generateData(DataType dataType,
     // case DataType::UnderwaterScattering:
     //     UnderwaterScatteringDataGenerator::generateUnderwaterScatteringData(data);
     //     break;
-    // case DataType::FizeauInstrument:
-    //     FizeauInstrumentDataGenerator::generateFizeauInstrumentData(data);
-    //     break;
-    // case DataType::FizeauSpectra:
-    //     FizeauSpectraDataGenerator::generateFizeauSpectraData(data);
-    //     break;
+    case DataType::FizeauInstrument:
+        data = FizeauDataGenerator::generateFizeauData(inputDataList);
+        break;
+    case DataType::FizeauSpectra:
+        data = FizeauDataGenerator::generateSpectrumAfterFizeau(inputDataList);
+        break;
     // case DataType::PMTFrequency:
     //     PMTFrequencyDataGenerator::generatePMTFrequencyData(data);
     //     break;
@@ -97,6 +98,29 @@ void PageDataGenerator::generatePairOfData(int page_index, const InputDataListMa
         //     yDataVector->append(
         //         PageDataGenerator::generateData(PageDataGenerator::DataType::MieScattering,
         //                                         inputDataList));
+    case 4:
+        xDataVector->append(generateData(DataType::Frequence, inputDataList));
+        yDataVector->append(generateData(DataType::FizeauInstrument, inputDataList));
+        yDataVector->append(generateData(DataType::FizeauSpectra, inputDataList));
+        emit dataGenerated(xDataVector, yDataVector, 2);
+        break;
+        // case 5:
+        //     xDataVector->append(
+        //         PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
+        //     yDataVector->append(
+        //         PageDataGenerator::generateData(PageDataGenerator::DataType::UnderwaterScattering,
+        //                                         inputDataList));
+        //     emit dataGenerated(xDataVector, yDataVector, 1);
+        //     break;
+        // case 6:
+        //     xDataVector->append(
+        //         PageDataGenerator::generateData(PageDataGenerator::DataType::PMTFrequency,
+        //                                         inputDataList));
+        //     yDataVector->append(
+        //         PageDataGenerator::generateData(PageDataGenerator::DataType::PMTEnergy,
+        //                                         inputDataList));
+        //     emit dataGenerated(xDataVector, yDataVector, 1);
+        //     break;
     }
     // 释放InputDataListManager内存
     delete inputDataList;

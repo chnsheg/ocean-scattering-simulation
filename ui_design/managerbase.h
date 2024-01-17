@@ -41,7 +41,20 @@ public:
         return action;
     }
 
-protected:
+    //取消事件订阅
+    template<typename Func1, typename Func2>
+    void removeEvent(const QString &event, Func1 item, Func2 slot)
+    {
+        auto action = getEvent(event);
+        if (action) {
+            QObject::disconnect(item, std::move(slot), action, &QAction::triggered);
+            delete action;
+        }
+        d_eventActions.remove(event);
+        d_eventParams.remove(event);
+    }
+
+protected slots:
     virtual void onEventAction(const QString &event, int status, const QVariant &param)
         = 0; //统一的事件处理的接口
 

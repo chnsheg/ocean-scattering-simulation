@@ -11,6 +11,7 @@ CONFIG += c++15.9
 SOURCES += \
     buttongroupmanager.cpp \
     customplotmanager.cpp \
+    fizeaudatagenerator.cpp \
     frequencedatagenerator.cpp \
     inputdatalistmanager.cpp \
     laserdatagenerator.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
 HEADERS += \
     buttongroupmanager.h \
     customplotmanager.h \
+    fizeaudatagenerator.h \
     frequencedatagenerator.h \
     inputdatalistmanager.h \
     laserdatagenerator.h \

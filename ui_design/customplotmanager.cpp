@@ -1,13 +1,20 @@
 #include "customplotmanager.h"
 #include "tracermanager.h"
 
-CustomPlotManager *CustomPlotManager::customPlotManagerInstance = nullptr;
+/**为什么此处不继承MangerBase类？
+ * 实际上是可以继承ManagerBase类的，但是此处不继承的原因是：
+ * 1.CustomPlotManager的同类事件比较少；
+ * 2.大部分产生的事件在内部已经完成处理，不需要再向外部传递；
+ * 3.基本没有涉及业务逻辑，只是对QCustomPlot进行了一些简单的封装；
+ */
 
+CustomPlotManager *CustomPlotManager::customPlotManagerInstance = nullptr;
 /**
  * @brief CustomPlotManager::CustomPlotManager
  * @param _customPlot
  * 构造函数
  */
+
 CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot, QObject *parent)
     : QObject(parent)
     , customPlot(_customPlot)
@@ -100,22 +107,11 @@ void CustomPlotManager::initCustomPlotStyle()
  */
 void CustomPlotManager::setCustomPlot(QCustomPlot *newCustomPlot)
 {
-    // void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector)
-    //     = &CustomPlotManager::mouseMoveSignal;
-    // void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
-    //     = &TracerManager::showTracer;
-    // disconnect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
-    // disconnect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
     TracerManager::getTracerManagerInstance()->setTracerVisible(false);
     stopGenerateTracerEventSignal();
     customPlot = newCustomPlot;
     initCustomPlotStyle();
     TracerManager::getTracerManagerInstance()->setTracerCustomPlot(newCustomPlot);
-    // connect(newCustomPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
-    // connect(this,
-    //         &CustomPlotManager::mouseMoveSignal,
-    //         TracerManager::getTracerManagerInstance(),
-    //         &TracerManager::showTracer);
 }
 
 /**

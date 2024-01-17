@@ -217,19 +217,19 @@ void ViewController::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
         tracerButtonClicked();
         break;
     case back1Button:
-        switchPageButtonClicked(0);
+        switchPlotPageButtonClicked(0);
         break;
     case back2Button:
-        switchPageButtonClicked(1);
+        switchPlotPageButtonClicked(0);
         break;
     case back3Button:
-        switchPageButtonClicked(2);
+        switchPlotPageButtonClicked(0);
         break;
     case back4Button:
-        switchPageButtonClicked(3);
+        switchPlotPageButtonClicked(0);
         break;
     case back5Button:
-        switchPageButtonClicked(4);
+        switchPlotPageButtonClicked(0);
         break;
     }
 }
@@ -258,16 +258,16 @@ void ViewController::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId butto
         switchShowPageButtonClicked(0);
         break;
     case ShowButton_2:
-        switchShowPageButtonClicked(0);
+        switchShowPageButtonClicked(1);
         break;
     case ShowButton_3:
-        switchShowPageButtonClicked(0);
+        switchShowPageButtonClicked(2);
         break;
     case ShowButton_4:
-        switchShowPageButtonClicked(0);
+        switchShowPageButtonClicked(3);
         break;
     case ShowButton_5:
-        switchShowPageButtonClicked(0);
+        switchShowPageButtonClicked(4);
         break;
     }
 }
