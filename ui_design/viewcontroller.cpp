@@ -130,13 +130,14 @@ void ViewController::updateViewCurveSlot(const QVector<double> *xData,
         CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
         break;
     case 4:
-        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("Fizeau仪器函数", 0);
-        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("通过Fizeau后的光谱", 1);
         //判断是否需要创建第二个坐标轴
         if (curve_index == 0) {
             CustomPlotManager::getCustomPlotManagerInstance()->createSecondAxis(0, 1, "y2");
             CustomPlotManager::getCustomPlotManagerInstance()->switchToSecondAxis(0);
         } else if (curve_index == 1) {
+            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("Fizeau仪器函数", 0);
+            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("通过Fizeau后的光谱",
+                                                                             1);
             CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
         }
         break;

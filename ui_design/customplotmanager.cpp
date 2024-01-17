@@ -261,15 +261,19 @@ void CustomPlotManager::createSecondAxis(double lower, double upper, QString lab
         customPlot->yAxis2->setLabelColor(QColor(226, 60, 255));
         //设置第二条坐标轴可以拖动
         customPlot->yAxis2->setLabel(label);
-        // make left and bottom axes always transfer their ranges to right and top axes:
-        connect(customPlot->xAxis,
-                SIGNAL(rangeChanged(QCPRange)),
-                customPlot->xAxis2,
-                SLOT(setRange(QCPRange)));
+        //等比例移动第二条坐标轴
+        void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
         connect(customPlot->yAxis,
-                SIGNAL(rangeChanged(QCPRange)),
+                rangeChanged,
                 customPlot->yAxis2,
-                SLOT(setRange(QCPRange)));
+                [=](const QCPRange &newRange, const QCPRange &oldRange) {
+                    QCPRange y2Range = customPlot->yAxis2->range();
+                    double dy = newRange.lower - oldRange.lower;
+                    double rate = dy / (oldRange.upper - oldRange.lower);
+                    double y2Lower = y2Range.lower + rate * (y2Range.upper - y2Range.lower);
+                    double y2Upper = y2Range.upper + rate * (y2Range.upper - y2Range.lower);
+                    customPlot->yAxis2->setRange(y2Lower, y2Upper);
+                });
     }
 }
 
