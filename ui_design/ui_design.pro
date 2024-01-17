@@ -9,45 +9,45 @@ CONFIG += c++15.9
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    buttongroupmanager.cpp \
-    customplotmanager.cpp \
-    fizeaudatagenerator.cpp \
-    frequencedatagenerator.cpp \
-    inputdatalistmanager.cpp \
-    laserdatagenerator.cpp \
+    controller/pageplot.cpp \
     main.cpp \
     mainwindow.cpp \
-    managerbase.cpp \
-    mycombobox.cpp \
-    mytracer.cpp \
-    pagedatagenerator.cpp \
-    pageplot.cpp \
-    qcustomplot.cpp \
-    readfiledata.cpp \
-    show1buttongroupmanager.cpp \
-    spectrumdatagenerator.cpp \
-    tracermanager.cpp \
-    viewcontroller.cpp
+    manager/buttongroupmanager.cpp \
+    manager/customplotmanager.cpp \
+    manager/inputdatalistmanager.cpp \
+    manager/managerbase.cpp \
+    manager/show1buttongroupmanager.cpp \
+    manager/tracermanager.cpp \
+    model/fizeaudatagenerator.cpp \
+    model/frequencedatagenerator.cpp \
+    model/laserdatagenerator.cpp \
+    model/pagedatagenerator.cpp \
+    model/spectrumdatagenerator.cpp \
+    module/mycombobox.cpp \
+    module/mytracer.cpp \
+    module/qcustomplot.cpp \
+    utils/readfiledata.cpp \
+    view/viewcontroller.cpp \
 
 HEADERS += \
-    buttongroupmanager.h \
-    customplotmanager.h \
-    fizeaudatagenerator.h \
-    frequencedatagenerator.h \
-    inputdatalistmanager.h \
-    laserdatagenerator.h \
+    controller/pageplot.h \
     mainwindow.h \
-    managerbase.h \
-    mycombobox.h \
-    mytracer.h \
-    pagedatagenerator.h \
-    pageplot.h \
-    qcustomplot.h \
-    readfiledata.h \
-    show1buttongroupmanager.h \
-    spectrumdatagenerator.h \
-    tracermanager.h \
-    viewcontroller.h
+    manager/buttongroupmanager.h \
+    manager/customplotmanager.h \
+    manager/inputdatalistmanager.h \
+    manager/managerbase.h \
+    manager/show1buttongroupmanager.h \
+    manager/tracermanager.h \
+    model/fizeaudatagenerator.h \
+    model/frequencedatagenerator.h \
+    model/laserdatagenerator.h \
+    model/pagedatagenerator.h \
+    model/spectrumdatagenerator.h \
+    module/mycombobox.h \
+    module/mytracer.h \
+    module/qcustomplot.h \
+    utils/readfiledata.h \
+    view/viewcontroller.h \
 
 FORMS += \
     mainwindow.ui
