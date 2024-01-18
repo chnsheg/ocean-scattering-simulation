@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QPushButton>
 #include <QVector>
+#include "base/singleton.h"
 #include "manager/managerbase.h"
 
 struct ButtonStatus // 控制按钮组状态结构体 按键组：控制显示状态的一组按键
@@ -60,6 +61,8 @@ Q_DECLARE_METATYPE(ButtonGroupId)
 class ButtonGroupsManager : public ManagerBase
 {
     Q_OBJECT
+    SINGLETON(ButtonGroupsManager);
+
 private:
     // 单例模式构造
     static ButtonGroupsManager *ButtonGroupsManagerInstance;
@@ -69,12 +72,12 @@ private:
     QVector<ButtonGroup> *buttonGroups;
 
 public:
-    // 单例模式获取实例
-    static ButtonGroupsManager *getButtonGroupsManagerInstance(QVector<ButtonGroup> *buttonGroups);
-    static ButtonGroupsManager *getButtonGroupsManagerInstance();
+    // // 单例模式获取实例
+    // static ButtonGroupsManager *getButtonGroupsManagerInstance(QVector<ButtonGroup> *buttonGroups);
+    // static ButtonGroupsManager *getButtonGroupsManagerInstance();
 
-    // 释放实例
-    static void destroyButtonGroupsManagerInstance();
+    // // 释放实例
+    // static void destroyButtonGroupsManagerInstance();
 
     //初始化按钮样式
     void initButtonStyle(int index);

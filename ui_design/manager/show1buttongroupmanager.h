@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QPushButton>
+#include "base/singleton.h"
 #include "manager/managerbase.h"
 
 class Show1ButtonGroup
@@ -40,18 +41,13 @@ Q_DECLARE_METATYPE(Show1ButtonGroupId)
 class Show1ButtonGroupManager : public ManagerBase
 {
     Q_OBJECT
+    SINGLETON(Show1ButtonGroupManager)
 
 private:
-    static Show1ButtonGroupManager *Show1ButtonGroupManagerInstance;
     Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonGroup, QObject *parent = nullptr);
     Show1ButtonGroup *show1ButtonGroup;
 
 public:
-    static Show1ButtonGroupManager *getShow1ButtonGroupManagerInstance(
-        Show1ButtonGroup *_show1ButtonGroup);
-    static Show1ButtonGroupManager *getShow1ButtonGroupManagerInstance();
-    static void destroyShow1ButtonGroupManagerInstance();
-
     //保留接口
     void initShow1ButtonGroupStyle();
     void initShow1ButtonGroupStatus();

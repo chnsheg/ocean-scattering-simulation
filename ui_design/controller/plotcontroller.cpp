@@ -25,35 +25,35 @@ PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObje
 // TODO: Add destructor
 PlotController::~PlotController() {}
 
-PlotController *PlotController::getPlotControllerInstance(PlotView *_view, PageDataGenerator *_model)
-{
-    if (plotControllerInstance == nullptr) {
-        plotControllerInstance = new PlotController(_view, _model);
-    }
-    return plotControllerInstance;
-}
+// PlotController *PlotController::getPlotControllerInstance(PlotView *_view, PageDataGenerator *_model)
+// {
+//     if (plotControllerInstance == nullptr) {
+//         plotControllerInstance = new PlotController(_view, _model);
+//     }
+//     return plotControllerInstance;
+// }
 
-PlotController *PlotController::getPlotControllerInstance()
-{
-    if (plotControllerInstance != nullptr) {
-        return plotControllerInstance;
-    } else {
-        return nullptr;
-    }
-}
+// PlotController *PlotController::getPlotControllerInstance()
+// {
+//     if (plotControllerInstance != nullptr) {
+//         return plotControllerInstance;
+//     } else {
+//         return nullptr;
+//     }
+// }
 
-void PlotController::destroyPlotControllerInstance()
-{
-    if (plotControllerInstance != nullptr) {
-        delete plotControllerInstance;
-        plotControllerInstance = nullptr;
-    }
-}
+// void PlotController::destroyPlotControllerInstance()
+// {
+//     if (plotControllerInstance != nullptr) {
+//         delete plotControllerInstance;
+//         plotControllerInstance = nullptr;
+//     }
+// }
 
 void PlotController::handleStartButtonClicked(const InputDataListManager *inputDataList)
 {
     //获取当前页面索引
-    int page_index = PlotView::getPlotViewInstance()->getCurrentPageIndex();
+    int page_index = Singleton<PlotView>::getInstance()->getCurrentPageIndex();
     model->generatePairOfData(page_index, inputDataList);
 }
 

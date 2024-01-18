@@ -5,11 +5,13 @@
 
 #include <QObject>
 #include <QVector>
+#include "base/singleton.h"
 #include "manager/inputdatalistmanager.h"
 
 class PageDataGenerator : public QObject
 {
     Q_OBJECT
+    SINGLETON(PageDataGenerator)
 public:
     enum DataType {
         Frequence,
@@ -25,9 +27,6 @@ public:
         // Add more page types if needed
     };
 
-    static PageDataGenerator *getPageDataGeneratorInstance();
-    static void destroyPageDataGeneratorInstance();
-
     QVector<double> *generateData(DataType dataType, const InputDataListManager *inputDataList);
 
 signals:
@@ -39,11 +38,6 @@ public slots:
 
 private:
     explicit PageDataGenerator(QObject *parent = nullptr);
-    ~PageDataGenerator();
-    static PageDataGenerator *pageDataGeneratorInstance;
-    // 禁止拷贝构造和赋值操作
-    PageDataGenerator(const PageDataGenerator &other) = delete;
-    PageDataGenerator &operator=(const PageDataGenerator &other) = delete;
 };
 
 #endif // PAGEDATAGENERATOR_H

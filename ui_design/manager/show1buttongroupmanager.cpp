@@ -1,7 +1,5 @@
 #include "manager/show1buttongroupmanager.h"
 
-Show1ButtonGroupManager *Show1ButtonGroupManager::Show1ButtonGroupManagerInstance = nullptr;
-
 Show1ButtonGroupManager::Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonGroup,
                                                  QObject *parent)
     : ManagerBase(parent)
@@ -35,30 +33,14 @@ Show1ButtonGroupManager::Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonG
              Show1ButtonGroupId::ShowButton_5);
 }
 
-Show1ButtonGroupManager *Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance(
-    Show1ButtonGroup *_show1ButtonGroup)
-{
-    if (!Show1ButtonGroupManagerInstance) {
-        Show1ButtonGroupManagerInstance = new Show1ButtonGroupManager(_show1ButtonGroup);
-    }
-    return Show1ButtonGroupManagerInstance;
-}
+Show1ButtonGroupManager::Show1ButtonGroupManager() {}
 
-Show1ButtonGroupManager *Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()
+Show1ButtonGroupManager::~Show1ButtonGroupManager()
 {
-    if (!Show1ButtonGroupManagerInstance) {
-        // 在这里你可能想要抛出一个异常或者采取其他处理方式
-        // 因为没有指定 QCustomPlot 的实例，单例模式无法正常工作
-        return nullptr;
-    }
-    return Show1ButtonGroupManagerInstance;
-}
-
-void Show1ButtonGroupManager::destroyShow1ButtonGroupManagerInstance()
-{
-    if (Show1ButtonGroupManagerInstance) {
-        delete Show1ButtonGroupManagerInstance;
-        Show1ButtonGroupManagerInstance = nullptr;
+    //释放内存
+    if (show1ButtonGroup != nullptr) {
+        delete show1ButtonGroup;
+        show1ButtonGroup = nullptr;
     }
 }
 

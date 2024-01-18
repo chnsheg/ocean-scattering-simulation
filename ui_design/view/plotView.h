@@ -2,6 +2,7 @@
 #define PLOTVIEW_H
 
 #include <QWidget>
+#include "base/singleton.h"
 #include "manager/buttongroupmanager.h"
 #include "manager/inputdatalistmanager.h"
 #include "manager/show1buttongroupmanager.h"
@@ -11,9 +12,10 @@
 
 class PlotView : public QWidget
 {
+    SINGLETON(PlotView)
     Q_OBJECT
 private:
-    static PlotView *plotViewInstance; // 全局唯一的ViewController实例
+    // static PlotView *plotViewInstance; // 全局唯一的ViewController实例
     Ui::MainWindow *ui;
     PlotView(Ui::MainWindow *_ui, QWidget *parent = nullptr);
 
@@ -23,9 +25,9 @@ private:
 
 public:
     // 单例模式
-    static PlotView *getPlotViewInstance(Ui::MainWindow *_ui);
-    static PlotView *getPlotViewInstance();
-    static void destroyPlotViewInstance();
+    // static PlotView *getPlotViewInstance(Ui::MainWindow *_ui);
+    // static PlotView *getPlotViewInstance();
+    // static void destroyPlotViewInstance();
 
     // 管理视图层属性和样式
     int getCurrentPageIndex();

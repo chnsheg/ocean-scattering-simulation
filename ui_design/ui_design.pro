@@ -9,6 +9,7 @@ CONFIG += c++15.9
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    base/singleton.cpp \
     controller/plotcontroller.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
     view/plotView.cpp
 
 HEADERS += \
+    base/singleton.h \
     controller/plotcontroller.h \
     mainwindow.h \
     manager/buttongroupmanager.h \
@@ -60,3 +62,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     data_csv.qrc \
     images.qrc
+
+DISTFILES += \
+    base/singleton.cpp.txt \
+    base/singleton.h.txt

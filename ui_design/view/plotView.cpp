@@ -2,34 +2,11 @@
 #include "manager/customplotmanager.h"
 #include "view/plotView.h"
 
-PlotView *PlotView::plotViewInstance = nullptr;
+// PlotView *PlotView::plotViewInstance = nullptr;
 
 PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     : QWidget(parent)
     , ui(_ui)
-{
-    //连接信号和槽
-    void (ButtonGroupsManager::*buttonGroupsManagerEventSignal)(ButtonGroupId)
-        = &ButtonGroupsManager::eventSignal;
-    void (PlotView::*handleButtonGroupManager)(ButtonGroupId)
-        = &PlotView::handleButtonGroupManagerEvent;
-    connect(ButtonGroupsManager::getButtonGroupsManagerInstance(),
-            buttonGroupsManagerEventSignal,
-            this,
-            handleButtonGroupManager);
-
-    void (PlotView::*handleShow1ButtonGroupManagerEvent)(Show1ButtonGroupId)
-        = &PlotView::handleShow1ButtonGroupManagerEvent;
-    void (Show1ButtonGroupManager::*eventSignal)(Show1ButtonGroupId)
-        = &Show1ButtonGroupManager::eventSignal;
-    connect(Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance(),
-            eventSignal,
-            this,
-            handleShow1ButtonGroupManagerEvent);
-}
-
-//在此挂载视图层
-PlotView *PlotView::getPlotViewInstance(Ui::MainWindow *_ui)
 {
     //挂载ButtonGroups单例
     QVector<ButtonGroup> *buttonGroup = new QVector<ButtonGroup>;
@@ -38,36 +15,42 @@ PlotView *PlotView::getPlotViewInstance(Ui::MainWindow *_ui)
     buttonGroup->push_back(ButtonGroup(_ui->show3, _ui->clear3, _ui->tracer3, _ui->back3));
     buttonGroup->push_back(ButtonGroup(_ui->show4, _ui->clear4, _ui->tracer4, _ui->back4));
     buttonGroup->push_back(ButtonGroup(_ui->show5, _ui->clear5, _ui->tracer5, _ui->back5));
-    ButtonGroupsManager::getButtonGroupsManagerInstance(buttonGroup);
+    // ButtonGroupsManager::getButtonGroupsManagerInstance(buttonGroup);
+    Singleton<ButtonGroupsManager>::getInstance(buttonGroup);
     //挂载show1ButtonGroupManager单例
     Show1ButtonGroup *show1ButtonGroup = new Show1ButtonGroup(_ui->homeButton_1,
                                                               _ui->homeButton_2,
                                                               _ui->homeButton_3,
                                                               _ui->homeButton_4,
                                                               _ui->homeButton_5);
-    Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance(show1ButtonGroup);
+    Singleton<Show1ButtonGroupManager>::getInstance(show1ButtonGroup);
 
     //挂载CustomPlotManager单例
-    CustomPlotManager::getCustomPlotManagerInstance(_ui->customPlot1);
-    if (plotViewInstance == nullptr)
-        plotViewInstance = new PlotView(_ui);
-    return plotViewInstance;
+    // Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
+    Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
+    //连接信号和槽
+    void (ButtonGroupsManager::*buttonGroupsManagerEventSignal)(ButtonGroupId)
+        = &ButtonGroupsManager::eventSignal;
+    void (PlotView::*handleButtonGroupManager)(ButtonGroupId)
+        = &PlotView::handleButtonGroupManagerEvent;
+    connect(Singleton<ButtonGroupsManager>::getInstance(),
+            buttonGroupsManagerEventSignal,
+            this,
+            handleButtonGroupManager);
+
+    void (PlotView::*handleShow1ButtonGroupManagerEvent)(Show1ButtonGroupId)
+        = &PlotView::handleShow1ButtonGroupManagerEvent;
+    void (Show1ButtonGroupManager::*eventSignal)(Show1ButtonGroupId)
+        = &Show1ButtonGroupManager::eventSignal;
+    connect(Singleton<Show1ButtonGroupManager>::getInstance(),
+            eventSignal,
+            this,
+            handleShow1ButtonGroupManagerEvent);
 }
 
-PlotView *PlotView::getPlotViewInstance()
-{
-    if (plotViewInstance == nullptr)
-        // 在这里你可能想要抛出一个异常或者采取其他处理方式
-        // 因为没有指定 Ui::MainWindow 的实例，单例模式无法正常工作
-        return nullptr;
-    return plotViewInstance;
-}
+PlotView::PlotView() {} //必须要在此处实现一个空的构造，否则会报错
 
-void PlotView::destroyPlotViewInstance()
-{
-    if (plotViewInstance != nullptr)
-        delete plotViewInstance;
-}
+PlotView::~PlotView() {}
 
 int PlotView::getCurrentPageIndex()
 {
@@ -86,21 +69,21 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
     if (plotPageIndex.contains(plotInterfaceIndex)) {
         ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
         //更新视图层中CustomPlot的样式
-        CustomPlotManager::getCustomPlotManagerInstance()->setCustomPlot(getCurrentPageCustomPlot());
-        CustomPlotManager::getCustomPlotManagerInstance()->initCustomPlotStyle();
+        Singleton<CustomPlotManager>::getInstance()->setCustomPlot(getCurrentPageCustomPlot());
+        Singleton<CustomPlotManager>::getInstance()->initCustomPlotStyle();
         //更新视图层中ButtonGroups的样式和状态
-        ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStyle(plotInterfaceIndex);
-        ButtonGroupsManager::getButtonGroupsManagerInstance()->initButtonStatus(plotInterfaceIndex);
+        Singleton<ButtonGroupsManager>::getInstance()->initButtonStyle(plotInterfaceIndex);
+        Singleton<ButtonGroupsManager>::getInstance()->initButtonStatus(plotInterfaceIndex);
         //更新视图层中show1ButtonGroup的样式和状态
-        Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()->initShow1ButtonGroupStyle();
-        Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()->initShow1ButtonGroupStatus();
-        CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+        Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStyle();
+        Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStatus();
+        Singleton<CustomPlotManager>::getInstance()->refreshPlot();
     } else if (showPageIndex.contains(plotInterfaceIndex)) {
         // Update view style accordingly
         ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
         //更新视图层中ButtonGroups的样式和状态
-        Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()->initShow1ButtonGroupStyle();
-        Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance()->initShow1ButtonGroupStatus();
+        Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStyle();
+        Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStatus();
     }
 }
 
@@ -110,41 +93,39 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
 {
     // Update view curve accordingly
     int index = ui->stackedWidget->currentIndex();
-    CustomPlotManager::getCustomPlotManagerInstance()->plotGraphToBuffer(xData, yData, curve_index);
+    Singleton<CustomPlotManager>::getInstance()->plotGraphToBuffer(xData, yData, curve_index);
     //根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
     switch (index) {
     case 1:
-        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("激光光谱", 0);
-        CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+        Singleton<CustomPlotManager>::getInstance()->setLegendName("激光光谱", 0);
+        Singleton<CustomPlotManager>::getInstance()->refreshPlot();
         break;
     case 2:
         if (curve_index == 2) {
-            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("布里渊散射曲线", 0);
-            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("米散射曲线", 1);
-            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("瑞利散射曲线", 2);
-            CustomPlotManager::getCustomPlotManagerInstance()
-                ->refreshPlot(); //在最后一条曲线绘制完毕后刷新
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("布里渊散射曲线", 0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("米散射曲线", 1);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("瑞利散射曲线", 2);
+            Singleton<CustomPlotManager>::getInstance()->refreshPlot(); //在最后一条曲线绘制完毕后刷新
         }
         break;
     case 3:
-        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("水下散射光谱", 0);
-        CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+        Singleton<CustomPlotManager>::getInstance()->setLegendName("水下散射光谱", 0);
+        Singleton<CustomPlotManager>::getInstance()->refreshPlot();
         break;
     case 4:
         //判断是否需要创建第二个坐标轴
         if (curve_index == 0) {
-            CustomPlotManager::getCustomPlotManagerInstance()->createSecondAxis(0, 1, "y2");
-            CustomPlotManager::getCustomPlotManagerInstance()->switchToSecondAxis(0);
+            Singleton<CustomPlotManager>::getInstance()->createSecondAxis(0, 1, "y2");
+            Singleton<CustomPlotManager>::getInstance()->switchToSecondAxis(0);
         } else if (curve_index == 1) {
-            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("Fizeau仪器函数", 0);
-            CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("通过Fizeau后的光谱",
-                                                                             1);
-            CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Fizeau仪器函数", 0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("通过Fizeau后的光谱", 1);
+            Singleton<CustomPlotManager>::getInstance()->refreshPlot();
         }
         break;
     case 5:
-        CustomPlotManager::getCustomPlotManagerInstance()->setLegendName("PMT能谱", 0);
-        CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
+        Singleton<CustomPlotManager>::getInstance()->setLegendName("PMT能谱", 0);
+        Singleton<CustomPlotManager>::getInstance()->refreshPlot();
         break;
     default:
         break;
@@ -156,10 +137,9 @@ void PlotView::updateViewClearSlot()
     int index = ui->stackedWidget->currentIndex();
     ButtonStatus ButtonWaitForOpen = {true, false, false}; // 等待开启显示的按钮状态结构体
     // Clear view curve accordingly
-    CustomPlotManager::getCustomPlotManagerInstance()->hidePlot();
-    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateButtonStatus(index,
-                                                                              ButtonWaitForOpen);
-    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateTracerButtonText(index, false);
+    Singleton<CustomPlotManager>::getInstance()->hidePlot();
+    Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForOpen);
+    Singleton<ButtonGroupsManager>::getInstance()->updateTracerButtonText(index, false);
 }
 
 void PlotView::updateViewTracerSlot()
@@ -167,12 +147,12 @@ void PlotView::updateViewTracerSlot()
     // Update tracer button accordingly
     int index = ui->stackedWidget->currentIndex();
     //更新Tracer状态s
-    bool isVisible = CustomPlotManager::getCustomPlotManagerInstance()->getTracerStatus();
+    bool isVisible = Singleton<CustomPlotManager>::getInstance()->getTracerStatus();
 
     // 更新按键状态
-    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateTracerButtonText(index, !isVisible);
-    CustomPlotManager::getCustomPlotManagerInstance()->refreshPlot();
-    CustomPlotManager::getCustomPlotManagerInstance()->changeTracerStatus();
+    Singleton<ButtonGroupsManager>::getInstance()->updateTracerButtonText(index, !isVisible);
+    Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+    Singleton<CustomPlotManager>::getInstance()->changeTracerStatus();
 }
 
 void PlotView::updateViewPageSlot(int page_index)
@@ -183,7 +163,7 @@ void PlotView::updateViewPageSlot(int page_index)
 
 void PlotView::startButtonClicked()
 {
-    if (CustomPlotManager::getCustomPlotManagerInstance()->getCount() == 0) {
+    if (Singleton<CustomPlotManager>::getInstance()->getCount() == 0) {
         // Get input data from view
         InputDataListManager *inputDataList = new InputDataListManager();
         // for (int i = 0; i < ui.inputLineEdits.size(); ++i) {
@@ -196,14 +176,13 @@ void PlotView::startButtonClicked()
         emit onStartButtonClicked(inputDataList);
     } else {
         // Update view style accordingly
-        CustomPlotManager::getCustomPlotManagerInstance()->showPlot();
-        bool visible = CustomPlotManager::getCustomPlotManagerInstance()->getTracerStatus();
+        Singleton<CustomPlotManager>::getInstance()->showPlot();
+        bool visible = Singleton<CustomPlotManager>::getInstance()->getTracerStatus();
         qDebug() << "visible = " << visible;
     }
     int index = ui->stackedWidget->currentIndex();
     ButtonStatus ButtonWaitForClose = {false, true, true};
-    ButtonGroupsManager::getButtonGroupsManagerInstance()->updateButtonStatus(index,
-                                                                              ButtonWaitForClose);
+    Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
 }
 
 void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
@@ -249,7 +228,7 @@ void PlotView::switchPlotPageButtonClicked(int index)
 {
     // 从当前绘图界面退出
     //清除customPlot数据
-    CustomPlotManager::getCustomPlotManagerInstance()->clearPlot();
+    Singleton<CustomPlotManager>::getInstance()->clearPlot();
     emit switchPageButtonClicked(showPageIndex[index]);
 }
 

@@ -4,27 +4,9 @@
 #include "model/laserdatagenerator.h"
 #include "model/spectrumdatagenerator.h"
 
-PageDataGenerator *PageDataGenerator::pageDataGeneratorInstance = nullptr;
-
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
 {}
-
-PageDataGenerator *PageDataGenerator::getPageDataGeneratorInstance()
-{
-    if (pageDataGeneratorInstance == nullptr) {
-        pageDataGeneratorInstance = new PageDataGenerator();
-    }
-    return pageDataGeneratorInstance;
-}
-
-void PageDataGenerator::destroyPageDataGeneratorInstance()
-{
-    if (pageDataGeneratorInstance != nullptr) {
-        delete pageDataGeneratorInstance;
-        pageDataGeneratorInstance = nullptr;
-    }
-}
 
 PageDataGenerator::~PageDataGenerator() {}
 

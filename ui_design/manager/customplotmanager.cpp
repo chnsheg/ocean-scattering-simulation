@@ -8,7 +8,7 @@
  * 3.基本没有涉及业务逻辑，只是对QCustomPlot进行了一些简单的封装；
  */
 
-CustomPlotManager *CustomPlotManager::customPlotManagerInstance = nullptr;
+// CustomPlotManager *CustomPlotManager::customPlotManagerInstance = nullptr;
 /**
  * @brief CustomPlotManager::CustomPlotManager
  * @param _customPlot
@@ -22,8 +22,8 @@ CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot, QObject *parent)
     // 初始化 QCustomPlot 样式
     initCustomPlotStyle();
     //挂载轨迹管理器
-    TracerManager::getTracerManagerInstance(_customPlot);
-    TracerManager::getTracerManagerInstance()->setTracerVisible(false);
+    Singleton<TracerManager>::getInstance(_customPlot);
+    Singleton<TracerManager>::getInstance()->setTracerVisible(false);
     stopGenerateTracerEventSignal();
     // connect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
     // void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector)
@@ -33,34 +33,45 @@ CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot, QObject *parent)
     // connect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
 }
 
-/**
- * @brief CustomPlotManager::getInstance
- * @param customPlot
- * @return
- * 获取 QCustomPlotManager 实例
- */
-CustomPlotManager *CustomPlotManager::getCustomPlotManagerInstance(QCustomPlot *customPlot)
+CustomPlotManager::CustomPlotManager() {}
+
+CustomPlotManager::~CustomPlotManager()
 {
-    if (!customPlotManagerInstance) {
-        customPlotManagerInstance = new CustomPlotManager(customPlot);
+    //释放内存
+    if (customPlot != nullptr) {
+        delete customPlot;
+        customPlot = nullptr;
     }
-    return customPlotManagerInstance;
 }
 
-/**
- * @brief CustomPlotManager::getInstance
- * @return
- * 获取 QCustomPlotManager 实例
- */
-CustomPlotManager *CustomPlotManager::getCustomPlotManagerInstance()
-{
-    if (!customPlotManagerInstance) {
-        // 在这里你可能想要抛出一个异常或者采取其他处理方式
-        // 因为没有指定 QCustomPlot 的实例，单例模式无法正常工作
-        return nullptr;
-    }
-    return customPlotManagerInstance;
-}
+// /**
+//  * @brief CustomPlotManager::getInstance
+//  * @param customPlot
+//  * @return
+//  * 获取 QCustomPlotManager 实例
+//  */
+// CustomPlotManager *CustomPlotManager::getCustomPlotManagerInstance(QCustomPlot *customPlot)
+// {
+//     if (!customPlotManagerInstance) {
+//         customPlotManagerInstance = new CustomPlotManager(customPlot);
+//     }
+//     return customPlotManagerInstance;
+// }
+
+// /**
+//  * @brief CustomPlotManager::getInstance
+//  * @return
+//  * 获取 QCustomPlotManager 实例
+//  */
+// CustomPlotManager *CustomPlotManager::getCustomPlotManagerInstance()
+// {
+//     if (!customPlotManagerInstance) {
+//         // 在这里你可能想要抛出一个异常或者采取其他处理方式
+//         // 因为没有指定 QCustomPlot 的实例，单例模式无法正常工作
+//         return nullptr;
+//     }
+//     return customPlotManagerInstance;
+// }
 
 /**
  * @brief CustomPlotManager::initCustomPlotStyle
@@ -107,11 +118,11 @@ void CustomPlotManager::initCustomPlotStyle()
  */
 void CustomPlotManager::setCustomPlot(QCustomPlot *newCustomPlot)
 {
-    TracerManager::getTracerManagerInstance()->setTracerVisible(false);
+    Singleton<TracerManager>::getInstance()->setTracerVisible(false);
     stopGenerateTracerEventSignal();
     customPlot = newCustomPlot;
     initCustomPlotStyle();
-    TracerManager::getTracerManagerInstance()->setTracerCustomPlot(newCustomPlot);
+    Singleton<TracerManager>::getInstance()->setTracerCustomPlot(newCustomPlot);
 }
 
 /**
@@ -176,7 +187,7 @@ void CustomPlotManager::hidePlot()
     //隐藏图例显示
     customPlot->legend->setVisible(false);
     //隐藏跟踪点
-    TracerManager::getTracerManagerInstance()->setTracerVisible(false);
+    Singleton<TracerManager>::getInstance()->setTracerVisible(false);
     stopGenerateTracerEventSignal();
     customPlot->replot();
 }
@@ -190,7 +201,7 @@ void CustomPlotManager::showPlot()
     //显示图例显示
     customPlot->legend->setVisible(true);
     //显示跟踪点
-    TracerManager::getTracerManagerInstance()->setTracerVisible(false);
+    Singleton<TracerManager>::getInstance()->setTracerVisible(false);
     stopGenerateTracerEventSignal();
     customPlot->replot();
 }
@@ -202,7 +213,7 @@ int CustomPlotManager::getCount()
 
 bool CustomPlotManager::getTracerStatus()
 {
-    return TracerManager::getTracerManagerInstance()->getTracerVisible();
+    return Singleton<TracerManager>::getInstance()->getTracerVisible();
 }
 
 /**
@@ -213,7 +224,7 @@ bool CustomPlotManager::getTracerStatus()
 bool CustomPlotManager::changeTracerStatus()
 {
     bool visible = getTracerStatus();
-    TracerManager::getTracerManagerInstance()->setTracerVisible(!visible);
+    Singleton<TracerManager>::getInstance()->setTracerVisible(!visible);
     if (visible) {
         stopGenerateTracerEventSignal();
         refreshPlot();
@@ -230,7 +241,7 @@ void CustomPlotManager::stopGenerateTracerEventSignal()
         = &CustomPlotManager::mouseMoveSignal;
     void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
         = &TracerManager::showTracer;
-    disconnect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
+    disconnect(this, mouseMoveSignal, Singleton<TracerManager>::getInstance(), showTracer);
 }
 
 void CustomPlotManager::startGenerateTracerEventSignal()
@@ -240,7 +251,7 @@ void CustomPlotManager::startGenerateTracerEventSignal()
         = &CustomPlotManager::mouseMoveSignal;
     void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
         = &TracerManager::showTracer;
-    connect(this, mouseMoveSignal, TracerManager::getTracerManagerInstance(), showTracer);
+    connect(this, mouseMoveSignal, Singleton<TracerManager>::getInstance(), showTracer);
 }
 
 /**

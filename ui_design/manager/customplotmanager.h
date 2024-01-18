@@ -2,11 +2,13 @@
 #define CUSTOMPLOTMANAGER_H
 
 #include <QObject>
+#include "base/singleton.h"
 #include "module/qcustomplot.h"
 
 class CustomPlotManager : public QObject
 {
     Q_OBJECT
+    SINGLETON(CustomPlotManager)
 public:
     QVector<QColor> colorContainer = {QColor(226, 60, 255),
                                       QColor(64, 224, 208),
@@ -18,9 +20,6 @@ public:
                                       QColor(0, 0, 255),
                                       QColor(255, 255, 255),
                                       QColor(0, 0, 0)};
-
-    static CustomPlotManager *getCustomPlotManagerInstance(QCustomPlot *customPlot);
-    static CustomPlotManager *getCustomPlotManagerInstance();
 
     void setCustomPlot(QCustomPlot *newCustomPlot);
     QCustomPlot *getCustomPlot();
@@ -51,8 +50,6 @@ signals:
 
 private:
     CustomPlotManager(QCustomPlot *_customPlot, QObject *parent = nullptr);
-
-    static CustomPlotManager *customPlotManagerInstance;
     QCustomPlot *customPlot;
 };
 

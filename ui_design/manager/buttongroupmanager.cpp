@@ -32,32 +32,43 @@ ButtonGroupsManager::ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups, QO
     }
 }
 
-ButtonGroupsManager *ButtonGroupsManager::ButtonGroupsManagerInstance = nullptr;
+ButtonGroupsManager::ButtonGroupsManager() {}
 
-ButtonGroupsManager *ButtonGroupsManager::getButtonGroupsManagerInstance(
-    QVector<ButtonGroup> *buttonGroups)
+ButtonGroupsManager::~ButtonGroupsManager()
 {
-    if (ButtonGroupsManagerInstance == nullptr)
-        ButtonGroupsManagerInstance = new ButtonGroupsManager(buttonGroups);
-    return ButtonGroupsManagerInstance;
-}
-
-ButtonGroupsManager *ButtonGroupsManager::getButtonGroupsManagerInstance()
-{
-    if (ButtonGroupsManagerInstance == nullptr)
-        // 在这里你可能想要抛出一个异常或者采取其他处理方式
-        // 因为没有指定 QCustomPlot 的实例，单例模式无法正常工作
-        return nullptr;
-    return ButtonGroupsManagerInstance;
-}
-
-void ButtonGroupsManager::destroyButtonGroupsManagerInstance()
-{
-    if (ButtonGroupsManagerInstance != nullptr) {
-        delete ButtonGroupsManagerInstance;
-        ButtonGroupsManagerInstance = nullptr;
+    //释放内存
+    if (buttonGroups != nullptr) {
+        delete buttonGroups;
+        buttonGroups = nullptr;
     }
 }
+
+// ButtonGroupsManager *ButtonGroupsManager::ButtonGroupsManagerInstance = nullptr;
+
+// ButtonGroupsManager *ButtonGroupsManager::getButtonGroupsManagerInstance(
+//     QVector<ButtonGroup> *buttonGroups)
+// {
+//     if (ButtonGroupsManagerInstance == nullptr)
+//         ButtonGroupsManagerInstance = new ButtonGroupsManager(buttonGroups);
+//     return ButtonGroupsManagerInstance;
+// }
+
+// ButtonGroupsManager *ButtonGroupsManager::getButtonGroupsManagerInstance()
+// {
+//     if (ButtonGroupsManagerInstance == nullptr)
+//         // 在这里你可能想要抛出一个异常或者采取其他处理方式
+//         // 因为没有指定 QCustomPlot 的实例，单例模式无法正常工作
+//         return nullptr;
+//     return ButtonGroupsManagerInstance;
+// }
+
+// void ButtonGroupsManager::destroyButtonGroupsManagerInstance()
+// {
+//     if (ButtonGroupsManagerInstance != nullptr) {
+//         delete ButtonGroupsManagerInstance;
+//         ButtonGroupsManagerInstance = nullptr;
+//     }
+// }
 
 //TODO:初始化按钮样式
 void ButtonGroupsManager::initButtonStyle(int index)

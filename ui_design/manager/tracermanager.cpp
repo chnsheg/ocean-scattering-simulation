@@ -1,7 +1,5 @@
 #include "manager/tracermanager.h"
 
-TracerManager *TracerManager::tracerManagerInstance = nullptr;
-
 TracerManager::TracerManager(QCustomPlot *customPlot, QObject *parent)
     : QObject(parent)
 {
@@ -17,31 +15,7 @@ TracerManager::TracerManager(QCustomPlot *customPlot, QObject *parent)
     m_TracerY->setVisible(false);
 }
 
-TracerManager *TracerManager::getTracerManagerInstance(QCustomPlot *customPlot)
-{
-    if (!tracerManagerInstance) {
-        tracerManagerInstance = new TracerManager(customPlot);
-    }
-    return tracerManagerInstance;
-}
-
-TracerManager *TracerManager::getTracerManagerInstance()
-{
-    if (!tracerManagerInstance) {
-        // 在这里你可能想要抛出一个异常或者采取其他处理方式
-        // 因为没有指定 QCustomPlot 的实例，单例模式无法正常工作
-        return nullptr;
-    }
-    return tracerManagerInstance;
-}
-
-void TracerManager::destroyTracerManagerInstance()
-{
-    if (tracerManagerInstance) {
-        delete tracerManagerInstance;
-        tracerManagerInstance = nullptr;
-    }
-}
+TracerManager::TracerManager() {}
 
 TracerManager::~TracerManager()
 {
