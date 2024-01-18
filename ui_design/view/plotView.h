@@ -1,5 +1,5 @@
-#ifndef VIEWCONTROLLER_H
-#define VIEWCONTROLLER_H
+#ifndef PLOTVIEW_H
+#define PLOTVIEW_H
 
 #include <QWidget>
 #include "manager/buttongroupmanager.h"
@@ -9,13 +9,13 @@
 
 /***************************视图层***************************/
 
-class ViewController : public QWidget
+class PlotView : public QWidget
 {
     Q_OBJECT
 private:
-    static ViewController *viewControllerInstance; // 全局唯一的ViewController实例
+    static PlotView *plotViewInstance; // 全局唯一的ViewController实例
     Ui::MainWindow *ui;
-    ViewController(Ui::MainWindow *_ui, QWidget *parent = nullptr);
+    PlotView(Ui::MainWindow *_ui, QWidget *parent = nullptr);
 
 private:
     const QList<int> plotPageIndex = {1, 2, 3, 4, 5};
@@ -23,9 +23,9 @@ private:
 
 public:
     // 单例模式
-    static ViewController *getViewControllerInstance(Ui::MainWindow *_ui);
-    static ViewController *getViewControllerInstance();
-    static void destroyViewControllerInstance();
+    static PlotView *getPlotViewInstance(Ui::MainWindow *_ui);
+    static PlotView *getPlotViewInstance();
+    static void destroyPlotViewInstance();
 
     // 管理视图层属性和样式
     int getCurrentPageIndex();
@@ -60,4 +60,4 @@ private:
     void switchShowPageButtonClicked(int index);
 };
 
-#endif // VIEWCONTROLLER_H
+#endif // PLOTVIEW_H

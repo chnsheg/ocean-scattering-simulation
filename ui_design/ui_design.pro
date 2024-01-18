@@ -9,7 +9,7 @@ CONFIG += c++15.9
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    controller/pageplot.cpp \
+    controller/plotcontroller.cpp \
     main.cpp \
     mainwindow.cpp \
     manager/buttongroupmanager.cpp \
@@ -27,10 +27,10 @@ SOURCES += \
     module/mytracer.cpp \
     module/qcustomplot.cpp \
     utils/readfiledata.cpp \
-    view/viewcontroller.cpp \
+    view/plotView.cpp
 
 HEADERS += \
-    controller/pageplot.h \
+    controller/plotcontroller.h \
     mainwindow.h \
     manager/buttongroupmanager.h \
     manager/customplotmanager.h \
@@ -47,7 +47,7 @@ HEADERS += \
     module/mytracer.h \
     module/qcustomplot.h \
     utils/readfiledata.h \
-    view/viewcontroller.h \
+    view/plotView.h
 
 FORMS += \
     mainwindow.ui

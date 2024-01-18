@@ -1,24 +1,25 @@
-#include "view/viewcontroller.h"
+#include "view/plotView.h"
 #include "manager/customplotmanager.h"
+#include "view/plotView.h"
 
-ViewController *ViewController::viewControllerInstance = nullptr;
+PlotView *PlotView::plotViewInstance = nullptr;
 
-ViewController::ViewController(Ui::MainWindow *_ui, QWidget *parent)
+PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     : QWidget(parent)
     , ui(_ui)
 {
     //连接信号和槽
     void (ButtonGroupsManager::*buttonGroupsManagerEventSignal)(ButtonGroupId)
         = &ButtonGroupsManager::eventSignal;
-    void (ViewController::*handleButtonGroupManager)(ButtonGroupId)
-        = &ViewController::handleButtonGroupManagerEvent;
+    void (PlotView::*handleButtonGroupManager)(ButtonGroupId)
+        = &PlotView::handleButtonGroupManagerEvent;
     connect(ButtonGroupsManager::getButtonGroupsManagerInstance(),
             buttonGroupsManagerEventSignal,
             this,
             handleButtonGroupManager);
 
-    void (ViewController::*handleShow1ButtonGroupManagerEvent)(Show1ButtonGroupId)
-        = &ViewController::handleShow1ButtonGroupManagerEvent;
+    void (PlotView::*handleShow1ButtonGroupManagerEvent)(Show1ButtonGroupId)
+        = &PlotView::handleShow1ButtonGroupManagerEvent;
     void (Show1ButtonGroupManager::*eventSignal)(Show1ButtonGroupId)
         = &Show1ButtonGroupManager::eventSignal;
     connect(Show1ButtonGroupManager::getShow1ButtonGroupManagerInstance(),
@@ -28,7 +29,7 @@ ViewController::ViewController(Ui::MainWindow *_ui, QWidget *parent)
 }
 
 //在此挂载视图层
-ViewController *ViewController::getViewControllerInstance(Ui::MainWindow *_ui)
+PlotView *PlotView::getPlotViewInstance(Ui::MainWindow *_ui)
 {
     //挂载ButtonGroups单例
     QVector<ButtonGroup> *buttonGroup = new QVector<ButtonGroup>;
@@ -48,38 +49,38 @@ ViewController *ViewController::getViewControllerInstance(Ui::MainWindow *_ui)
 
     //挂载CustomPlotManager单例
     CustomPlotManager::getCustomPlotManagerInstance(_ui->customPlot1);
-    if (viewControllerInstance == nullptr)
-        viewControllerInstance = new ViewController(_ui);
-    return viewControllerInstance;
+    if (plotViewInstance == nullptr)
+        plotViewInstance = new PlotView(_ui);
+    return plotViewInstance;
 }
 
-ViewController *ViewController::getViewControllerInstance()
+PlotView *PlotView::getPlotViewInstance()
 {
-    if (viewControllerInstance == nullptr)
+    if (plotViewInstance == nullptr)
         // 在这里你可能想要抛出一个异常或者采取其他处理方式
         // 因为没有指定 Ui::MainWindow 的实例，单例模式无法正常工作
         return nullptr;
-    return viewControllerInstance;
+    return plotViewInstance;
 }
 
-void ViewController::destroyViewControllerInstance()
+void PlotView::destroyPlotViewInstance()
 {
-    if (viewControllerInstance != nullptr)
-        delete viewControllerInstance;
+    if (plotViewInstance != nullptr)
+        delete plotViewInstance;
 }
 
-int ViewController::getCurrentPageIndex()
+int PlotView::getCurrentPageIndex()
 {
     return ui->stackedWidget->currentIndex();
 }
 
-QCustomPlot *ViewController::getCurrentPageCustomPlot()
+QCustomPlot *PlotView::getCurrentPageCustomPlot()
 {
     int index = ui->stackedWidget->currentIndex(); //ui文件中对此命名产生的约束
     return ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot%1").arg(index));
 }
 
-void ViewController::updateViewStyleSlot(int plotInterfaceIndex)
+void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
 {
     //判断plotInterfaceIndex是否为绘图界面,即是否在plotPageIndex中
     if (plotPageIndex.contains(plotInterfaceIndex)) {
@@ -103,9 +104,9 @@ void ViewController::updateViewStyleSlot(int plotInterfaceIndex)
     }
 }
 
-void ViewController::updateViewCurveSlot(const QVector<double> *xData,
-                                         const QVector<double> *yData,
-                                         int curve_index)
+void PlotView::updateViewCurveSlot(const QVector<double> *xData,
+                                   const QVector<double> *yData,
+                                   int curve_index)
 {
     // Update view curve accordingly
     int index = ui->stackedWidget->currentIndex();
@@ -150,7 +151,7 @@ void ViewController::updateViewCurveSlot(const QVector<double> *xData,
     }
 }
 
-void ViewController::updateViewClearSlot()
+void PlotView::updateViewClearSlot()
 {
     int index = ui->stackedWidget->currentIndex();
     ButtonStatus ButtonWaitForOpen = {true, false, false}; // 等待开启显示的按钮状态结构体
@@ -161,7 +162,7 @@ void ViewController::updateViewClearSlot()
     ButtonGroupsManager::getButtonGroupsManagerInstance()->updateTracerButtonText(index, false);
 }
 
-void ViewController::updateViewTracerSlot()
+void PlotView::updateViewTracerSlot()
 {
     // Update tracer button accordingly
     int index = ui->stackedWidget->currentIndex();
@@ -174,13 +175,13 @@ void ViewController::updateViewTracerSlot()
     CustomPlotManager::getCustomPlotManagerInstance()->changeTracerStatus();
 }
 
-void ViewController::updateViewPageSlot(int page_index)
+void PlotView::updateViewPageSlot(int page_index)
 {
     // 更新视图层的样式
     updateViewStyleSlot(page_index);
 }
 
-void ViewController::startButtonClicked()
+void PlotView::startButtonClicked()
 {
     if (CustomPlotManager::getCustomPlotManagerInstance()->getCount() == 0) {
         // Get input data from view
@@ -205,7 +206,7 @@ void ViewController::startButtonClicked()
                                                                               ButtonWaitForClose);
 }
 
-void ViewController::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
+void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
 {
     switch (buttonGroupId) {
     case showButton:
@@ -235,16 +236,16 @@ void ViewController::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
     }
 }
 
-void ViewController::clearButtonClicked()
+void PlotView::clearButtonClicked()
 {
     emit onClearButtonClicked();
 }
-void ViewController::tracerButtonClicked()
+void PlotView::tracerButtonClicked()
 {
     emit onTracerButtonClicked();
 }
 
-void ViewController::switchPlotPageButtonClicked(int index)
+void PlotView::switchPlotPageButtonClicked(int index)
 {
     // 从当前绘图界面退出
     //清除customPlot数据
@@ -252,7 +253,7 @@ void ViewController::switchPlotPageButtonClicked(int index)
     emit switchPageButtonClicked(showPageIndex[index]);
 }
 
-void ViewController::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId)
+void PlotView::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId)
 {
     switch (buttonGroupId) {
     case ShowButton_1:
@@ -273,7 +274,7 @@ void ViewController::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId butto
     }
 }
 
-void ViewController::switchShowPageButtonClicked(int index)
+void PlotView::switchShowPageButtonClicked(int index)
 {
     // qDebug() << plotPageIndex[index - 1] << " ";
     //从当前展示界面退出

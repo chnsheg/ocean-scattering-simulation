@@ -1,9 +1,9 @@
 #include "mainwindow.h"
 #include "QDebug"
-#include "controller/pageplot.h"
+#include "controller/plotcontroller.h"
 #include "model/pagedatagenerator.h"
 #include "ui_mainwindow.h"
-#include "view/viewcontroller.h"
+#include "view/plotView.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,10 +13,10 @@ MainWindow::MainWindow(QWidget *parent)
     //挂载模型层
     PageDataGenerator::getPageDataGeneratorInstance();
     // 挂载视图层
-    ViewController::getViewControllerInstance(ui);
+    PlotView::getPlotViewInstance(ui);
     // 挂载控制层
-    PagePlot::getPagePlotInstance(ViewController::getViewControllerInstance(),
-                                  PageDataGenerator::getPageDataGeneratorInstance());
+    PlotController::getPlotControllerInstance(PlotView::getPlotViewInstance(),
+                                              PageDataGenerator::getPageDataGeneratorInstance());
 
     // loadHomeScreen();
     // int index = ui->stackedWidget->currentIndex();

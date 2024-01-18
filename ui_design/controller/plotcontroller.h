@@ -1,20 +1,20 @@
-#ifndef PAGEPLOT_H
-#define PAGEPLOT_H
+#ifndef PLOTCONTROLLER_H
+#define PLOTCONTROLLER_H
 
 /***************************控制层***************************/
 
 #include <QObject>
 #include "manager/inputdatalistmanager.h"
 #include "model/pagedatagenerator.h"
-#include "view/viewcontroller.h"
+#include "view/plotView.h"
 
-class PagePlot : public QObject
+class PlotController : public QObject
 {
     Q_OBJECT
 public:
-    static PagePlot *getPagePlotInstance(ViewController *_view, PageDataGenerator *_model);
-    static PagePlot *getPagePlotInstance();
-    static void destroyPagePlotInstance();
+    static PlotController *getPlotControllerInstance(PlotView *_view, PageDataGenerator *_model);
+    static PlotController *getPlotControllerInstance();
+    static void destroyPlotControllerInstance();
 
 public slots:
     void handleStartButtonClicked(const InputDataListManager *inputDataList);
@@ -26,11 +26,11 @@ public slots:
     void handleSwitchPageButtonClicked(int page_index);
 
 private:
-    explicit PagePlot(ViewController *_view, PageDataGenerator *_model, QObject *parent = nullptr);
-    ~PagePlot();
-    static PagePlot *pagePlotInstance;
-    ViewController *view;
+    explicit PlotController(PlotView *_view, PageDataGenerator *_model, QObject *parent = nullptr);
+    ~PlotController();
+    static PlotController *plotControllerInstance;
+    PlotView *view;
     PageDataGenerator *model;
 };
 
-#endif // PAGEPLOT_H
+#endif // PLOTCONTROLLER_H
