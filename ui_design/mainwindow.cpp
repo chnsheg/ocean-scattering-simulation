@@ -7,11 +7,10 @@
 #include "view/plotView.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //挂载模型层
+    // 挂载模型层
     Singleton<PageDataGenerator>::getInstance(nullptr);
     // 挂载视图层
     Singleton<PlotView>::getInstance(ui);

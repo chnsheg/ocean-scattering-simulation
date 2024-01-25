@@ -72,3 +72,18 @@ CMakeLists.txt.user*
 *.dll
 *.exe
 
+# Ignore CMake generated files
+# ----------------------------
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+Makefile
+CMakeLists.txt.user
+CMakeLists.txt.user.*
+
+# Ignore build directory
+# ----------------------
+/build/
+```
+
