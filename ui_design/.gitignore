@@ -85,5 +85,9 @@ CMakeLists.txt.user.*
 # Ignore build directory
 # ----------------------
 /build/
+
+# 忽略.vscode隐藏文件夹
+.vscode
+
 ```
 

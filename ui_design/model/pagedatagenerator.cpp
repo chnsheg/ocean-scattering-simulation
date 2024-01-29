@@ -3,10 +3,13 @@
 #include "model/frequencedatagenerator.h"
 #include "model/laserdatagenerator.h"
 #include "model/spectrumdatagenerator.h"
+#include "model/constantstorage.h"
 
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
-{}
+{
+    Singleton<ConstantStorage>::getInstance(nullptr);
+}
 
 PageDataGenerator::~PageDataGenerator() {}
 
@@ -14,7 +17,8 @@ QVector<double> *PageDataGenerator::generateData(DataType dataType,
                                                  const InputDataListManager *inputDataList)
 {
     QVector<double> *data = nullptr;
-    switch (dataType) {
+    switch (dataType)
+    {
     case DataType::Frequence:
         data = FrequenceDataGenerator::generateFrequenceData(inputDataList);
         break;
@@ -61,7 +65,8 @@ void PageDataGenerator::generatePairOfData(int page_index, const InputDataListMa
     xDataVector = new QVector<QVector<double> *>;
     yDataVector = new QVector<QVector<double> *>;
 
-    switch (page_index) {
+    switch (page_index)
+    {
     case 1:
         xDataVector->append(generateData(DataType::Frequence, inputDataList));
         yDataVector->append(generateData(DataType::Laser, inputDataList));
@@ -107,3 +112,12 @@ void PageDataGenerator::generatePairOfData(int page_index, const InputDataListMa
     // 释放InputDataListManager内存
     delete inputDataList;
 }
+
+// void PageDataGenerator::parseInputDataList(const InputDataListManager *inputDataList)
+// {
+//     for (int i = 0; i < inputDataList->getInputDataList()->size(); i++)
+//     {
+//         qDebug() << inputDataList->getInputDataList()->at(i).getInputDataName();
+//         qDebug() << inputDataList->getInputDataList()->at(i).getInputDataValue();
+//     }
+// }

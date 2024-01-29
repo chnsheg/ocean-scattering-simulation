@@ -15,10 +15,9 @@ struct ButtonStatus // 控制按钮组状态结构体 按键组：控制显示�
     bool tracerEnabled;
 
     ButtonStatus(bool show, bool clear, bool tracer)
-        : showEnabled(show)
-        , clearEnabled(clear)
-        , tracerEnabled(tracer)
-    {}
+        : showEnabled(show), clearEnabled(clear), tracerEnabled(tracer)
+    {
+    }
 };
 
 // 按键状态的结构体
@@ -33,20 +32,17 @@ public:
 public:
     // 默认构造函数
     ButtonGroup()
-        : showButton(nullptr)
-        , clearButton(nullptr)
-        , tracerButton(nullptr)
-        , backButton(nullptr)
-    {}
+        : showButton(nullptr), clearButton(nullptr), tracerButton(nullptr), backButton(nullptr)
+    {
+    }
     ButtonGroup(QPushButton *show, QPushButton *clear, QPushButton *tracer, QPushButton *back)
-        : showButton(show)
-        , clearButton(clear)
-        , tracerButton(tracer)
-        , backButton(back)
-    {}
+        : showButton(show), clearButton(clear), tracerButton(tracer), backButton(back)
+    {
+    }
 };
 
-enum ButtonGroupId {
+enum ButtonGroupId
+{
     showButton,
     clearButton,
     tracerButton,
@@ -65,7 +61,7 @@ class ButtonGroupsManager : public ManagerBase
 
 private:
     // 单例模式构造
-    static ButtonGroupsManager *ButtonGroupsManagerInstance;
+    // static ButtonGroupsManager *ButtonGroupsManagerInstance;
     ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups, QObject *parent = nullptr);
 
     // 存储每个页面的按钮状态
@@ -79,23 +75,23 @@ public:
     // // 释放实例
     // static void destroyButtonGroupsManagerInstance();
 
-    //初始化按钮样式
+    // 初始化按钮样式
     void initButtonStyle(int index);
-    //初始化按钮状态
+    // 初始化按钮状态
     void initButtonStatus(int index);
 
     // 更新按钮状态
     void updateButtonStatus(int index, const ButtonStatus &status);
     void updateTracerButtonText(int index, bool isVisible);
 
-    //获取buttonGroups
-    // QVector<ButtonGroup> *getButtonGroups();
+    // 获取buttonGroups
+    //  QVector<ButtonGroup> *getButtonGroups();
 
     void onEventAction(const QString &event, int status, const QVariant &param);
 
 public:
 signals:
-    void eventSignal(ButtonGroupId param); //用来区分返回按键索引的信号
+    void eventSignal(ButtonGroupId param); // 用来区分返回按键索引的信号
 };
 
 #endif // BUTTONGROUPMANAGER_H

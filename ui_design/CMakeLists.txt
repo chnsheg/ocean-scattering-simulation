@@ -37,8 +37,11 @@ set(SOURCES
     manager/customplotmanager.cpp
     manager/inputdatalistmanager.cpp
     manager/managerbase.cpp
+    manager/texteditgroupmanager.cpp
     manager/show1buttongroupmanager.cpp
     manager/tracermanager.cpp
+    model/constantmap.cpp
+    model/constantstorage.cpp
     model/fizeaudatagenerator.cpp
     model/frequencedatagenerator.cpp
     model/laserdatagenerator.cpp
@@ -61,7 +64,10 @@ set(HEADERS
     manager/inputdatalistmanager.h
     manager/managerbase.h
     manager/show1buttongroupmanager.h
+    manager/texteditgroupmanager.h
     manager/tracermanager.h
+    model/constantmap.h
+    model/constantstorage.h
     model/fizeaudatagenerator.h
     model/frequencedatagenerator.h
     model/laserdatagenerator.h

@@ -13,7 +13,8 @@ class PageDataGenerator : public QObject
     Q_OBJECT
     SINGLETON(PageDataGenerator)
 public:
-    enum DataType {
+    enum DataType
+    {
         Frequence,
         Laser,
         MieScattering,
@@ -38,6 +39,7 @@ public slots:
 
 private:
     explicit PageDataGenerator(QObject *parent = nullptr);
+    void parseInputDataList(const InputDataListManager *inputDataList);
 };
 
 #endif // PAGEDATAGENERATOR_H
