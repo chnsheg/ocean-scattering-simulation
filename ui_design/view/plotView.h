@@ -38,10 +38,10 @@ public:
     // void updateTracerButtonText(bool isVisible);
 
 signals:
-    void onStartButtonClicked(const InputDataListManager *inputDataList);
+    void onStartButtonClicked(const int page_index);
     void onClearButtonClicked();
     void onTracerButtonClicked();
-    void switchPageButtonClicked(int page_index); //interface_index 用于区分返回的界面
+    void switchPageButtonClicked(int page_index); // interface_index 用于区分返回的界面
 
 public slots:
     void updateViewCurveSlot(const QVector<double> *xData,

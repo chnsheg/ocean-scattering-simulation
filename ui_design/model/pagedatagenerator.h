@@ -28,14 +28,14 @@ public:
         // Add more page types if needed
     };
 
-    QVector<double> *generateData(DataType dataType, const InputDataListManager *inputDataList);
+    QVector<double> *generateData(DataType dataType);
 
 signals:
     void dataGenerated(QVector<QVector<double> *> *xDataVector,
                        QVector<QVector<double> *> *yDataVector,
                        int curve_num);
 public slots:
-    void generatePairOfData(int page_index, const InputDataListManager *inputDataList);
+    void generatePairOfData(const int page_index);
 
 private:
     explicit PageDataGenerator(QObject *parent = nullptr);

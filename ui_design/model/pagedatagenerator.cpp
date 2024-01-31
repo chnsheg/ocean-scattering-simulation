@@ -13,36 +13,35 @@ PageDataGenerator::PageDataGenerator(QObject *parent)
 
 PageDataGenerator::~PageDataGenerator() {}
 
-QVector<double> *PageDataGenerator::generateData(DataType dataType,
-                                                 const InputDataListManager *inputDataList)
+QVector<double> *PageDataGenerator::generateData(DataType dataType)
 {
     QVector<double> *data = nullptr;
     switch (dataType)
     {
     case DataType::Frequence:
-        data = FrequenceDataGenerator::generateFrequenceData(inputDataList);
+        data = FrequenceDataGenerator::generateFrequenceData();
         break;
     case DataType::Laser:
-        data = LaserDataGenerator::generateLaserData(inputDataList);
+        data = LaserDataGenerator::generateLaserData();
         break;
-    case DataType::MieScattering:
-        data = SpectrumDataGenerator::generateMieScatteringData(inputDataList);
-        break;
-    case DataType::BriScattering:
-        data = SpectrumDataGenerator::generateBriScatteringData(inputDataList);
-        break;
-    case DataType::RayScattering:
-        data = SpectrumDataGenerator::generateRayScatteringData(inputDataList);
-        break;
+    // case DataType::MieScattering:
+    //     data = SpectrumDataGenerator::generateMieScatteringData();
+    //     break;
+    // case DataType::BriScattering:
+    //     data = SpectrumDataGenerator::generateBriScatteringData();
+    //     break;
+    // case DataType::RayScattering:
+    //     data = SpectrumDataGenerator::generateRayScatteringData();
+    //     break;
     // case DataType::UnderwaterScattering:
     //     UnderwaterScatteringDataGenerator::generateUnderwaterScatteringData(data);
     //     break;
-    case DataType::FizeauInstrument:
-        data = FizeauDataGenerator::generateFizeauData(inputDataList);
-        break;
-    case DataType::FizeauSpectra:
-        data = FizeauDataGenerator::generateSpectrumAfterFizeau(inputDataList);
-        break;
+    // case DataType::FizeauInstrument:
+    //     data = FizeauDataGenerator::generateFizeauData();
+    //     break;
+    // case DataType::FizeauSpectra:
+    //     data = FizeauDataGenerator::generateSpectrumAfterFizeau();
+    //     break;
     // case DataType::PMTFrequency:
     //     PMTFrequencyDataGenerator::generatePMTFrequencyData(data);
     //     break;
@@ -58,7 +57,7 @@ QVector<double> *PageDataGenerator::generateData(DataType dataType,
     return data;
 }
 
-void PageDataGenerator::generatePairOfData(int page_index, const InputDataListManager *inputDataList)
+void PageDataGenerator::generatePairOfData(int page_index)
 {
     QVector<QVector<double> *> *xDataVector;
     QVector<QVector<double> *> *yDataVector;
@@ -68,29 +67,29 @@ void PageDataGenerator::generatePairOfData(int page_index, const InputDataListMa
     switch (page_index)
     {
     case 1:
-        xDataVector->append(generateData(DataType::Frequence, inputDataList));
-        yDataVector->append(generateData(DataType::Laser, inputDataList));
+        xDataVector->append(generateData(DataType::Frequence));
+        yDataVector->append(generateData(DataType::Laser));
         emit dataGenerated(xDataVector, yDataVector, 1);
         break;
-    case 2:
-        xDataVector->append(generateData(DataType::Frequence, inputDataList));
-        yDataVector->append(generateData(DataType::MieScattering, inputDataList));
-        yDataVector->append(generateData(DataType::BriScattering, inputDataList));
-        yDataVector->append(generateData(DataType::RayScattering, inputDataList));
-        emit dataGenerated(xDataVector, yDataVector, 3);
-        break;
+        // case 2:
+        //     xDataVector->append(generateData(DataType::Frequence));
+        //     yDataVector->append(generateData(DataType::MieScattering));
+        //     yDataVector->append(generateData(DataType::BriScattering));
+        //     yDataVector->append(generateData(DataType::RayScattering));
+        //     emit dataGenerated(xDataVector, yDataVector, 3);
+        //     break;
         // case 3:
         //     xDataVector->append(
         //         PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
         //     yDataVector->append(
         //         PageDataGenerator::generateData(PageDataGenerator::DataType::MieScattering,
         //                                         inputDataList));
-    case 4:
-        xDataVector->append(generateData(DataType::Frequence, inputDataList));
-        yDataVector->append(generateData(DataType::FizeauInstrument, inputDataList));
-        yDataVector->append(generateData(DataType::FizeauSpectra, inputDataList));
-        emit dataGenerated(xDataVector, yDataVector, 2);
-        break;
+        // case 4:
+        //     xDataVector->append(generateData(DataType::Frequence));
+        //     yDataVector->append(generateData(DataType::FizeauInstrument));
+        //     yDataVector->append(generateData(DataType::FizeauSpectra));
+        //     emit dataGenerated(xDataVector, yDataVector, 2);
+        //     break;
         // case 5:
         //     xDataVector->append(
         //         PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
@@ -110,7 +109,7 @@ void PageDataGenerator::generatePairOfData(int page_index, const InputDataListMa
         //     break;
     }
     // 释放InputDataListManager内存
-    delete inputDataList;
+    // delete inputDataList;
 }
 
 // void PageDataGenerator::parseInputDataList(const InputDataListManager *inputDataList)

@@ -20,7 +20,7 @@ public:
     /*friend class Singleton<PlotController>;*/ // 友元类, 使得Singleton类可以访问PlotController的私有构造函数
 
 public slots:
-    void handleStartButtonClicked(const InputDataListManager *inputDataList);
+    void handleStartButtonClicked(const int page_index);
     void handleDataGenerated(const QVector<QVector<double> *> *xDataVector,
                              const QVector<QVector<double> *> *yDataVector,
                              const int curve_num);

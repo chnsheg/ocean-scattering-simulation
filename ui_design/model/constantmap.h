@@ -6,6 +6,7 @@
 #include <QString>
 #include <QMap>
 #include "base/singleton.h"
+// #include <QDebug>
 
 class ConstantGroup
 {
@@ -20,6 +21,8 @@ public:
     {
         if (constantIndex >= 0 && constantIndex < constants->size())
         {
+            // QString constantName = constants->at(constantIndex);
+            // qDebug() << "constantName: " << constantName;
             return constants->at(constantIndex);
         }
         return QString("null");

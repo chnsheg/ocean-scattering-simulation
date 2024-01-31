@@ -1,6 +1,7 @@
 #include "texteditgroupmanager.h"
 #include "model/constantmap.h"
 #include <qDebug>
+#include "constantstorage.h"
 
 /**
  * 该类用于绑定所有lineEdit到特定的常量名称，方便在程序中根据常量名称获取lineEdit的值。
@@ -27,6 +28,11 @@ LineEditGroupManager::~LineEditGroupManager()
     // This is a private destructor, so it can't be called.
 }
 
+void LineEditGroupManager::saveLineEditGroupsText(int index)
+{
+    m_lineEditGroups[index].saveLineEditGroupText();
+}
+
 LineEditGroup::LineEditGroup(QList<QLineEdit *> lineEdits, int index)
 {
     int i = 0;
@@ -34,5 +40,13 @@ LineEditGroup::LineEditGroup(QList<QLineEdit *> lineEdits, int index)
     {
         m_lineEdits.insert(lineEdit, Singleton<ConstantMap>::getInstance()->getConstantName(index, i++));
         lineEdit->setText(m_lineEdits[lineEdit]);
+    }
+}
+
+void LineEditGroup::saveLineEditGroupText()
+{
+    for (auto lineEdit : m_lineEdits.keys())
+    {
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(m_lineEdits[lineEdit], lineEdit->text());
     }
 }

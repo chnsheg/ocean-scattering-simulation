@@ -181,7 +181,7 @@ void PlotView::startButtonClicked()
     if (Singleton<CustomPlotManager>::getInstance()->getCount() == 0)
     {
         // Get input data from view
-        InputDataListManager *inputDataList = new InputDataListManager();
+        // InputDataListManager *inputDataList = new InputDataListManager();
         // for (int i = 0; i < ui.inputLineEdits.size(); ++i) {
         //     inputData.inputDataList->append(ui.inputLineEdits[i]->text());
         // }
@@ -189,8 +189,9 @@ void PlotView::startButtonClicked()
         // inputDataList->setInputDataList("1000");
         // inputDataList->setInputDataList("model1");
         // Send signal to controller
-
-        emit onStartButtonClicked(inputDataList);
+        int page_index = ui->stackedWidget->currentIndex();
+        // Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
+        emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
     }
     else
     {

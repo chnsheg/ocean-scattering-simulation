@@ -15,10 +15,10 @@ ConstantGroup::ConstantGroup()
 }
 
 QVector<QString> physicalConstantVector = QVector<QString>({"SpeedOfLight", "PlanckConstant", "GravitationalConstant"});
-QVector<QString> laserConstantVector = QVector<QString>({"Wavelength", "Power", "PulseDuration", "PulseEnergy"});
-QVector<QString> fizeauConstantVector = QVector<QString>({"Wavelength", "Power", "PulseDuration", "PulseEnergy"});
+QVector<QString> laserConstantVector = QVector<QString>({"LaserWidth", "waveLength", "Intensity", "frequencyRange"});
+QVector<QString> fizeauConstantVector = QVector<QString>({"Wavelength1", "Power1", "PulseDuration1", "PulseEnergy1"});
 QVector<QString> pmtConstantVector = QVector<QString>({"QuantumEfficiency", "DarkCountRate", "Gain", "NoiseEquivalentPower"});
-QVector<QString> spectrumConstantVector = QVector<QString>({"Wavelength", "Power", "PulseDuration", "PulseEnergy"});
+QVector<QString> spectrumConstantVector = QVector<QString>({"Wavelength2", "Power2", "PulseDuration2", "PulseEnergy2"});
 ConstantGroup physicalConstantGroup(&physicalConstantVector);
 ConstantGroup laserConstantGroup(&laserConstantVector);
 ConstantGroup fizeauConstantGroup(&fizeauConstantVector);

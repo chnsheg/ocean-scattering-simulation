@@ -7,7 +7,7 @@
 class FrequenceDataGenerator
 {
 public:
-    static QVector<double> *generateFrequenceData(const InputDataListManager *inputDataList);
+    static QVector<double> *generateFrequenceData();
 };
 
 #endif // FREQUENCEDATAGENERATOR_H
