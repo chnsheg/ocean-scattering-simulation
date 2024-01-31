@@ -40,6 +40,7 @@ public:
     bool changeTracerStatus();
     void stopGenerateTracerEventSignal();
     void startGenerateTracerEventSignal();
+    QSharedPointer<QCPGraphDataContainer> getDataContainer(int curve_index);
 
 public slots:
     void handleMouseMove(QMouseEvent *event);

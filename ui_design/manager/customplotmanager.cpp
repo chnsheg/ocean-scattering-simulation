@@ -16,12 +16,11 @@
  */
 
 CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot, QObject *parent)
-    : QObject(parent)
-    , customPlot(_customPlot)
+    : QObject(parent), customPlot(_customPlot)
 {
     // 初始化 QCustomPlot 样式
     initCustomPlotStyle();
-    //挂载轨迹管理器
+    // 挂载轨迹管理器
     Singleton<TracerManager>::getInstance(_customPlot);
     Singleton<TracerManager>::getInstance()->setTracerVisible(false);
     stopGenerateTracerEventSignal();
@@ -37,8 +36,9 @@ CustomPlotManager::CustomPlotManager() {}
 
 CustomPlotManager::~CustomPlotManager()
 {
-    //释放内存
-    if (customPlot != nullptr) {
+    // 释放内存
+    if (customPlot != nullptr)
+    {
         delete customPlot;
         customPlot = nullptr;
     }
@@ -80,15 +80,15 @@ CustomPlotManager::~CustomPlotManager()
 void CustomPlotManager::initCustomPlotStyle()
 {
     // 进行 QCustomPlot 样式初始化，你可以根据需要添加代码
-    customPlot->xAxis->setLabel("x");                         //设置x轴名称
-    customPlot->yAxis->setLabel("y");                         //设置y轴名称
-    customPlot->xAxis->setLabelColor(QColor(226, 60, 255));   //设置x轴名称颜色
-    customPlot->yAxis->setLabelColor(QColor(226, 60, 255));   //设置y轴名称颜色
-    customPlot->xAxis->setTickLabelColor(Qt::yellow);         //设置x轴坐标颜色
-    customPlot->yAxis->setTickLabelColor(Qt::yellow);         //设置y轴坐标颜色
-    customPlot->xAxis->setBasePen(QPen(QColor(0, 0, 0)));     //设置x轴坐标轴颜色
-    customPlot->yAxis->setBasePen(QPen(QColor(25, 150, 92))); //设置y轴坐标轴颜色
-    //设置画布背景色
+    customPlot->xAxis->setLabel("x");                         // 设置x轴名称
+    customPlot->yAxis->setLabel("y");                         // 设置y轴名称
+    customPlot->xAxis->setLabelColor(QColor(226, 60, 255));   // 设置x轴名称颜色
+    customPlot->yAxis->setLabelColor(QColor(226, 60, 255));   // 设置y轴名称颜色
+    customPlot->xAxis->setTickLabelColor(Qt::yellow);         // 设置x轴坐标颜色
+    customPlot->yAxis->setTickLabelColor(Qt::yellow);         // 设置y轴坐标颜色
+    customPlot->xAxis->setBasePen(QPen(QColor(0, 0, 0)));     // 设置x轴坐标轴颜色
+    customPlot->yAxis->setBasePen(QPen(QColor(25, 150, 92))); // 设置y轴坐标轴颜色
+    // 设置画布背景色
     QLinearGradient plotGradient;
     plotGradient.setStart(0, 0);
     plotGradient.setFinalStop(0, 350);
@@ -100,15 +100,14 @@ void CustomPlotManager::initCustomPlotStyle()
     customPlot->legend->setVisible(true);
     // 设置图例的位置
     customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignRight);
-    //设置legend的字体大小
+    // 设置legend的字体大小
     customPlot->legend->setFont(QFont("Consolas", 12));
-    customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes
-                                | QCP::iSelectLegend | QCP::iSelectPlottables);
+    customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
     customPlot->axisRect()->setRangeDrag(Qt::Horizontal | Qt::Vertical);
     customPlot->axisRect()->setRangeZoom(Qt::Horizontal | Qt::Vertical);
     customPlot->axisRect()->setRangeZoomAxes(customPlot->xAxis, nullptr);
     customPlot->axisRect()->setRangeZoomFactor(0.8);
-    customPlot->replot(); //重绘 每次改变完以后都要调用这个进行重新绘制
+    customPlot->replot(); // 重绘 每次改变完以后都要调用这个进行重新绘制
 }
 
 /**
@@ -140,17 +139,28 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
 {
     // 绘制曲线
     customPlot->addGraph();
-    auto maxElement = std::min_element(yData->begin(), yData->end(), [](double a, double b) {
-        return (a >= b); //此处决定了应该将最大值更大的曲线放在最后再绘制
-    });
-    //对横坐标范围进行限定，下界向下取整，上界向上取整
+    auto maxElement = std::min_element(yData->begin(), yData->end(), [](double a, double b)
+                                       {
+                                           return (a >= b); // 此处决定了应该将最大值更大的曲线放在最后再绘制
+                                       });
+    // 对横坐标范围进行限定，下界向下取整，上界向上取整
     customPlot->xAxis->setRange(floor(*xData->begin()), ceil(*xData->end()));
     customPlot->yAxis->setRange(0, *maxElement);
-    customPlot->graph(curve_index)->setPen(QPen(colorContainer.at(curve_index), 3)); //设置曲线颜色
-    customPlot->graph(curve_index)->setData(*xData, *yData, true); //必须确保数据是有序的
+    customPlot->graph(curve_index)->setPen(QPen(colorContainer.at(curve_index), 3)); // 设置曲线颜色
+    // customPlot->graph(curve_index)->setData(*xData, *yData, true);                   // 必须确保数据是有序的
+    // 补充代码：用下述方法：void QCPDataContainer< DataType >::add ( const QVector< DataType > &  data, bool  alreadySorted = false  )
+    QVector<QCPGraphData> graphData(xData->size());
+    for (int i = 0; i < xData->size(); ++i)
+    {
+        graphData[i].key = (*xData)[i];
+        graphData[i].value = (*yData)[i];
+    }
+
+    customPlot->graph(curve_index)->data()->add(graphData, true);
+
     customPlot->legend->setVisible(true);
     customPlot->graph(curve_index)->rescaleAxes(true);
-    customPlot->replot(); //重绘 每次改变完以后都要调用这个进行重新绘制
+    customPlot->replot(); // 重绘 每次改变完以后都要调用这个进行重新绘制
 }
 
 void CustomPlotManager::plotGraph(const QVector<double> *xData,
@@ -174,19 +184,20 @@ void CustomPlotManager::refreshPlot()
 void CustomPlotManager::clearPlot()
 {
     customPlot->clearGraphs();
-    customPlot->replot();
+    // customPlot->replot();
 }
 
 void CustomPlotManager::hidePlot()
 {
     stopGenerateTracerEventSignal();
-    //隐藏曲线显示
-    for (int i = 0; i < customPlot->graphCount(); i++) {
+    // 隐藏曲线显示
+    for (int i = 0; i < customPlot->graphCount(); i++)
+    {
         customPlot->graph(i)->setVisible(false);
     }
-    //隐藏图例显示
+    // 隐藏图例显示
     customPlot->legend->setVisible(false);
-    //隐藏跟踪点
+    // 隐藏跟踪点
     Singleton<TracerManager>::getInstance()->setTracerVisible(false);
     stopGenerateTracerEventSignal();
     customPlot->replot();
@@ -194,13 +205,14 @@ void CustomPlotManager::hidePlot()
 
 void CustomPlotManager::showPlot()
 {
-    //显示曲线显示
-    for (int i = 0; i < customPlot->graphCount(); i++) {
+    // 显示曲线显示
+    for (int i = 0; i < customPlot->graphCount(); i++)
+    {
         customPlot->graph(i)->setVisible(true);
     }
-    //显示图例显示
+    // 显示图例显示
     customPlot->legend->setVisible(true);
-    //显示跟踪点
+    // 显示跟踪点
     Singleton<TracerManager>::getInstance()->setTracerVisible(false);
     stopGenerateTracerEventSignal();
     customPlot->replot();
@@ -209,6 +221,11 @@ void CustomPlotManager::showPlot()
 int CustomPlotManager::getCount()
 {
     return customPlot->graphCount();
+}
+
+QSharedPointer<QCPGraphDataContainer> CustomPlotManager::getDataContainer(int curve_index)
+{
+    return customPlot->graph(curve_index)->data();
 }
 
 bool CustomPlotManager::getTracerStatus()
@@ -225,10 +242,13 @@ bool CustomPlotManager::changeTracerStatus()
 {
     bool visible = getTracerStatus();
     Singleton<TracerManager>::getInstance()->setTracerVisible(!visible);
-    if (visible) {
+    if (visible)
+    {
         stopGenerateTracerEventSignal();
         refreshPlot();
-    } else {
+    }
+    else
+    {
         startGenerateTracerEventSignal();
     }
     return !visible;
@@ -237,20 +257,16 @@ bool CustomPlotManager::changeTracerStatus()
 void CustomPlotManager::stopGenerateTracerEventSignal()
 {
     disconnect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
-    void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector)
-        = &CustomPlotManager::mouseMoveSignal;
-    void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
-        = &TracerManager::showTracer;
+    void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector) = &CustomPlotManager::mouseMoveSignal;
+    void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector) = &TracerManager::showTracer;
     disconnect(this, mouseMoveSignal, Singleton<TracerManager>::getInstance(), showTracer);
 }
 
 void CustomPlotManager::startGenerateTracerEventSignal()
 {
     connect(customPlot, &QCustomPlot::mouseMove, this, &CustomPlotManager::handleMouseMove);
-    void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector)
-        = &CustomPlotManager::mouseMoveSignal;
-    void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector)
-        = &TracerManager::showTracer;
+    void (CustomPlotManager::*mouseMoveSignal)(QMouseEvent *event, QVector<QColor> colorVector) = &CustomPlotManager::mouseMoveSignal;
+    void (TracerManager::*showTracer)(QMouseEvent *event, QVector<QColor> colorVector) = &TracerManager::showTracer;
     connect(this, mouseMoveSignal, Singleton<TracerManager>::getInstance(), showTracer);
 }
 
@@ -264,20 +280,22 @@ void CustomPlotManager::startGenerateTracerEventSignal()
 void CustomPlotManager::createSecondAxis(double lower, double upper, QString label)
 {
     // 创建第二个坐标轴
-    if (customPlot->yAxis2 != nullptr) {
+    if (customPlot->yAxis2 != nullptr)
+    {
         customPlot->yAxis2->setVisible(true);
         customPlot->yAxis2->setTickLabels(true);
         customPlot->yAxis2->setRange(lower, upper);
         customPlot->yAxis2->setTickLabelColor(Qt::yellow);
         customPlot->yAxis2->setLabelColor(QColor(226, 60, 255));
-        //设置第二条坐标轴可以拖动
+        // 设置第二条坐标轴可以拖动
         customPlot->yAxis2->setLabel(label);
-        //等比例移动第二条坐标轴
+        // 等比例移动第二条坐标轴
         void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
         connect(customPlot->yAxis,
                 rangeChanged,
                 customPlot->yAxis2,
-                [=](const QCPRange &newRange, const QCPRange &oldRange) {
+                [=](const QCPRange &newRange, const QCPRange &oldRange)
+                {
                     QCPRange y2Range = customPlot->yAxis2->range();
                     double dy = newRange.lower - oldRange.lower;
                     double rate = dy / (oldRange.upper - oldRange.lower);

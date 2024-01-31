@@ -1,5 +1,7 @@
 #include "constantstorage.h"
 #include <qDebug>
+#include "module/qcustomplot.h"
+
 ConstantStorage::ConstantStorage(QObject *parent)
     : QObject{parent}
 {

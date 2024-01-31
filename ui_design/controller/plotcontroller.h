@@ -27,6 +27,7 @@ public slots:
     void handleClearButtonClicked();
     void handleTracerButtonClicked();
     void handleSwitchPageButtonClicked(int page_index);
+    void handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
 
 private:
     explicit PlotController(PlotView *_view, PageDataGenerator *_model, QObject *parent = nullptr);

@@ -7,11 +7,15 @@
 #include <QVector>
 #include "base/singleton.h"
 #include "manager/inputdatalistmanager.h"
+#include "module/qcustomplot.h"
+
+Q_DECLARE_METATYPE(QSharedPointer<QCPGraphDataContainer>)
 
 class PageDataGenerator : public QObject
 {
     Q_OBJECT
     SINGLETON(PageDataGenerator)
+
 public:
     enum DataType
     {
@@ -36,10 +40,10 @@ signals:
                        int curve_num);
 public slots:
     void generatePairOfData(const int page_index);
+    void storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
 
 private:
     explicit PageDataGenerator(QObject *parent = nullptr);
-    void parseInputDataList(const InputDataListManager *inputDataList);
 };
 
 #endif // PAGEDATAGENERATOR_H

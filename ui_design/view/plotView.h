@@ -41,7 +41,8 @@ signals:
     void onStartButtonClicked(const int page_index);
     void onClearButtonClicked();
     void onTracerButtonClicked();
-    void switchPageButtonClicked(int page_index); // interface_index 用于区分返回的界面
+    void switchPageButtonClicked(int page_index);                                                                                  // interface_index 用于区分返回的界面
+    void storeRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index); // 用于存储运行时数据
 
 public slots:
     void updateViewCurveSlot(const QVector<double> *xData,

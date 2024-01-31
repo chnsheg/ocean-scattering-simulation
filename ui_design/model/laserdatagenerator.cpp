@@ -20,12 +20,12 @@ double polyarea(const QVector<double> &x, const QVector<double> &y)
 QVector<double> *LaserDataGenerator::generateLaserData()
 {
     // 读取存储的数据
-    double width = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 0)).toDouble();
-    double lambda_0 = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 1)).toDouble();
-    QString s = Singleton<ConstantMap>::getInstance()->getConstantName(0, 0);
-    double c = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 0)).toDouble();
-    double intensity = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 2)).toDouble();
-    double frequencyRange = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 3)).toDouble();
+    double width = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 0)).toDouble();
+    double lambda_0 = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1)).toDouble();
+    // QString s = Singleton<ConstantMap>::getInstance()->getConstantName(0, 0);
+    double c = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4)).toDouble();
+    double intensity = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 2)).toDouble();
+    double frequencyRange = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 3)).toDouble();
 
     // 计算得到的变量
     double delta_l = width / 2.0;

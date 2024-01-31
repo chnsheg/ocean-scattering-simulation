@@ -1,6 +1,5 @@
 #include "view/plotView.h"
 #include "manager/customplotmanager.h"
-#include "view/plotView.h"
 #include "manager/texteditgroupmanager.h"
 
 // PlotView *PlotView::plotViewInstance = nullptr;
@@ -145,6 +144,7 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     default:
         break;
     }
+    emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), index, curve_index);
 }
 
 void PlotView::updateViewClearSlot()
@@ -178,31 +178,35 @@ void PlotView::updateViewPageSlot(int page_index)
 
 void PlotView::startButtonClicked()
 {
-    if (Singleton<CustomPlotManager>::getInstance()->getCount() == 0)
-    {
-        // Get input data from view
-        // InputDataListManager *inputDataList = new InputDataListManager();
-        // for (int i = 0; i < ui.inputLineEdits.size(); ++i) {
-        //     inputData.inputDataList->append(ui.inputLineEdits[i]->text());
-        // }
-        // inputDataList->setInputDataList("0.8");
-        // inputDataList->setInputDataList("1000");
-        // inputDataList->setInputDataList("model1");
-        // Send signal to controller
-        int page_index = ui->stackedWidget->currentIndex();
-        // Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
-        emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
-    }
-    else
-    {
-        // Update view style accordingly
-        Singleton<CustomPlotManager>::getInstance()->showPlot();
-        bool visible = Singleton<CustomPlotManager>::getInstance()->getTracerStatus();
-        qDebug() << "visible = " << visible;
-    }
+    // if (Singleton<CustomPlotManager>::getInstance()->getCount() == 0)
+    // {
+    //     // Get input data from view
+    //     // InputDataListManager *inputDataList = new InputDataListManager();
+    //     // for (int i = 0; i < ui.inputLineEdits.size(); ++i) {
+    //     //     inputData.inputDataList->append(ui.inputLineEdits[i]->text());
+    //     // }
+    //     // inputDataList->setInputDataList("0.8");
+    //     // inputDataList->setInputDataList("1000");
+    //     // inputDataList->setInputDataList("model1");
+    //     // Send signal to controller
+    //     int page_index = ui->stackedWidget->currentIndex();
+    //     Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
+    //     emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
+    // }
+    // else
+    // {
+    //     // Update view style accordingly
+    //     Singleton<CustomPlotManager>::getInstance()->showPlot();
+    //     bool visible = Singleton<CustomPlotManager>::getInstance()->getTracerStatus();
+    //     qDebug() << "visible = " << visible;
+    // }
+    int page_index = ui->stackedWidget->currentIndex();
+    Singleton<CustomPlotManager>::getInstance()->clearPlot();
+    Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
+    emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
     int index = ui->stackedWidget->currentIndex();
-    ButtonStatus ButtonWaitForClose = {false, true, true};
-    Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
+    // ButtonStatus ButtonWaitForClose = {false, true, true};
+    // Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
 }
 
 void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
@@ -248,8 +252,8 @@ void PlotView::tracerButtonClicked()
 void PlotView::switchPlotPageButtonClicked(int index)
 {
     // 从当前绘图界面退出
-    // 清除customPlot数据
-    Singleton<CustomPlotManager>::getInstance()->clearPlot();
+    // 清除customPlot数据,由于与数据存储使用共享指针，因此不在此释放内存
+    // Singleton<CustomPlotManager>::getInstance()->clearPlot();
     emit switchPageButtonClicked(showPageIndex[index]);
 }
 

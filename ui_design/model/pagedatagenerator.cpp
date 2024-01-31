@@ -4,11 +4,14 @@
 #include "model/laserdatagenerator.h"
 #include "model/spectrumdatagenerator.h"
 #include "model/constantstorage.h"
+#include "model/constantmap.h"
 
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
 {
     Singleton<ConstantStorage>::getInstance(nullptr);
+    // 注册元类型
+    qRegisterMetaType<QSharedPointer<QCPGraphDataContainer>>("QSharedPointer<QCPGraphDataContainer>");
 }
 
 PageDataGenerator::~PageDataGenerator() {}
@@ -120,3 +123,31 @@ void PageDataGenerator::generatePairOfData(int page_index)
 //         qDebug() << inputDataList->getInputDataList()->at(i).getInputDataValue();
 //     }
 // }
+
+void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index)
+{
+    switch (page_index)
+    {
+    case 1:
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, curve_index), QVariant::fromValue(dataContainer));
+        break;
+        // case 2:
+        //     MieScatteringDataGenerator::saveRuntimeData();
+        //     BriScatteringDataGenerator::saveRuntimeData();
+        //     RayScatteringDataGenerator::saveRuntimeData();
+        //     break;
+        // case 3:
+        //     MieScatteringDataGenerator::saveRuntimeData();
+        //     break;
+        // case 4:
+        //     FizeauDataGenerator::saveRuntimeData();
+        //     break;
+        // case 5:
+        //     UnderwaterScatteringDataGenerator::saveRuntimeData();
+        //     break;
+        // case 6:
+        //     PMTFrequencyDataGenerator::saveRuntimeData();
+        //     PMTEnergyDataGenerator::saveRuntimeData();
+        //     break;
+    }
+}

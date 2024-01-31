@@ -75,6 +75,12 @@ void PlotController::handleDataGenerated(const QVector<QVector<double> *> *xData
     yDataVector = nullptr;
 }
 
+void PlotController::handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index)
+{
+    // 通知model存储数据
+    model->storeRuntimeDataByIndex(dataContainer, page_index, curve_index);
+}
+
 void PlotController::handleClearButtonClicked()
 {
     view->updateViewClearSlot();
@@ -89,5 +95,6 @@ void PlotController::handleSwitchPageButtonClicked(int page_index)
 {
     // 获取当前页面索引
     qDebug() << "page_index = " << page_index;
+    // 通知model存储数据
     view->updateViewPageSlot(page_index);
 }
