@@ -16,6 +16,8 @@ PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObje
     void (PlotView::*switchPageButtonClicked)(int) = &PlotView::switchPageButtonClicked;
     void (PlotController::*handleSwitchPageButtonClicked)(int) = &PlotController::handleSwitchPageButtonClicked;
     connect(view, switchPageButtonClicked, this, handleSwitchPageButtonClicked);
+
+    connect(view, &PlotView::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
 }
 
 // TODO: Add destructor

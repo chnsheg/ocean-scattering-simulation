@@ -36,6 +36,7 @@ ConstantMap::ConstantMap()
     this->m_constantMap->insert(2, &fizeauConstantGroup);
     this->m_constantMap->insert(3, &pmtConstantGroup);
     this->m_constantMap->insert(4, &spectrumConstantGroup);
+    this->m_constantMap->insert(5, &runtimeDataGroup);
 }
 
 ConstantMap::~ConstantMap() {}

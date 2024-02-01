@@ -205,8 +205,8 @@ void PlotView::startButtonClicked()
     Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
     emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
     int index = ui->stackedWidget->currentIndex();
-    // ButtonStatus ButtonWaitForClose = {false, true, true};
-    // Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
+    ButtonStatus ButtonWaitForClose = {true, true, true};
+    Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
 }
 
 void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
@@ -254,6 +254,7 @@ void PlotView::switchPlotPageButtonClicked(int index)
     // 从当前绘图界面退出
     // 清除customPlot数据,由于与数据存储使用共享指针，因此不在此释放内存
     // Singleton<CustomPlotManager>::getInstance()->clearPlot();
+    Singleton<CustomPlotManager>::getInstance()->hidePlot();
     emit switchPageButtonClicked(showPageIndex[index]);
 }
 

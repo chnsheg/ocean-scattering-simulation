@@ -130,6 +130,8 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
     {
     case 1:
         Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, curve_index), QVariant::fromValue(dataContainer));
+        // 打印底层存储地址
+        // qDebug() << "dataContainer: " << dataContainer.data();
         break;
         // case 2:
         //     MieScatteringDataGenerator::saveRuntimeData();

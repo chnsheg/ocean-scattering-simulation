@@ -225,6 +225,7 @@ int CustomPlotManager::getCount()
 
 QSharedPointer<QCPGraphDataContainer> CustomPlotManager::getDataContainer(int curve_index)
 {
+    // qDebug() << "CustomPlotManager::getDataContainer:" << customPlot->graph(curve_index)->data().data() << Qt::endl;
     return customPlot->graph(curve_index)->data();
 }
 
