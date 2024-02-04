@@ -22,7 +22,7 @@ QVector<double> *PageDataGenerator::generateData(DataType dataType)
     switch (dataType)
     {
     case DataType::Frequence:
-        data = FrequenceDataGenerator::generateFrequenceData();
+        data = FrequenceDataGenerator::generateRelativeFrequenceData();
         break;
     case DataType::Laser:
         data = LaserDataGenerator::generateLaserData();

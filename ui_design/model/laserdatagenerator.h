@@ -2,7 +2,6 @@
 #define LASERDATAGENERATOR_H
 
 #include <QVector>
-#include "manager/inputdatalistmanager.h"
 #include "model/constantstorage.h"
 #include "base/singleton.h"
 

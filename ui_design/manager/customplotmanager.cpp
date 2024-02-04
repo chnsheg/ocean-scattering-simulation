@@ -159,8 +159,8 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
     customPlot->graph(curve_index)->data()->add(graphData, true);
 
     customPlot->legend->setVisible(true);
-    customPlot->graph(curve_index)->rescaleAxes(true);
-    customPlot->replot(); // 重绘 每次改变完以后都要调用这个进行重新绘制
+    customPlot->graph(curve_index)->rescaleAxes(true); // 如果图像不在中心，则需要去除true这个参数
+    customPlot->replot();                              // 重绘 每次改变完以后都要调用这个进行重新绘制
 }
 
 void CustomPlotManager::plotGraph(const QVector<double> *xData,
