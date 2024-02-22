@@ -21,9 +21,9 @@ public:
 
 public slots:
     void handleStartButtonClicked(const int page_index);
-    void handleDataGenerated(const QVector<QVector<double> *> *xDataVector,
-                             const QVector<QVector<double> *> *yDataVector,
-                             const int curve_num);
+    void handleDataGenerated(QVector<QVector<double> *> *xDataVector,
+                             QVector<QVector<double> *> *yDataVector,
+                             int curve_num);
     void handleClearButtonClicked();
     void handleTracerButtonClicked();
     void handleSwitchPageButtonClicked(int page_index);

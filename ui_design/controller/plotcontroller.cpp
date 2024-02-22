@@ -54,9 +54,9 @@ void PlotController::handleStartButtonClicked(int page_index)
     model->generatePairOfData(page_index);
 }
 
-void PlotController::handleDataGenerated(const QVector<QVector<double> *> *xDataVector,
-                                         const QVector<QVector<double> *> *yDataVector,
-                                         const int curve_num)
+void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector,
+                                         QVector<QVector<double> *> *yDataVector,
+                                         int curve_num)
 {
     QVector<double> *xData;
     QVector<double> *yData;
@@ -68,6 +68,7 @@ void PlotController::handleDataGenerated(const QVector<QVector<double> *> *xData
         // 释放内存，如果每次开始绘图导致系统卡顿，可以不释放内存，仅在切换页面时释放内存
         delete yData;
         yData = nullptr;
+        //yDataVector->replace(i, nullptr); // 设置为 nullptr 避免悬空指针
     }
     delete xData;
     xData = nullptr;

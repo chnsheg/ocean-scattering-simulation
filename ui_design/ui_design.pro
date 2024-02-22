@@ -72,3 +72,7 @@ RESOURCES += \
 DISTFILES += \
     base/singleton.cpp.txt \
     base/singleton.h.txt
+
+msvc:QMAKE_CXXFLAGS += -execution-charset:utf-8
+msvc:QMAKE_CXXFLAGS += -source-charset:utf-8
+QMAKE_CXXFLAGS_WARN_ON += -wd4819

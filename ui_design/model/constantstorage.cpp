@@ -5,38 +5,38 @@
 ConstantStorage::ConstantStorage(QObject *parent)
     : QObject{parent}
 {
-    if (!loadFromJsonFile("constants1.json"))
+    if (!loadFromJsonFile("constants.json"))
     {
         // 默认值
         ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
-        m_constants.insert(constantMap->getConstantName(0, 0), 299792458.0);
-        m_constants.insert(constantMap->getConstantName(0, 1), 6.62607015e-34);
-        m_constants.insert(constantMap->getConstantName(0, 2), 6.67430e-11);
-        m_constants.insert(constantMap->getConstantName(1, 0), 100e6);
-        m_constants.insert(constantMap->getConstantName(1, 1), 532e-9);
-        m_constants.insert(constantMap->getConstantName(1, 2), 1.0);
-        m_constants.insert(constantMap->getConstantName(1, 3), 12e9);
+        // m_constants.insert(constantMap->getConstantName(0, 0), 299792458.0);
+        // m_constants.insert(constantMap->getConstantName(0, 1), 6.62607015e-34);
+        // m_constants.insert(constantMap->getConstantName(0, 2), 6.67430e-11);
+        // m_constants.insert(constantMap->getConstantName(1, 0), 100e6);
+        // m_constants.insert(constantMap->getConstantName(1, 1), 532e-9);
+        // m_constants.insert(constantMap->getConstantName(1, 2), 1.0);
+        // m_constants.insert(constantMap->getConstantName(1, 3), 12e9);
 
-        m_constants.insert(constantMap->getConstantName(2, 0), 532e-9);
-        m_constants.insert(constantMap->getConstantName(2, 1), 1.0);
-        m_constants.insert(constantMap->getConstantName(2, 2), 10e-12);
-        m_constants.insert(constantMap->getConstantName(2, 3), 10e-6);
-        m_constants.insert(constantMap->getConstantName(3, 0), 0.25);
-        m_constants.insert(constantMap->getConstantName(3, 1), 100.0);
-        m_constants.insert(constantMap->getConstantName(3, 2), 1.0e6);
-        m_constants.insert(constantMap->getConstantName(3, 3), 1.0e-9);
-        m_constants.insert(constantMap->getConstantName(4, 0), 532e-9);
-        m_constants.insert(constantMap->getConstantName(4, 1), 1.0);
-        m_constants.insert(constantMap->getConstantName(4, 2), 10e-12);
-        m_constants.insert(constantMap->getConstantName(4, 3), 10e-6);
+        // m_constants.insert(constantMap->getConstantName(2, 0), 532e-9);
+        // m_constants.insert(constantMap->getConstantName(2, 1), 1.0);
+        // m_constants.insert(constantMap->getConstantName(2, 2), 10e-12);
+        // m_constants.insert(constantMap->getConstantName(2, 3), 10e-6);
+        // m_constants.insert(constantMap->getConstantName(3, 0), 0.25);
+        // m_constants.insert(constantMap->getConstantName(3, 1), 100.0);
+        // m_constants.insert(constantMap->getConstantName(3, 2), 1.0e6);
+        // m_constants.insert(constantMap->getConstantName(3, 3), 1.0e-9);
+        // m_constants.insert(constantMap->getConstantName(4, 0), 532e-9);
+        // m_constants.insert(constantMap->getConstantName(4, 1), 1.0);
+        // m_constants.insert(constantMap->getConstantName(4, 2), 10e-12);
+        // m_constants.insert(constantMap->getConstantName(4, 3), 10e-6);
 
-        saveToJsonFile("constants1.json");
+        saveToJsonFile("constants.json");
     }
 }
 
 ConstantStorage::~ConstantStorage()
 {
-    saveToJsonFile("constants1.json");
+    saveToJsonFile("constants.json");
 }
 
 void ConstantStorage::setConstant(const QString &name, const QVariant &value)
@@ -63,6 +63,8 @@ QJsonObject ConstantStorage::getAllConstantsJson() const
 void ConstantStorage::saveToJsonFile(const QString &fileName) const
 {
     QFile file{fileName};
+    // 打印保存的路径
+    qDebug() << "save path: " << QDir::currentPath();
     if (!file.open(QIODevice::WriteOnly))
     {
         qWarning() << "Cannot open file for writing:" << fileName;

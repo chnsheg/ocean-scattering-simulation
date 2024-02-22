@@ -11,8 +11,8 @@ public:
     static QVector<double> *generateRelativeFrequenceData();
 
 private:
-    static QVector<double> *data;
-    static QVector<double> *relativeData;
+    // static QVector<double> *data;
+    // static QVector<double> *relativeData;
     // static int frequence_count;
     // static int relative_frequence_count;
 };

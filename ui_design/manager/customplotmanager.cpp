@@ -139,10 +139,9 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
 {
     // 绘制曲线
     customPlot->addGraph();
-    auto maxElement = std::min_element(yData->begin(), yData->end(), [](double a, double b)
-                                       {
-                                           return (a >= b); // 此处决定了应该将最大值更大的曲线放在最后再绘制
-                                       });
+    auto maxElement = std::max_element(yData->begin(), yData->end(), [](double a, double b) {
+        return a < b; // 使用正确的比较器条件
+    });
     // 对横坐标范围进行限定，下界向下取整，上界向上取整
     customPlot->xAxis->setRange(floor(*xData->begin()), ceil(*xData->end()));
     customPlot->yAxis->setRange(0, *maxElement);

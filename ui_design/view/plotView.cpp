@@ -203,6 +203,7 @@ void PlotView::startButtonClicked()
     int page_index = ui->stackedWidget->currentIndex();
     Singleton<CustomPlotManager>::getInstance()->clearPlot();
     Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
+    Singleton<CustomPlotManager>::getInstance()->clearPlot();
     emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
     int index = ui->stackedWidget->currentIndex();
     ButtonStatus ButtonWaitForClose = {true, true, true};

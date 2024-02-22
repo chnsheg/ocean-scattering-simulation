@@ -1,7 +1,7 @@
 #include "texteditgroupmanager.h"
 #include "model/constantmap.h"
+#include "model/constantstorage.h"
 #include <qDebug>
-#include "constantstorage.h"
 
 /**
  * 该类用于绑定所有lineEdit到特定的常量名称，方便在程序中根据常量名称获取lineEdit的值。
