@@ -16,9 +16,9 @@ ConstantGroup::ConstantGroup()
 
 QVector<QString> physicalConstantVector = QVector<QString>({"SpeedOfLight", "PlanckConstant", "GravitationalConstant"});
 QVector<QString> laserConstantVector = QVector<QString>({"LaserWidth", "waveLength", "Intensity", "frequencyRange", "C"});
+QVector<QString> spectrumConstantVector = QVector<QString>({"Temperature", "Salinity", "BrillouinLine", "BrillouinShift"});
 QVector<QString> fizeauConstantVector = QVector<QString>({"Wavelength1", "Power1", "PulseDuration1", "PulseEnergy1"});
 QVector<QString> pmtConstantVector = QVector<QString>({"QuantumEfficiency", "DarkCountRate", "Gain", "NoiseEquivalentPower"});
-QVector<QString> spectrumConstantVector = QVector<QString>({"Wavelength2", "Power2", "PulseDuration2", "PulseEnergy2"});
 QVector<QString> runtimeDataVector = QVector<QString>({"Laser", "BrillouinSpectrum", "MieSpectrum", "RayleighSpectrum", "UnderWaterSpectrum", "FizeauInstrument", "SpectrumAfterFizeau", "PMT", "SpectrumAfterPMT"});
 
 ConstantGroup physicalConstantGroup(&physicalConstantVector);
@@ -32,10 +32,10 @@ ConstantMap::ConstantMap()
 {
     this->m_constantMap = new QMap<int, ConstantGroup *>();
     this->m_constantMap->insert(0, &laserConstantGroup);
-    this->m_constantMap->insert(1, &physicalConstantGroup);
+    this->m_constantMap->insert(1, &spectrumConstantGroup);
     this->m_constantMap->insert(2, &fizeauConstantGroup);
     this->m_constantMap->insert(3, &pmtConstantGroup);
-    this->m_constantMap->insert(4, &spectrumConstantGroup);
+    this->m_constantMap->insert(4, &physicalConstantGroup);
     this->m_constantMap->insert(5, &runtimeDataGroup);
 }
 

@@ -1,22 +1,8 @@
 #include "model/laserdatagenerator.h"
 #include <QDebug>
-#include "utils/readfiledata.h"
 #include "QMath.h"
 #include "model/frequencedatagenerator.h"
-
-double polyarea(const QVector<double> &x, const QVector<double> &y)
-{
-    double area = 0.0;
-    int j = x.size() - 1;
-
-    for (int i = 0; i < x.size(); i++)
-    {
-        area += (x[j] + x[i]) * (y[j] - y[i]);
-        j = i;
-    }
-
-    return std::abs(area / 2.0);
-}
+#include "utils/mymath.h"
 
 QVector<double> *LaserDataGenerator::generateLaserData()
 {
@@ -47,7 +33,7 @@ QVector<double> *LaserDataGenerator::generateLaserData()
     }
 
     // D = polyarea(miu, fx); % 求面积，面积归一化
-    double D = polyarea(*miu, fx);
+    double D = MyMath::polyarea(*miu, fx);
     double max = fx[max_index] / D;
 
     QVector<double> *data = new QVector<double>(size);
@@ -70,6 +56,9 @@ QVector<double> *LaserDataGenerator::generateLaserData()
     // double width_lase = (*miu)[col_LS.back()] - (*miu)[col_LS.front()];
     double width_lase = (*miu)[col_LS.back()] - (*miu)[col_LS.front()];
     qDebug() << "width_lase: " << width_lase;
+
+    delete miu;
+    miu = nullptr;
 
     return data;
 }

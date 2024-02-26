@@ -2,14 +2,17 @@
 #define SPECTRUMDATAGENERATOR_H
 
 #include <QVector>
-#include "manager/inputdatalistmanager.h"
+#include "model/constantstorage.h"
+#include "base/singleton.h"
 
 class SpectrumDataGenerator
 {
 public:
-    static QVector<double> *generateBriScatteringData(const InputDataListManager *inputDataList);
-    static QVector<double> *generateMieScatteringData(const InputDataListManager *inputDataList);
-    static QVector<double> *generateRayScatteringData(const InputDataListManager *inputDataList);
+    static double BrillouinLine();
+    static double BrillouinShift();
+    static QVector<double> *generateBriScatteringData();
+    static QVector<double> *generateMieScatteringData();
+    static QVector<double> *generateRayScatteringData();
 };
 
 #endif // SPECTRUMDATAGENERATOR_H

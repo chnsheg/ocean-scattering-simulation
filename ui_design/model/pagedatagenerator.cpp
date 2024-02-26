@@ -27,15 +27,15 @@ QVector<double> *PageDataGenerator::generateData(DataType dataType)
     case DataType::Laser:
         data = LaserDataGenerator::generateLaserData();
         break;
-    // case DataType::MieScattering:
-    //     data = SpectrumDataGenerator::generateMieScatteringData();
-    //     break;
-    // case DataType::BriScattering:
-    //     data = SpectrumDataGenerator::generateBriScatteringData();
-    //     break;
-    // case DataType::RayScattering:
-    //     data = SpectrumDataGenerator::generateRayScatteringData();
-    //     break;
+    case DataType::MieScattering:
+        data = SpectrumDataGenerator::generateMieScatteringData();
+        break;
+    case DataType::BriScattering:
+        data = SpectrumDataGenerator::generateBriScatteringData();
+        break;
+    case DataType::RayScattering:
+        data = SpectrumDataGenerator::generateRayScatteringData();
+        break;
     // case DataType::UnderwaterScattering:
     //     UnderwaterScatteringDataGenerator::generateUnderwaterScatteringData(data);
     //     break;
@@ -74,13 +74,13 @@ void PageDataGenerator::generatePairOfData(int page_index)
         yDataVector->append(generateData(DataType::Laser));
         emit dataGenerated(xDataVector, yDataVector, 1);
         break;
-        // case 2:
-        //     xDataVector->append(generateData(DataType::Frequence));
-        //     yDataVector->append(generateData(DataType::MieScattering));
-        //     yDataVector->append(generateData(DataType::BriScattering));
-        //     yDataVector->append(generateData(DataType::RayScattering));
-        //     emit dataGenerated(xDataVector, yDataVector, 3);
-        //     break;
+    case 2:
+        xDataVector->append(generateData(DataType::Frequence));
+        yDataVector->append(generateData(DataType::MieScattering));
+        yDataVector->append(generateData(DataType::BriScattering));
+        yDataVector->append(generateData(DataType::RayScattering));
+        emit dataGenerated(xDataVector, yDataVector, 3);
+        break;
         // case 3:
         //     xDataVector->append(
         //         PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));

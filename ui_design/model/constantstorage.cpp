@@ -5,15 +5,17 @@
 ConstantStorage::ConstantStorage(QObject *parent)
     : QObject{parent}
 {
-    if (!loadFromJsonFile("constants.json"))
+    bool debug = true;
+    if ((!loadFromJsonFile("constants.json")) || debug == true)
     {
         // 默认值
         ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
-        // m_constants.insert(constantMap->getConstantName(0, 0), 299792458.0);
-        // m_constants.insert(constantMap->getConstantName(0, 1), 6.62607015e-34);
-        // m_constants.insert(constantMap->getConstantName(0, 2), 6.67430e-11);
-        // m_constants.insert(constantMap->getConstantName(1, 0), 100e6);
-        // m_constants.insert(constantMap->getConstantName(1, 1), 532e-9);
+        m_constants.insert(constantMap->getConstantName(0, 0), 299792458.0);
+        m_constants.insert(constantMap->getConstantName(0, 1), 5.32e-07);
+        m_constants.insert(constantMap->getConstantName(0, 2), 1);
+        m_constants.insert(constantMap->getConstantName(0, 3), 12000000000);
+        m_constants.insert(constantMap->getConstantName(1, 0), 20);
+        m_constants.insert(constantMap->getConstantName(1, 1), 35);
         // m_constants.insert(constantMap->getConstantName(1, 2), 1.0);
         // m_constants.insert(constantMap->getConstantName(1, 3), 12e9);
 
