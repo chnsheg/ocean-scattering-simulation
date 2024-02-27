@@ -72,6 +72,7 @@ set(SOURCES
     module/mycombobox.cpp
     module/mytracer.cpp
     module/qcustomplot.cpp
+    utils/logger.cpp
     utils/myMath.cpp
     utils/readfiledata.cpp
     view/plotView.cpp
@@ -100,6 +101,7 @@ set(HEADERS
     module/mycombobox.h
     module/mytracer.h
     module/qcustomplot.h
+    utils/logger.h
     utils/myMath.h
     utils/readfiledata.h
     view/plotView.h

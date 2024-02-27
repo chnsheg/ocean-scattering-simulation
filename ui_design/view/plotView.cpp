@@ -2,6 +2,7 @@
 #include "manager/customplotmanager.h"
 #include "manager/lineeditgroupmanager.h"
 #include "manager/texteditmanager.h"
+#include "utils/logger.h"
 
 // PlotView *PlotView::plotViewInstance = nullptr;
 
@@ -30,6 +31,8 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
     // 挂载TextEditManager单例
     Singleton<TextEditManager>::getInstance(_ui->textEdit1);
+    // 挂载Logger单例
+    Singleton<Logger>::getInstance(Singleton<TextEditManager>::getInstance());
     // 挂载LineEditGroupManager单例
     QList<QList<QLineEdit *>> lineEditsList;
     for (auto &&widgetName : {_ui->cebianlan_1, _ui->cebianlan_2, _ui->cebianlan_3, _ui->cebianlan_4, _ui->cebianlan_5})
@@ -152,6 +155,10 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     default:
         break;
     }
+    Singleton<Logger>::getInstance()->logMessage("PlotView::PlotView()", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("PlotView::PlotView()", Logger::Warning);
+    Singleton<Logger>::getInstance()->logMessage("PlotView::PlotView()", Logger::Log);
+    Singleton<Logger>::getInstance()->logMessage("PlotView::PlotView()", Logger::Title);
     emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), index, curve_index);
 }
 

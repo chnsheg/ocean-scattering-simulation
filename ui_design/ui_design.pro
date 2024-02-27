@@ -31,6 +31,7 @@ SOURCES += \
     module/mycombobox.cpp \
     module/mytracer.cpp \
     module/qcustomplot.cpp \
+    utils/logger.cpp \
     utils/mymath.cpp \
     utils/readfiledata.cpp \
     view/plotView.cpp
@@ -57,6 +58,7 @@ HEADERS += \
     module/mycombobox.h \
     module/mytracer.h \
     module/qcustomplot.h \
+    utils/logger.h \
     utils/mymath.h \
     utils/readfiledata.h \
     view/plotView.h

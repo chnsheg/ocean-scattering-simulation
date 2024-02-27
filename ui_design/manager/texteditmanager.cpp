@@ -16,52 +16,6 @@ TextEditManager::TextEditManager() {}
 
 void TextEditManager::initTextEditStyle()
 {
-    // 初始化文本框样式
-    // QString styleSheet = "QTextEdit {"
-    //                      "    background-color: #f0f0f0;"
-    //                      "    color: #333;"
-    //                      "    font-family: 'Arial', sans-serif;"
-    //                      "    font-size: 14px;"
-    //                      "}"
-    //                      "QTextEdit::ScrollBar {"
-    //                      "    width: 10px;"
-    //                      "}"
-    //                      "QTextEdit::ScrollBar:vertical {"
-    //                      "    border: 2px solid #ccc;"
-    //                      "    background: #f0f0f0;"
-    //                      "}"
-    //                      "QTextEdit::ScrollBar::handle:vertical {"
-    //                      "    background: #999;"
-    //                      "    min-height: 20px;"
-    //                      "}"
-    //                      "QTextEdit::ScrollBar::add-line:vertical,"
-    //                      "QTextEdit::ScrollBar::sub-line:vertical {"
-    //                      "    height: 0px;"
-    //                      "}"
-    //                      "QTextEdit::ScrollBar:horizontal {"
-    //                      "    border: 2px solid #ccc;"
-    //                      "    background: #f0f0f0;"
-    //                      "}"
-    //                      "QTextEdit::ScrollBar::handle:horizontal {"
-    //                      "    background: #999;"
-    //                      "    min-width: 20px;"
-    //                      "}"
-    //                      "QTextEdit::ScrollBar::add-line:horizontal,"
-    //                      "QTextEdit::ScrollBar::sub-line:horizontal {"
-    //                      "    width: 0px;"
-    //                      "}";
-
-    // // 设置画布背景色
-    // QLinearGradient plotGradient;
-    // plotGradient.setStart(0, 0);
-    // plotGradient.setFinalStop(0, 350);
-    // plotGradient.setColorAt(0, QColor(80, 80, 80));
-    // plotGradient.setColorAt(1, QColor(50, 50, 50));
-
-    // QPalette palette = textEdit->palette();
-    // palette.setBrush(QPalette::Base, plotGradient);
-    // textEdit->setPalette(palette);
-    // 设置背景、前景色以及边框
     // 设置背景、前景色以及边框
     QPalette palette;
     palette.setColor(QPalette::Base, QColor(240, 240, 240)); // 背景色
@@ -142,4 +96,38 @@ void TextEditManager::appendText(const QString &text, const QColor &color, bool 
     {
         textEdit->append("\n");
     }
+}
+
+void TextEditManager::appendText(const QString &text, const QTextCharFormat &format, bool newLine)
+{
+    QTextEdit *m_textEdit = textEdit;
+    if (m_textEdit == nullptr) {
+        return;
+    }
+    m_textEdit->setCurrentCharFormat(format);
+    m_textEdit->append(text);
+    if (newLine)
+    {
+        m_textEdit->append("\n");
+    }
+
+    // if (textEdit)
+    // {
+    //     // 在文本编辑器中追加带有特定格式的文本
+    //     QTextCursor cursor = textEdit->textCursor();
+    //     cursor.movePosition(QTextCursor::End);
+
+    //     // 设置插入文本的格式
+    //     cursor.setCharFormat(format);
+
+    //     // 插入文本
+    //     cursor.insertText(text);
+
+    //     // 插入换行符
+    //     if (newLine)
+    //         cursor.insertBlock();
+
+    //     // 将光标移动到文本末尾
+    //     textEdit->setTextCursor(cursor);
+    // }
 }

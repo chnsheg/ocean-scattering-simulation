@@ -12,6 +12,7 @@ class TextEditManager : public QObject
 public:
     void appendText(const QString &text, bool newLine = true);
     void appendText(const QString &text, const QColor &color, bool newLine = true);
+    void appendText(const QString &text, const QTextCharFormat &format, bool newLine = true);
     void clearText();
     void initTextEditStyle();
     void setTextEdit(QTextEdit *textEdit);
