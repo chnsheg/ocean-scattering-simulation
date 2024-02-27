@@ -54,11 +54,14 @@ QVector<double> *LaserDataGenerator::generateLaserData()
 
     // 计算宽度
     // double width_lase = (*miu)[col_LS.back()] - (*miu)[col_LS.front()];
-    double width_lase = (*miu)[col_LS.back()] - (*miu)[col_LS.front()];
+    QVector<double> *RF = FrequenceDataGenerator::generateRelativeFrequenceData();
+    double width_lase = (*RF)[col_LS.back()] - (*RF)[col_LS.front()];
     qDebug() << "width_lase: " << width_lase;
 
     delete miu;
     miu = nullptr;
+    delete RF;
+    RF = nullptr;
 
     return data;
 }

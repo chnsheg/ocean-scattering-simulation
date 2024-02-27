@@ -16,9 +16,10 @@ SOURCES += \
     manager/buttongroupmanager.cpp \
     manager/customplotmanager.cpp \
     manager/inputdatalistmanager.cpp \
+    manager/lineeditgroupmanager.cpp \
     manager/managerbase.cpp \
     manager/show1buttongroupmanager.cpp \
-    manager/texteditgroupmanager.cpp \
+    manager/texteditmanager.cpp \
     manager/tracermanager.cpp \
     model/constantmap.cpp \
     model/constantstorage.cpp \
@@ -41,9 +42,10 @@ HEADERS += \
     manager/buttongroupmanager.h \
     manager/customplotmanager.h \
     manager/inputdatalistmanager.h \
+    manager/lineeditgroupmanager.h \
     manager/managerbase.h \
     manager/show1buttongroupmanager.h \
-    manager/texteditgroupmanager.h \
+    manager/texteditmanager.h \
     manager/tracermanager.h \
     model/constantmap.h \
     model/constantstorage.h \

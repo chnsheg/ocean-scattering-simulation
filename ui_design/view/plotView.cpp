@@ -1,6 +1,7 @@
 #include "view/plotView.h"
 #include "manager/customplotmanager.h"
-#include "manager/texteditgroupmanager.h"
+#include "manager/lineeditgroupmanager.h"
+#include "manager/texteditmanager.h"
 
 // PlotView *PlotView::plotViewInstance = nullptr;
 
@@ -27,7 +28,9 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     // 挂载CustomPlotManager单例
     //  Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
     Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
-    // 挂载TextEditGroupManager单例
+    // 挂载TextEditManager单例
+    Singleton<TextEditManager>::getInstance(_ui->textEdit1);
+    // 挂载LineEditGroupManager单例
     QList<QList<QLineEdit *>> lineEditsList;
     for (auto &&widgetName : {_ui->cebianlan_1, _ui->cebianlan_2, _ui->cebianlan_3, _ui->cebianlan_4, _ui->cebianlan_5})
     {
@@ -78,6 +81,11 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
         // 更新视图层中CustomPlot的样式
         Singleton<CustomPlotManager>::getInstance()->setCustomPlot(getCurrentPageCustomPlot());
         Singleton<CustomPlotManager>::getInstance()->initCustomPlotStyle();
+        // 更新视图层中TextEdit的样式
+        Singleton<TextEditManager>::getInstance()->setTextEdit(
+            ui->stackedWidget->findChild<QTextEdit *>(
+                QString("textEdit%1").arg(getCurrentPageIndex())));
+        Singleton<TextEditManager>::getInstance()->initTextEditStyle();
         // 更新视图层中ButtonGroups的样式和状态
         Singleton<ButtonGroupsManager>::getInstance()->initButtonStyle(plotInterfaceIndex);
         Singleton<ButtonGroupsManager>::getInstance()->initButtonStatus(plotInterfaceIndex);

@@ -1,4 +1,4 @@
-#include "texteditgroupmanager.h"
+#include "lineeditgroupmanager.h"
 #include "model/constantmap.h"
 #include "model/constantstorage.h"
 #include <qDebug>

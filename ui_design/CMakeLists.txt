@@ -58,8 +58,9 @@ set(SOURCES
     manager/customplotmanager.cpp
     manager/inputdatalistmanager.cpp
     manager/managerbase.cpp
-    manager/texteditgroupmanager.cpp
+    manager/lineeditgroupmanager.cpp
     manager/show1buttongroupmanager.cpp
+    manager/texteditmanager.cpp
     manager/tracermanager.cpp
     model/constantmap.cpp
     model/constantstorage.cpp
@@ -86,7 +87,8 @@ set(HEADERS
     manager/inputdatalistmanager.h
     manager/managerbase.h
     manager/show1buttongroupmanager.h
-    manager/texteditgroupmanager.h
+    manager/lineeditgroupmanager.h
+    manager/texteditmanager.h
     manager/tracermanager.h
     model/constantmap.h
     model/constantstorage.h

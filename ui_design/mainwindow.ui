@@ -30,7 +30,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_4">
        <layout class="QHBoxLayout" name="horizontalLayout">
@@ -214,7 +214,7 @@ border-image: none;</string>
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QTextEdit" name="textEdit">
+                  <widget class="QTextEdit" name="textEdit1">
                    <property name="html">
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -399,7 +399,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QTextEdit" name="textEdit_2">
+                  <widget class="QTextEdit" name="textEdit2">
                    <property name="html">
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -627,7 +627,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QTextEdit" name="textEdit_3">
+                  <widget class="QTextEdit" name="textEdit3">
                    <property name="html">
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -826,7 +826,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QTextEdit" name="textEdit_8">
+                  <widget class="QTextEdit" name="textEdit4">
                    <property name="html">
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -1004,7 +1004,7 @@ li.checked::marker { content: &quot;\2612&quot;; }
                   <number>0</number>
                  </property>
                  <item>
-                  <widget class="QTextEdit" name="textEdit_9">
+                  <widget class="QTextEdit" name="textEdit5">
                    <property name="html">
                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;

@@ -1,8 +1,7 @@
-#ifndef TEXTEDITGROUPMANAGER_H
-#define TEXTEDITGROUPMANAGER_H
+#ifndef LINEEDITGROUPMANAGER_H
+#define LINEEDITGROUPMANAGER_H
 
 #include <QObject>
-#include <QTextEdit>
 #include <QVector>
 #include "base/singleton.h"
 #include <QLineEdit>
@@ -36,4 +35,4 @@ private:
 signals:
 };
 
-#endif // TEXTEDITGROUPMANAGER_H
+#endif // LINEEDITGROUPMANAGER_H
