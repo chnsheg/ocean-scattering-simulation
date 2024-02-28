@@ -1,4 +1,5 @@
 #include "controller/plotcontroller.h"
+#include "utils/logger.h"
 
 PlotController *PlotController::plotControllerInstance = nullptr;
 
@@ -60,6 +61,7 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
 {
     QVector<double> *xData;
     QVector<double> *yData;
+    Singleton<Logger>::getInstance()->logMessage("数据生成完毕！", Logger::Log);
     xData = xDataVector->at(0); // 默认所有曲线的x轴数据都是一样的
     for (int i = 0; i < curve_num; ++i)
     {
@@ -68,7 +70,7 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
         // 释放内存，如果每次开始绘图导致系统卡顿，可以不释放内存，仅在切换页面时释放内存
         delete yData;
         yData = nullptr;
-        //yDataVector->replace(i, nullptr); // 设置为 nullptr 避免悬空指针
+        // yDataVector->replace(i, nullptr); // 设置为 nullptr 避免悬空指针
     }
     delete xData;
     xData = nullptr;
@@ -96,8 +98,6 @@ void PlotController::handleTracerButtonClicked()
 
 void PlotController::handleSwitchPageButtonClicked(int page_index)
 {
-    // 获取当前页面索引
-    qDebug() << "page_index = " << page_index;
     // 通知model存储数据
     view->updateViewPageSlot(page_index);
 }

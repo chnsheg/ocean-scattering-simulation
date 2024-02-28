@@ -89,6 +89,27 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
             ui->stackedWidget->findChild<QTextEdit *>(
                 QString("textEdit%1").arg(getCurrentPageIndex())));
         Singleton<TextEditManager>::getInstance()->initTextEditStyle();
+        // 输出logger信息
+        switch (plotInterfaceIndex)
+        {
+        case 1:
+            Singleton<Logger>::getInstance()->logMessage("激光发射系统", Logger::Title);
+            break;
+        case 2:
+            Singleton<Logger>::getInstance()->logMessage("散射光谱生成系统", Logger::Title);
+            break;
+        case 3:
+            Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱生成系统", Logger::Title);
+            break;
+        case 4:
+            Singleton<Logger>::getInstance()->logMessage("Fizeau干涉仪系统", Logger::Title);
+            break;
+        case 5:
+            Singleton<Logger>::getInstance()->logMessage("PMT系统", Logger::Title);
+            break;
+        default:
+            break;
+        }
         // 更新视图层中ButtonGroups的样式和状态
         Singleton<ButtonGroupsManager>::getInstance()->initButtonStyle(plotInterfaceIndex);
         Singleton<ButtonGroupsManager>::getInstance()->initButtonStatus(plotInterfaceIndex);
@@ -99,6 +120,7 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
     }
     else if (showPageIndex.contains(plotInterfaceIndex))
     {
+        Singleton<Logger>::getInstance()->logMessage("返回主界面!", Logger::Log);
         // Update view style accordingly
         ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
         // 更新视图层中ButtonGroups的样式和状态
@@ -120,6 +142,7 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     case 1:
         Singleton<CustomPlotManager>::getInstance()->setLegendName("激光光谱", 0);
         Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+        Singleton<Logger>::getInstance()->logMessage("激光光谱绘制完毕！", Logger::Log);
         break;
     case 2:
         if (curve_index == 2)
@@ -128,11 +151,13 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
             Singleton<CustomPlotManager>::getInstance()->setLegendName("米散射曲线", 1);
             Singleton<CustomPlotManager>::getInstance()->setLegendName("瑞利散射曲线", 2);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot(); // 在最后一条曲线绘制完毕后刷新
+            Singleton<Logger>::getInstance()->logMessage("散射光谱绘制完毕！", Logger::Log);
         }
         break;
     case 3:
         Singleton<CustomPlotManager>::getInstance()->setLegendName("水下散射光谱", 0);
         Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+        Singleton<Logger>::getInstance()->logMessage("水下散射光谱绘制完毕！", Logger::Log);
         break;
     case 4:
         // 判断是否需要创建第二个坐标轴
@@ -140,25 +165,24 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         {
             Singleton<CustomPlotManager>::getInstance()->createSecondAxis(0, 1, "y2");
             Singleton<CustomPlotManager>::getInstance()->switchToSecondAxis(0);
+            Singleton<Logger>::getInstance()->logMessage("Fizeau干涉仪器函数绘制完毕", Logger::Log);
         }
         else if (curve_index == 1)
         {
             Singleton<CustomPlotManager>::getInstance()->setLegendName("Fizeau仪器函数", 0);
             Singleton<CustomPlotManager>::getInstance()->setLegendName("通过Fizeau后的光谱", 1);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+            Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱通过Fizeau后的光谱绘制完毕", Logger::Log);
         }
         break;
     case 5:
         Singleton<CustomPlotManager>::getInstance()->setLegendName("PMT能谱", 0);
         Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+        Singleton<Logger>::getInstance()->logMessage("PMT能谱绘制完毕！", Logger::Log);
         break;
     default:
         break;
     }
-    Singleton<Logger>::getInstance()->logMessage("PlotView::PlotView()", Logger::Info);
-    Singleton<Logger>::getInstance()->logMessage("PlotView::PlotView()", Logger::Warning);
-    Singleton<Logger>::getInstance()->logMessage("PlotView::PlotView()", Logger::Log);
-    Singleton<Logger>::getInstance()->logMessage("PlotView::PlotView()", Logger::Title);
     emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), index, curve_index);
 }
 
@@ -170,6 +194,7 @@ void PlotView::updateViewClearSlot()
     Singleton<CustomPlotManager>::getInstance()->hidePlot();
     Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForOpen);
     Singleton<ButtonGroupsManager>::getInstance()->updateTracerButtonText(index, false);
+    Singleton<Logger>::getInstance()->logMessage("隐藏曲线显示！", Logger::Log);
 }
 
 void PlotView::updateViewTracerSlot()
@@ -178,7 +203,7 @@ void PlotView::updateViewTracerSlot()
     int index = ui->stackedWidget->currentIndex();
     // 更新Tracer状态s
     bool isVisible = Singleton<CustomPlotManager>::getInstance()->getTracerStatus();
-
+    isVisible ? Singleton<Logger>::getInstance()->logMessage("关闭Tracer显示", Logger::Log) : Singleton<Logger>::getInstance()->logMessage("开启Tracer显示", Logger::Log);
     // 更新按键状态
     Singleton<ButtonGroupsManager>::getInstance()->updateTracerButtonText(index, !isVisible);
     Singleton<CustomPlotManager>::getInstance()->refreshPlot();
@@ -216,9 +241,10 @@ void PlotView::startButtonClicked()
     //     qDebug() << "visible = " << visible;
     // }
     int page_index = ui->stackedWidget->currentIndex();
+    Singleton<Logger>::getInstance()->logMessage("开始绘图...", Logger::Log);
     Singleton<CustomPlotManager>::getInstance()->clearPlot();
     Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
-    Singleton<CustomPlotManager>::getInstance()->clearPlot();
+    // Singleton<CustomPlotManager>::getInstance()->clearPlot();
     emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
     int index = ui->stackedWidget->currentIndex();
     ButtonStatus ButtonWaitForClose = {true, true, true};

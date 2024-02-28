@@ -5,6 +5,7 @@ TextEditManager::TextEditManager(QTextEdit *textEdit, QObject *parent)
 {
     this->textEdit = textEdit;
     initTextEditStyle();
+    // this->textEdit->clear();
 }
 
 TextEditManager::~TextEditManager()
@@ -63,6 +64,11 @@ void TextEditManager::initTextEditStyle()
     // textEdit->setFocusPolicy(Qt::NoFocus);             // 禁用焦点, 使得文本框不可编辑
     textEdit->setFrameStyle(QFrame::NoFrame); // 禁用边框
 
+    // 设置字体大小
+    QFont font = textEdit->font();
+    font.setPointSize(10);
+    textEdit->setFont(font);
+
     // 当文本框内容改变时，自动滚动到底部
     connect(textEdit, &QTextEdit::textChanged, [=]()
             { textEdit->moveCursor(QTextCursor::End); });
@@ -72,6 +78,7 @@ void TextEditManager::setTextEdit(QTextEdit *textEdit)
 {
     this->textEdit = textEdit;
     initTextEditStyle();
+    // this->textEdit->clear();
 }
 
 void TextEditManager::clearText()
@@ -101,7 +108,8 @@ void TextEditManager::appendText(const QString &text, const QColor &color, bool 
 void TextEditManager::appendText(const QString &text, const QTextCharFormat &format, bool newLine)
 {
     QTextEdit *m_textEdit = textEdit;
-    if (m_textEdit == nullptr) {
+    if (m_textEdit == nullptr)
+    {
         return;
     }
     m_textEdit->setCurrentCharFormat(format);

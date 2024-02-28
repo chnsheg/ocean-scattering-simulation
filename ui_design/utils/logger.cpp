@@ -43,7 +43,7 @@ QTextCharFormat Logger::getFormatForLogLevel(LogLevel level)
         format.setForeground(Qt::black); // 设置为深蓝色
         format.setToolTip("[TITLE]: ");  // 设置标识符
         // 设置字体大小
-        format.setFontPointSize(16);
+        format.setFontPointSize(14);
         // 设置字体加粗
         format.setFontWeight(99);
         break;

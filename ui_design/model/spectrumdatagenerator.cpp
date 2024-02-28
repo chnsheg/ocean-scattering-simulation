@@ -3,6 +3,7 @@
 #include <qmath.h>
 #include "utils/mymath.h"
 #include "model/frequencedatagenerator.h"
+#include "utils/logger.h"
 
 double SpectrumDataGenerator::BrillouinLine()
 {
@@ -60,11 +61,8 @@ double SpectrumDataGenerator::BrillouinLine()
     double linew = 1.9850e18 * (1.0 / (4.0 * MY_PI * rho)) * qPow((4.0 * MY_PI * n / a), 2) * (4.0 / 3.0 * gs + gb);
 
     Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 2), linew);
-    qDebug() << "rho: " << rho;
-    qDebug() << "n: " << n;
-    qDebug() << "gs: " << gs;
-    qDebug() << "gb: " << gb;
-    qDebug() << "linew: " << linew;
+
+    Singleton<Logger>::getInstance()->logMessage("BrillouinLine: " + QString::number(linew), Logger::Info);
     return linew;
 }
 
@@ -89,7 +87,7 @@ double SpectrumDataGenerator::BrillouinShift()
 
     Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 3), v);
 
-    qDebug() << "v: " << v;
+    Singleton<Logger>::getInstance()->logMessage("BrillouinShift: " + QString::number(v), Logger::Info);
     return v;
 }
 
