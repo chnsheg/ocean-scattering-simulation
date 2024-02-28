@@ -14,12 +14,25 @@ ConstantGroup::ConstantGroup()
 {
 }
 
-QVector<QString> physicalConstantVector = QVector<QString>({"SpeedOfLight", "PlanckConstant", "GravitationalConstant"});
-QVector<QString> laserConstantVector = QVector<QString>({"LaserWidth", "waveLength", "Intensity", "frequencyRange", "C"});
-QVector<QString> spectrumConstantVector = QVector<QString>({"Temperature", "Salinity", "BrillouinLine", "BrillouinShift"});
-QVector<QString> fizeauConstantVector = QVector<QString>({"Wavelength1", "Power1", "PulseDuration1", "PulseEnergy1"});
-QVector<QString> pmtConstantVector = QVector<QString>({"QuantumEfficiency", "DarkCountRate", "Gain", "NoiseEquivalentPower"});
-QVector<QString> runtimeDataVector = QVector<QString>({"Laser", "BrillouinSpectrum", "MieSpectrum", "RayleighSpectrum", "UnderWaterSpectrum", "FizeauInstrument", "SpectrumAfterFizeau", "PMT", "SpectrumAfterPMT"});
+QVector<QString> physicalConstantVector = QVector<QString>(
+    {"SpeedOfLight", "PlanckConstant", "GravitationalConstant"});
+QVector<QString> laserConstantVector = QVector<QString>(
+    {"LaserWidth", "waveLength", "Intensity", "frequencyRange", "C"});
+QVector<QString> spectrumConstantVector = QVector<QString>(
+    {"Temperature", "Salinity", "BrillouinLine", "BrillouinShift"});
+QVector<QString> fizeauConstantVector = QVector<QString>(
+    {"Wavelength1", "Power1", "PulseDuration1", "PulseEnergy1"});
+QVector<QString> pmtConstantVector = QVector<QString>(
+    {"QuantumEfficiency", "DarkCountRate", "Gain", "NoiseEquivalentPower"});
+QVector<QString> runtimeDataVector = QVector<QString>({"Laser",
+                                                       "BrillouinSpectrum",
+                                                       "MieSpectrum",
+                                                       "RayleighSpectrum",
+                                                       "UnderWaterSpectrum",
+                                                       "FizeauInstrument",
+                                                       "SpectrumAfterFizeau",
+                                                       "PMT",
+                                                       "SpectrumAfterPMT"});
 
 ConstantGroup physicalConstantGroup(&physicalConstantVector);
 ConstantGroup laserConstantGroup(&laserConstantVector);

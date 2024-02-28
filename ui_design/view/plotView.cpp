@@ -3,6 +3,8 @@
 #include "manager/lineeditgroupmanager.h"
 #include "manager/texteditmanager.h"
 #include "utils/logger.h"
+#include "model/constantstorage.h"
+#include "model/constantmap.h"
 
 // PlotView *PlotView::plotViewInstance = nullptr;
 
@@ -114,8 +116,8 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
         Singleton<ButtonGroupsManager>::getInstance()->initButtonStyle(plotInterfaceIndex);
         Singleton<ButtonGroupsManager>::getInstance()->initButtonStatus(plotInterfaceIndex);
         // 更新视图层中show1ButtonGroup的样式和状态
-        Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStyle();
-        Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStatus();
+        // Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStyle();
+        // Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStatus();
         Singleton<CustomPlotManager>::getInstance()->refreshPlot();
     }
     else if (showPageIndex.contains(plotInterfaceIndex))
@@ -135,7 +137,37 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
 {
     // Update view curve accordingly
     int index = ui->stackedWidget->currentIndex();
+
     Singleton<CustomPlotManager>::getInstance()->plotGraphToBuffer(xData, yData, curve_index);
+    // if (index == 3)
+    // {
+    //     // 先从存储的数据QSharedPointer<QCPGraphDataContainer>中获得xData和yData，然后再绘制
+    //  显示不在中心是x坐标轴范围设置有问题！！！！！！！！！！
+    // QVector<double> *x1Data = new QVector<double>;
+    // QVector<double> *y1Data = new QVector<double>;
+    //     // x1Data = Singleton<ConstantStorage>::getInstance(nullptr)
+    //     //              ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 0))
+    //     //              .value<QSharedPointer<QCPGraphDataContainer>>()
+    //     //              .data()->at(0).key;
+
+    //     QCPDataContainer<QCPGraphData> *dataContainer = Singleton<ConstantStorage>::getInstance(nullptr)
+    //                                                         ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 0))
+    //                                                         .value<QSharedPointer<QCPGraphDataContainer>>()
+    //                                                         .data();
+    //     int size = dataContainer->size();
+    //     for (int i = 0; i < size; i++)
+    //     {
+    //         double x = dataContainer->at(i)->mainKey();
+    //         double y = dataContainer->at(i)->mainValue();
+    //         x1Data->push_back(x);
+    //         y1Data->push_back(y);
+    //         // if (y > 0.5)
+    //         // {
+    //         //     qDebug() << "x = " << x << " y = " << y;
+    //         // }
+    //     }
+    //     Singleton<CustomPlotManager>::getInstance()->plotGraphToBuffer(x1Data, y1Data, 0);
+    // }
     // 根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
     switch (index)
     {
@@ -158,6 +190,13 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         Singleton<CustomPlotManager>::getInstance()->setLegendName("水下散射光谱", 0);
         Singleton<CustomPlotManager>::getInstance()->refreshPlot();
         Singleton<Logger>::getInstance()->logMessage("水下散射光谱绘制完毕！", Logger::Log);
+        // test
+        // Singleton<CustomPlotManager>::getInstance()->getCustomPlot()->addGraph();
+        // // void QCPGraph::setData ( QSharedPointer< QCPGraphDataContainer >  data)
+        // Singleton<CustomPlotManager>::getInstance()->getCustomPlot()->graph(0)->setData(Singleton<ConstantStorage>::getInstance(nullptr)
+        //                                                                                     ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 0))
+        //                                                                                     .value<QSharedPointer<QCPGraphDataContainer>>());
+        // Singleton<CustomPlotManager>::getInstance()->getCustomPlot()->replot();
         break;
     case 4:
         // 判断是否需要创建第二个坐标轴

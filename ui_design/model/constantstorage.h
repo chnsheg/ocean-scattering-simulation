@@ -9,6 +9,9 @@
 #include <QJsonDocument>
 #include <QFile>
 #include "model/constantmap.h"
+#include "module/qcustomplot.h"
+
+Q_DECLARE_METATYPE(QSharedPointer<QCPGraphDataContainer>)
 
 class ConstantStorage : public QObject
 {

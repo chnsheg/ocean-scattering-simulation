@@ -139,12 +139,11 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
 {
     // 绘制曲线
     customPlot->addGraph();
-    auto maxElement = std::max_element(yData->begin(), yData->end(), [](double a, double b) {
-        return a < b; // 使用正确的比较器条件
-    });
+    auto maxElement = std::max_element(yData->begin(), yData->end(), [](double a, double b)
+                                       {
+                                           return a < b; // 使用正确的比较器条件
+                                       });
     // 对横坐标范围进行限定，下界向下取整，上界向上取整
-    customPlot->xAxis->setRange(floor(*xData->begin()), ceil(*xData->end()));
-    customPlot->yAxis->setRange(0, *maxElement);
     customPlot->graph(curve_index)->setPen(QPen(colorContainer.at(curve_index), 3)); // 设置曲线颜色
     // customPlot->graph(curve_index)->setData(*xData, *yData, true);                   // 必须确保数据是有序的
     // 补充代码：用下述方法：void QCPDataContainer< DataType >::add ( const QVector< DataType > &  data, bool  alreadySorted = false  )
@@ -156,10 +155,14 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
     }
 
     customPlot->graph(curve_index)->data()->add(graphData, true);
+    // customPlot->graph(curve_index)->setData(*xData, *yData, true);
 
     customPlot->legend->setVisible(true);
+    // customPlot->xAxis->setRange(floor(*xData->begin()), ceil(*xData->end()));
+    customPlot->xAxis->setRange(*xData->begin(), *xData->end());
+    customPlot->yAxis->setRange(0, *maxElement);
     customPlot->graph(curve_index)->rescaleAxes(true); // 如果图像不在中心，则需要去除true这个参数
-    customPlot->replot();                              // 重绘 每次改变完以后都要调用这个进行重新绘制
+    // customPlot->replot();                              // 重绘 此处若不断重绘会导致坐标轴范围出现问题
 }
 
 void CustomPlotManager::plotGraph(const QVector<double> *xData,

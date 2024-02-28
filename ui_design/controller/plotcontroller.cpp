@@ -62,6 +62,12 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
     QVector<double> *xData;
     QVector<double> *yData;
     Singleton<Logger>::getInstance()->logMessage("数据生成完毕！", Logger::Log);
+    if (xDataVector->size() == 0 || yDataVector->size() == 0)
+    {
+        Singleton<Logger>::getInstance()->logMessage("请设置所有输入变量！", Logger::Warning);
+        view->updateViewCurveSlot(nullptr, nullptr, 0);
+        return;
+    }
     xData = xDataVector->at(0); // 默认所有曲线的x轴数据都是一样的
     for (int i = 0; i < curve_num; ++i)
     {

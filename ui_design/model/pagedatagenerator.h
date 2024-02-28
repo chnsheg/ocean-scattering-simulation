@@ -9,8 +9,6 @@
 #include "manager/inputdatalistmanager.h"
 #include "module/qcustomplot.h"
 
-Q_DECLARE_METATYPE(QSharedPointer<QCPGraphDataContainer>)
-
 class PageDataGenerator : public QObject
 {
     Q_OBJECT

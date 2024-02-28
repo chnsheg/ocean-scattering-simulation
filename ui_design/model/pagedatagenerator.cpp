@@ -81,12 +81,14 @@ void PageDataGenerator::generatePairOfData(int page_index)
         yDataVector->append(generateData(DataType::MieScattering));
         emit dataGenerated(xDataVector, yDataVector, 3);
         break;
-        // case 3:
-        //     xDataVector->append(
-        //         PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
-        //     yDataVector->append(
-        //         PageDataGenerator::generateData(PageDataGenerator::DataType::MieScattering,
-        //                                         inputDataList));
+    case 3:
+        // xDataVector->append(
+        //     PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
+        // yDataVector->append(
+        //     PageDataGenerator::generateData(PageDataGenerator::DataType::MieScattering,
+        //                                     inputDataList));
+        emit dataGenerated(xDataVector, yDataVector, 1);
+        break;
         // case 4:
         //     xDataVector->append(generateData(DataType::Frequence));
         //     yDataVector->append(generateData(DataType::FizeauInstrument));
@@ -115,15 +117,6 @@ void PageDataGenerator::generatePairOfData(int page_index)
     // delete inputDataList;
 }
 
-// void PageDataGenerator::parseInputDataList(const InputDataListManager *inputDataList)
-// {
-//     for (int i = 0; i < inputDataList->getInputDataList()->size(); i++)
-//     {
-//         qDebug() << inputDataList->getInputDataList()->at(i).getInputDataName();
-//         qDebug() << inputDataList->getInputDataList()->at(i).getInputDataValue();
-//     }
-// }
-
 void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index)
 {
     switch (page_index)
@@ -133,23 +126,18 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
         // 打印底层存储地址
         // qDebug() << "dataContainer: " << dataContainer.data();
         break;
-        // case 2:
-        //     MieScatteringDataGenerator::saveRuntimeData();
-        //     BriScatteringDataGenerator::saveRuntimeData();
-        //     RayScatteringDataGenerator::saveRuntimeData();
-        //     break;
-        // case 3:
-        //     MieScatteringDataGenerator::saveRuntimeData();
-        //     break;
-        // case 4:
-        //     FizeauDataGenerator::saveRuntimeData();
-        //     break;
-        // case 5:
-        //     UnderwaterScatteringDataGenerator::saveRuntimeData();
-        //     break;
-        // case 6:
-        //     PMTFrequencyDataGenerator::saveRuntimeData();
-        //     PMTEnergyDataGenerator::saveRuntimeData();
-        //     break;
+    case 2:
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 1 + curve_index), QVariant::fromValue(dataContainer));
+
+    case 3:
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 4 + curve_index), QVariant::fromValue(dataContainer));
+        break;
+
+    case 4:
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 5 + curve_index), QVariant::fromValue(dataContainer));
+        break;
+    case 5:
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 7 + curve_index), QVariant::fromValue(dataContainer));
+        break;
     }
 }
