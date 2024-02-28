@@ -8,10 +8,19 @@
 QVector<double> *LaserDataGenerator::generateLaserData()
 {
     // 读取存储的数据
-    double width = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 0)).toDouble();
-    double lambda_0 = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1)).toDouble();
-    double c = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4)).toDouble();
-    double intensity = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 2)).toDouble();
+    double width = Singleton<ConstantStorage>::getInstance(nullptr)
+                       ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 0))
+                       .toDouble();
+    double lambda_0 = Singleton<ConstantStorage>::getInstance(nullptr)
+                          ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
+                          .toDouble();
+    double c = Singleton<ConstantStorage>::getInstance(nullptr)
+                   ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
+                   .toDouble();
+    double intensity = Singleton<ConstantStorage>::getInstance(nullptr)
+                           ->getConstant(
+                               Singleton<ConstantMap>::getInstance()->getConstantName(0, 2))
+                           .toDouble();
 
     // 计算得到的变量
     double delta_l = width / 2.0;
@@ -55,15 +64,24 @@ QVector<double> *LaserDataGenerator::generateLaserData()
 
     // 计算宽度
     // double width_lase = (*miu)[col_LS.back()] - (*miu)[col_LS.front()];
-    QVector<double> *RF = FrequenceDataGenerator::generateRelativeFrequenceData();
-    double width_lase = (*RF)[col_LS.back()] - (*RF)[col_LS.front()];
-    // qDebug() << "width_lase: " << width_lase;
-    Singleton<Logger>::getInstance()->logMessage("width_lase: " + QString::number(width_lase), Logger::Info);
-
+    if (col_LS.size() < 2)
+    {
+        Singleton<Logger>::getInstance()->logMessage(
+            "Setting the laser_width within this frequency range cannot calculate width_laser. "
+            "Please modify the frequency range or the size of laser_width",
+            Logger::Warning);
+    }
+    else
+    {
+        QVector<double> *RF = FrequenceDataGenerator::generateRelativeFrequenceData();
+        double width_lase = (*RF)[col_LS.back()] - (*RF)[col_LS.front()];
+        // qDebug() << "width_lase: " << width_lase;
+        Singleton<Logger>::getInstance()->logMessage("width_lase: " + QString::number(width_lase), Logger::Info);
+        delete RF;
+        RF = nullptr;
+    }
     delete miu;
     miu = nullptr;
-    delete RF;
-    RF = nullptr;
 
     return data;
 }

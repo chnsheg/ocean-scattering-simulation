@@ -112,7 +112,9 @@ QVector<double> *SpectrumDataGenerator::generateBriScatteringData()
     // L_m = delta_m ./ (4 .* (miu - vr) .^ 2 + delta_m ^ 2); % 定义瑞利峰，线型为洛伦兹函数
     for (int i = 0; i < size; i++)
     {
-        (*data)[i] = delta_b / (4 * qPow((*miu)[i] - vr, 2) + qPow(delta_b, 2));
+        // (*data)[i] = delta_b / (4 * qPow((*miu)[i] - vr, 2) + qPow(delta_b, 2));
+        // L_b = delta_b ./ (4 .* (miu - vb1) .^ 2 + delta_b ^ 2) + delta_b ./ (4 .* (miu - vb2) .^ 2 + delta_b ^ 2);
+        (*data)[i] = delta_b / (4 * qPow((*miu)[i] - v_b1, 2) + qPow(delta_b, 2)) + delta_b / (4 * qPow((*miu)[i] - v_b2, 2) + qPow(delta_b, 2));
     }
 
     double A = MyMath::polyarea(*miu, *data);
@@ -122,6 +124,7 @@ QVector<double> *SpectrumDataGenerator::generateBriScatteringData()
     }
 
     delete miu;
+    miu = nullptr;
     return data;
 }
 
@@ -150,6 +153,7 @@ QVector<double> *SpectrumDataGenerator::generateMieScatteringData()
     }
 
     delete miu;
+    miu = nullptr;
     return data;
 }
 
@@ -178,6 +182,6 @@ QVector<double> *SpectrumDataGenerator::generateRayScatteringData()
     }
 
     delete miu;
-
+    miu = nullptr;
     return data;
 }

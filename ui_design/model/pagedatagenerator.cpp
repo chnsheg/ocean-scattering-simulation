@@ -76,9 +76,9 @@ void PageDataGenerator::generatePairOfData(int page_index)
         break;
     case 2:
         xDataVector->append(generateData(DataType::Frequence));
-        yDataVector->append(generateData(DataType::MieScattering));
         yDataVector->append(generateData(DataType::BriScattering));
         yDataVector->append(generateData(DataType::RayScattering));
+        yDataVector->append(generateData(DataType::MieScattering));
         emit dataGenerated(xDataVector, yDataVector, 3);
         break;
         // case 3:

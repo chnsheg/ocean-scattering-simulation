@@ -118,24 +118,4 @@ void TextEditManager::appendText(const QString &text, const QTextCharFormat &for
     {
         m_textEdit->append("\n");
     }
-
-    // if (textEdit)
-    // {
-    //     // 在文本编辑器中追加带有特定格式的文本
-    //     QTextCursor cursor = textEdit->textCursor();
-    //     cursor.movePosition(QTextCursor::End);
-
-    //     // 设置插入文本的格式
-    //     cursor.setCharFormat(format);
-
-    //     // 插入文本
-    //     cursor.insertText(text);
-
-    //     // 插入换行符
-    //     if (newLine)
-    //         cursor.insertBlock();
-
-    //     // 将光标移动到文本末尾
-    //     textEdit->setTextCursor(cursor);
-    // }
 }

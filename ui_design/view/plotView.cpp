@@ -148,8 +148,8 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         if (curve_index == 2)
         {
             Singleton<CustomPlotManager>::getInstance()->setLegendName("布里渊散射曲线", 0);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("米散射曲线", 1);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("瑞利散射曲线", 2);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("瑞利散射曲线", 1);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("米散射曲线", 2);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot(); // 在最后一条曲线绘制完毕后刷新
             Singleton<Logger>::getInstance()->logMessage("散射光谱绘制完毕！", Logger::Log);
         }
