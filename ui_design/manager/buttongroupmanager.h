@@ -20,7 +20,7 @@ struct ButtonStatus // 控制按钮组状态结构体 按键组：控制显示�
     }
 };
 
-// 按键状态的结构体
+// 按键状态的结构体,按功能定义
 class ButtonGroup
 {
 public:
@@ -28,15 +28,16 @@ public:
     QPushButton *clearButton;
     QPushButton *tracerButton;
     QPushButton *backButton;
+    QPushButton *saveConstantButton;
     // 可以添加更多按钮指针
 public:
     // 默认构造函数
     ButtonGroup()
-        : showButton(nullptr), clearButton(nullptr), tracerButton(nullptr), backButton(nullptr)
+        : showButton(nullptr), clearButton(nullptr), tracerButton(nullptr), backButton(nullptr), saveConstantButton(nullptr)
     {
     }
-    ButtonGroup(QPushButton *show, QPushButton *clear, QPushButton *tracer, QPushButton *back)
-        : showButton(show), clearButton(clear), tracerButton(tracer), backButton(back)
+    ButtonGroup(QPushButton *show, QPushButton *clear, QPushButton *tracer, QPushButton *back, QPushButton *saveConstant)
+        : showButton(show), clearButton(clear), tracerButton(tracer), backButton(back), saveConstantButton(saveConstant)
     {
     }
 };
@@ -51,6 +52,11 @@ enum ButtonGroupId
     back3Button,
     back4Button,
     back5Button,
+    saveConstant1Button,
+    saveConstant2Button,
+    saveConstant3Button,
+    saveConstant4Button,
+    saveConstant5Button,
 };
 Q_DECLARE_METATYPE(ButtonGroupId)
 

@@ -141,3 +141,8 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
         break;
     }
 }
+
+void PageDataGenerator::storeConstantByGroupIndex(int index)
+{
+    Singleton<ConstantStorage>::getInstance(nullptr)->savePageConstantToJsonFile(index);
+}

@@ -13,11 +13,11 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
 {
     // 挂载ButtonGroups单例
     QVector<ButtonGroup> *buttonGroup = new QVector<ButtonGroup>;
-    buttonGroup->push_back(ButtonGroup(_ui->show1, _ui->clear1, _ui->tracer1, _ui->back1));
-    buttonGroup->push_back(ButtonGroup(_ui->show2, _ui->clear2, _ui->tracer2, _ui->back2));
-    buttonGroup->push_back(ButtonGroup(_ui->show3, _ui->clear3, _ui->tracer3, _ui->back3));
-    buttonGroup->push_back(ButtonGroup(_ui->show4, _ui->clear4, _ui->tracer4, _ui->back4));
-    buttonGroup->push_back(ButtonGroup(_ui->show5, _ui->clear5, _ui->tracer5, _ui->back5));
+    buttonGroup->push_back(ButtonGroup(_ui->show1, _ui->clear1, _ui->tracer1, _ui->back1, _ui->clear1));
+    buttonGroup->push_back(ButtonGroup(_ui->show2, _ui->clear2, _ui->tracer2, _ui->back2, _ui->clear2));
+    buttonGroup->push_back(ButtonGroup(_ui->show3, _ui->clear3, _ui->tracer3, _ui->back3, _ui->clear3));
+    buttonGroup->push_back(ButtonGroup(_ui->show4, _ui->clear4, _ui->tracer4, _ui->back4, _ui->clear4));
+    buttonGroup->push_back(ButtonGroup(_ui->show5, _ui->clear5, _ui->tracer5, _ui->back5, _ui->clear5));
     // ButtonGroupsManager::getButtonGroupsManagerInstance(buttonGroup);
     Singleton<ButtonGroupsManager>::getInstance(buttonGroup);
     // 挂载show1ButtonGroupManager单例
@@ -318,7 +318,27 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
     case back5Button:
         switchPlotPageButtonClicked(0);
         break;
+    case saveConstant1Button:
+        saveConstantButtonClicked(0);
+        break;
+    case saveConstant2Button:
+        saveConstantButtonClicked(1);
+        break;
+    case saveConstant3Button:
+        saveConstantButtonClicked(2);
+        break;
+    case saveConstant4Button:
+        saveConstantButtonClicked(3);
+        break;
+    case saveConstant5Button:
+        saveConstantButtonClicked(4);
+        break;
     }
+}
+
+void PlotView::saveConstantButtonClicked(int index)
+{
+    emit onSaveConstantButtonClicked(index);
 }
 
 void PlotView::clearButtonClicked()

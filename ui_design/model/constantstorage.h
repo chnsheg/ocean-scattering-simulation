@@ -15,10 +15,11 @@ Q_DECLARE_METATYPE(QSharedPointer<QCPGraphDataContainer>)
 
 class ConstantStorage : public QObject
 {
+#define CONSTANT_FILE "constants.json"
     SINGLETON(ConstantStorage);
     Q_OBJECT
 public:
-    explicit ConstantStorage(QObject *parent = nullptr);
+    // explicit ConstantStorage(QObject *parent = nullptr);
 
     // 设置常量的方法
     void setConstant(const QString &name, const QVariant &value);
@@ -29,11 +30,16 @@ public:
     // 获取所有常量的 JSON 格式表示
     QJsonObject getAllConstantsJson() const;
 
+    // 保存常量到文件
+    void savePageConstantToJsonFile(int index);
+
 private:
-    // 常量的存储容器
-    QMap<QString, QVariant> m_constants;
+    explicit ConstantStorage(QObject *parent = nullptr);
     void saveToJsonFile(const QString &fileName) const;
     bool loadFromJsonFile(const QString &fileName);
+
+    // 常量的存储容器
+    QMap<QString, QVariant> m_constants;
 
 signals:
 };

@@ -1,14 +1,14 @@
 #include "manager/buttongroupmanager.h"
 
 ButtonGroupsManager::ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups, QObject *parent)
-    : ManagerBase(parent)
-    , buttonGroups(_buttonGroups)
+    : ManagerBase(parent), buttonGroups(_buttonGroups)
 {
     buttonGroups = _buttonGroups;
     initButtonStyle(1);
     initButtonStatus(1);
 
-    for (int i = 0; i < buttonGroups->size(); i++) {
+    for (int i = 0; i < buttonGroups->size(); i++)
+    {
         addEvent(QString("start%1ButtonClicked").arg(i + 1),
                  QString("start%1ButtonClicked").arg(i + 1),
                  buttonGroups->at(i).showButton,
@@ -29,6 +29,11 @@ ButtonGroupsManager::ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups, QO
                  buttonGroups->at(i).backButton,
                  &QPushButton::clicked,
                  static_cast<ButtonGroupId>(static_cast<int>(ButtonGroupId::back1Button) + i));
+        addEvent(QString("saveConstant%1ButtonClicked").arg(i + 1),
+                 QString("saveConstant%1ButtonClicked").arg(i + 1),
+                 buttonGroups->at(i).saveConstantButton,
+                 &QPushButton::clicked,
+                 static_cast<ButtonGroupId>(static_cast<int>(ButtonGroupId::saveConstant1Button) + i));
     }
 }
 
@@ -36,8 +41,9 @@ ButtonGroupsManager::ButtonGroupsManager() {}
 
 ButtonGroupsManager::~ButtonGroupsManager()
 {
-    //释放内存
-    if (buttonGroups != nullptr) {
+    // 释放内存
+    if (buttonGroups != nullptr)
+    {
         delete buttonGroups;
         buttonGroups = nullptr;
     }
@@ -70,7 +76,7 @@ ButtonGroupsManager::~ButtonGroupsManager()
 //     }
 // }
 
-//TODO:初始化按钮样式
+// TODO:初始化按钮样式
 void ButtonGroupsManager::initButtonStyle(int index)
 {
     // Set button style accordingly
@@ -121,11 +127,11 @@ void ButtonGroupsManager::onEventAction(const QString &event, int status, const 
     // qDebug() << "event: " << event << "status: " << status << "param: " << param;
 }
 
-//获取buttonGroups
-// QVector<ButtonGroup> *ButtonGroupsManager::getButtonGroups()
-// {
-//     return buttonGroups;
-// }
+// 获取buttonGroups
+//  QVector<ButtonGroup> *ButtonGroupsManager::getButtonGroups()
+//  {
+//      return buttonGroups;
+//  }
 
 // void ButtonGroupsManager::startButtonClicked()
 // {

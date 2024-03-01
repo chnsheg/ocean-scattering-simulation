@@ -1,6 +1,7 @@
 #include "constantstorage.h"
 #include <qDebug>
 #include "module/qcustomplot.h"
+#include "utils/logger.h"
 
 ConstantStorage::ConstantStorage(QObject *parent)
     : QObject{parent}
@@ -32,14 +33,13 @@ ConstantStorage::ConstantStorage(QObject *parent)
         // m_constants.insert(constantMap->getConstantName(4, 1), 1.0);
         // m_constants.insert(constantMap->getConstantName(4, 2), 10e-12);
         // m_constants.insert(constantMap->getConstantName(4, 3), 10e-6);
-
-        saveToJsonFile("constants.json");
+        saveToJsonFile(CONSTANT_FILE);
     }
 }
 
 ConstantStorage::~ConstantStorage()
 {
-    saveToJsonFile("constants.json");
+    saveToJsonFile(CONSTANT_FILE);
 }
 
 void ConstantStorage::setConstant(const QString &name, const QVariant &value)
@@ -94,4 +94,50 @@ bool ConstantStorage::loadFromJsonFile(const QString &fileName)
         qDebug() << "jsonName: " << name << "jsonValue: " << m_constants[name];
     }
     return true;
+}
+
+void ConstantStorage::savePageConstantToJsonFile(int index)
+{
+    // 可以搞个save(all?)复选框来判断
+    // 1、先根据index获取当前页面的常数名称，再根据名称去QMap<QString, QVariant> m_constants获取当前页面的常数值
+    ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
+    int i = 0;
+    QMap<QString, QVariant> temp;
+    while (true)
+    {
+        QString name = constantMap->getConstantName(index, i);
+        if (name == QString())
+        {
+            break;
+        }
+        temp[name] = m_constants[name];
+        i++;
+    }
+
+    // 保存当前页面的常数到"constants.json"；注意不是清空文件后再写入，而是在原有的基础上更改
+    QFile file{CONSTANT_FILE};
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        qWarning() << "Cannot open file for reading:" << CONSTANT_FILE;
+        return;
+    }
+    auto jsonDocument = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    auto jsonObject = jsonDocument.object();
+    for (const auto &name : temp.keys())
+    {
+        // 更新或追加键值对
+        jsonObject[name] = QJsonValue::fromVariant(temp[name]);
+    }
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        // qWarning() << "Cannot open file for writing:" << CONSTANT_FILE;
+        Singleton<Logger>::getInstance()->logMessage("Cannot open file for writing", Logger::Warning);
+        return;
+    }
+    file.write(QJsonDocument{jsonObject}.toJson());
+    file.close();
+
+    // 使用Logger打印保存路径
+    Singleton<Logger>::getInstance()->logMessage("Save constant to " + QDir::currentPath() + "/" + CONSTANT_FILE, Logger::Info);
 }

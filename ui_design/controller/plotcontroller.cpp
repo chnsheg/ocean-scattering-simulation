@@ -19,35 +19,12 @@ PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObje
     connect(view, switchPageButtonClicked, this, handleSwitchPageButtonClicked);
 
     connect(view, &PlotView::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
+
+    connect(view, &PlotView::onSaveConstantButtonClicked, this, &PlotController::handleSaveConstantButtonClicked);
 }
 
 // TODO: Add destructor
 PlotController::~PlotController() {}
-
-// PlotController *PlotController::getPlotControllerInstance(PlotView *_view, PageDataGenerator *_model)
-// {
-//     if (plotControllerInstance == nullptr) {
-//         plotControllerInstance = new PlotController(_view, _model);
-//     }
-//     return plotControllerInstance;
-// }
-
-// PlotController *PlotController::getPlotControllerInstance()
-// {
-//     if (plotControllerInstance != nullptr) {
-//         return plotControllerInstance;
-//     } else {
-//         return nullptr;
-//     }
-// }
-
-// void PlotController::destroyPlotControllerInstance()
-// {
-//     if (plotControllerInstance != nullptr) {
-//         delete plotControllerInstance;
-//         plotControllerInstance = nullptr;
-//     }
-// }
 
 void PlotController::handleStartButtonClicked(int page_index)
 {
@@ -99,6 +76,12 @@ void PlotController::handleClearButtonClicked()
 void PlotController::handleTracerButtonClicked()
 {
     view->updateViewTracerSlot();
+}
+
+void PlotController::handleSaveConstantButtonClicked(int index)
+{
+    // 通知model存储数据
+    model->storeConstantByGroupIndex(index);
 }
 
 void PlotController::handleSwitchPageButtonClicked(int page_index)

@@ -25,7 +25,7 @@ public:
             // qDebug() << "constantName: " << constantName;
             return constants->at(constantIndex);
         }
-        return QString("null");
+        return QString();
     }
 
     ConstantGroup();
