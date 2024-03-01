@@ -65,7 +65,6 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
     if (xDataVector->size() == 0 || yDataVector->size() == 0)
     {
         Singleton<Logger>::getInstance()->logMessage("请设置所有输入变量！", Logger::Warning);
-        view->updateViewCurveSlot(nullptr, nullptr, 0);
         return;
     }
     xData = xDataVector->at(0); // 默认所有曲线的x轴数据都是一样的

@@ -30,14 +30,17 @@ QTextCharFormat Logger::getFormatForLogLevel(LogLevel level)
     case Log:
         format.setForeground(Qt::darkBlue); // 设置为黑色
         format.setToolTip("[LOG]: ");       // 设置标识符
+        format.setFontPointSize(12);
         break;
     case Warning:
         format.setForeground(Qt::darkRed); // 设置为深红色
         format.setToolTip("[WARNING]: ");  // 设置标识符
+        format.setFontPointSize(12);
         break;
     case Info:
         format.setForeground(Qt::darkGreen); // 设置为深绿色
         format.setToolTip("[INFO]: ");       // 设置标识符
+        format.setFontPointSize(12);
         break;
     case Title:
         format.setForeground(Qt::black); // 设置为深蓝色

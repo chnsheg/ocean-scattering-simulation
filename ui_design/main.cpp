@@ -10,6 +10,19 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+
+    QFile file(":/qss.css");
+    if (file.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&file);
+        QString css = in.readAll();
+        a.setStyleSheet(css);
+        file.close();
+    }
+    else
+    {
+        qDebug() << "open file failed";
+    }
     w.show();
     return a.exec();
 }

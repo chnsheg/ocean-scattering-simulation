@@ -73,7 +73,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     data_csv.qrc \
-    images.qrc
+    images.qrc \
+    qss.qrc
 
 DISTFILES += \
     base/singleton.cpp.txt \

@@ -41,6 +41,7 @@ set(FORMS
 set(RESOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data_csv.qrc
     ${CMAKE_CURRENT_SOURCE_DIR}/images.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qss.qrc
 )
 
 # Run uic on .ui files
