@@ -161,7 +161,7 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
     // customPlot->xAxis->setRange(floor(*xData->begin()), ceil(*xData->end()));
     customPlot->xAxis->setRange(*xData->begin(), *xData->end());
     customPlot->yAxis->setRange(0, *maxElement);
-    customPlot->graph(curve_index)->rescaleAxes(true); // 如果图像不在中心，则需要去除true这个参数
+    customPlot->graph(curve_index)->rescaleAxes(); // 此处不能设置为true，会导致连续点击时坐标轴无法正常缩放
     // customPlot->replot();                              // 重绘 此处若不断重绘会导致坐标轴范围出现问题
 }
 
@@ -186,6 +186,7 @@ void CustomPlotManager::refreshPlot()
 void CustomPlotManager::clearPlot()
 {
     customPlot->clearGraphs();
+    // initCustomPlotStyle();
     // customPlot->replot();
 }
 
