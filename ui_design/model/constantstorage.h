@@ -15,7 +15,7 @@ Q_DECLARE_METATYPE(QSharedPointer<QCPGraphDataContainer>)
 
 class ConstantStorage : public QObject
 {
-#define CONSTANT_FILE "constants.json"
+#define CONSTANT_FILE "constants4.json"
     SINGLETON(ConstantStorage);
     Q_OBJECT
 public:
@@ -32,6 +32,7 @@ public:
 
     // 保存常量到文件
     void savePageConstantToJsonFile(int index);
+    void saveAllPageConstantToJsonFile();
 
 private:
     explicit ConstantStorage(QObject *parent = nullptr);

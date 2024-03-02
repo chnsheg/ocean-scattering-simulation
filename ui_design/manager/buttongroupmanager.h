@@ -51,12 +51,7 @@ enum ButtonGroupId
     back2Button,
     back3Button,
     back4Button,
-    back5Button,
-    saveConstant1Button,
-    saveConstant2Button,
-    saveConstant3Button,
-    saveConstant4Button,
-    saveConstant5Button,
+    back5Button
 };
 Q_DECLARE_METATYPE(ButtonGroupId)
 

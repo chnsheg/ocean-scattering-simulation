@@ -34,6 +34,8 @@ private:
     void onEventAction(const QString &event, int status, const QVariant &param);
 
 public:
+    void showPageMenuStatus();
+    void plotPageMenuStatus();
 signals:
     void eventSignal(MenuActionId param);
 

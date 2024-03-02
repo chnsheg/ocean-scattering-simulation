@@ -146,3 +146,8 @@ void PageDataGenerator::storeConstantByGroupIndex(int index)
 {
     Singleton<ConstantStorage>::getInstance(nullptr)->savePageConstantToJsonFile(index);
 }
+
+void PageDataGenerator::storeAllConstant()
+{
+    Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageConstantToJsonFile();
+}

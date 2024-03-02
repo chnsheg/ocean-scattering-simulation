@@ -93,6 +93,8 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
     if (plotPageIndex.contains(plotInterfaceIndex))
     {
         ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
+        // 更新视图层中Menu的样式
+        Singleton<MenuManager>::getInstance()->plotPageMenuStatus();
         // 更新视图层中CustomPlot的样式
         Singleton<CustomPlotManager>::getInstance()->setCustomPlot(getCurrentPageCustomPlot());
         Singleton<CustomPlotManager>::getInstance()->initCustomPlotStyle();
@@ -133,6 +135,7 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
     else if (showPageIndex.contains(plotInterfaceIndex))
     {
         Singleton<Logger>::getInstance()->logMessage("返回主界面!", Logger::Log);
+        Singleton<MenuManager>::getInstance()->showPageMenuStatus();
         // Update view style accordingly
         ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
         // 更新视图层中ButtonGroups的样式和状态
@@ -302,13 +305,16 @@ void PlotView::startButtonClicked()
 
 void PlotView::handleMenuManagerEvent(MenuActionId menuActionId)
 {
+    int index = ui->stackedWidget->currentIndex();
     switch (menuActionId)
     {
     case Menu1_Menu1_Action1:
         Singleton<Logger>::getInstance()->logMessage("菜单1-1被点击", Logger::Log);
+        saveConstantButtonClicked(index, false);
         break;
     case Menu1_Menu1_Action2:
         Singleton<Logger>::getInstance()->logMessage("菜单1-2被点击", Logger::Log);
+        saveConstantButtonClicked(index, true);
         break;
     case Menu1_Menu2_Action1:
         Singleton<Logger>::getInstance()->logMessage("菜单2-1被点击", Logger::Log);
@@ -359,28 +365,23 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
     case back5Button:
         switchPlotPageButtonClicked(0);
         break;
-    case saveConstant1Button:
-        saveConstantButtonClicked(0);
-        break;
-    case saveConstant2Button:
-        saveConstantButtonClicked(1);
-        break;
-    case saveConstant3Button:
-        saveConstantButtonClicked(2);
-        break;
-    case saveConstant4Button:
-        saveConstantButtonClicked(3);
-        break;
-    case saveConstant5Button:
-        saveConstantButtonClicked(4);
-        break;
     }
 }
 
-void PlotView::saveConstantButtonClicked(int index)
+void PlotView::saveConstantButtonClicked(int index, bool type)
 {
-    Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(index);
-    emit onSaveConstantButtonClicked(index);
+    if (!type)
+    {
+        Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(index - 1);
+    }
+    else
+    {
+        for (int i = 0; i < plotPageIndex.size(); i++)
+        {
+            Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(i);
+        }
+    }
+    emit onSaveConstantButtonClicked(index - 1, type);
 }
 
 void PlotView::clearButtonClicked()

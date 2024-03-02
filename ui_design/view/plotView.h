@@ -42,7 +42,7 @@ signals:
     void onStartButtonClicked(const int page_index);
     void onClearButtonClicked();
     void onTracerButtonClicked();
-    void onSaveConstantButtonClicked(int index);
+    void onSaveConstantButtonClicked(int index, bool type);
     void switchPageButtonClicked(int page_index);                                                                                  // interface_index 用于区分返回的界面
     void storeRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index); // 用于存储运行时数据
 
@@ -59,7 +59,7 @@ private:
     void handleMenuManagerEvent(MenuActionId menuActionId);
     void handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId);
     void handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId);
-    void saveConstantButtonClicked(int index);
+    void saveConstantButtonClicked(int index, bool type);
     void startButtonClicked();
     void clearButtonClicked();
     void tracerButtonClicked();

@@ -29,11 +29,6 @@ ButtonGroupsManager::ButtonGroupsManager(QVector<ButtonGroup> *_buttonGroups, QO
                  buttonGroups->at(i).backButton,
                  &QPushButton::clicked,
                  static_cast<ButtonGroupId>(static_cast<int>(ButtonGroupId::back1Button) + i));
-        addEvent(QString("saveConstant%1ButtonClicked").arg(i + 1),
-                 QString("saveConstant%1ButtonClicked").arg(i + 1),
-                 buttonGroups->at(i).saveConstantButton,
-                 &QPushButton::clicked,
-                 static_cast<ButtonGroupId>(static_cast<int>(ButtonGroupId::saveConstant1Button) + i));
     }
 }
 

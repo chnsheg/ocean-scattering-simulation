@@ -42,6 +42,8 @@ MenuManager::MenuManager(QMenuBar *menuBar, QObject *parent) : ManagerBase(paren
              menuBar->actions().at(1)->menu()->actions().at(1)->menu()->actions().at(2),
              &QAction::triggered,
              MenuActionId::Menu2_Menu2_Action2);
+
+    showPageMenuStatus();
 }
 
 MenuManager::MenuManager() {}
@@ -60,4 +62,22 @@ void MenuManager::onEventAction(const QString &event, int status, const QVariant
 {
     MenuActionId menuActionId = param.value<MenuActionId>();
     emit eventSignal(menuActionId);
+}
+
+void MenuManager::showPageMenuStatus()
+{
+    // 进行菜单状态初始化，你可以根据需要添加代码
+    menuBar->actions().at(0)->menu()->actions().at(0)->menu()->actions().at(0)->setEnabled(false);
+    menuBar->actions().at(0)->menu()->actions().at(1)->menu()->actions().at(0)->setEnabled(false);
+    menuBar->actions().at(1)->menu()->actions().at(0)->menu()->actions().at(0)->setEnabled(false);
+    menuBar->actions().at(1)->menu()->actions().at(1)->menu()->actions().at(0)->setEnabled(false);
+}
+
+void MenuManager::plotPageMenuStatus()
+{
+    // 进行菜单状态初始化，你可以根据需要添加代码
+    menuBar->actions().at(0)->menu()->actions().at(0)->menu()->actions().at(0)->setEnabled(true);
+    menuBar->actions().at(0)->menu()->actions().at(1)->menu()->actions().at(0)->setEnabled(true);
+    menuBar->actions().at(1)->menu()->actions().at(0)->menu()->actions().at(0)->setEnabled(true);
+    menuBar->actions().at(1)->menu()->actions().at(1)->menu()->actions().at(0)->setEnabled(true);
 }

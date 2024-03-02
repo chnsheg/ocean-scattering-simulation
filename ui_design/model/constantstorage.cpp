@@ -139,5 +139,11 @@ void ConstantStorage::savePageConstantToJsonFile(int index)
     file.close();
 
     // 使用Logger打印保存路径
-    Singleton<Logger>::getInstance()->logMessage("Save constant to " + QDir::currentPath() + "/" + CONSTANT_FILE, Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Save current page's constants to " + QDir::currentPath() + "/" + CONSTANT_FILE, Logger::Info);
+}
+
+void ConstantStorage::saveAllPageConstantToJsonFile()
+{
+    saveToJsonFile(CONSTANT_FILE);
+    Singleton<Logger>::getInstance()->logMessage("Save all pages' constants to " + QDir::currentPath() + "/" + CONSTANT_FILE, Logger::Info);
 }
