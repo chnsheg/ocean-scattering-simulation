@@ -235,7 +235,7 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     default:
         break;
     }
-    emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), index, curve_index);
+    emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), index - 1, curve_index);
 }
 
 void PlotView::updateViewClearSlot()
@@ -310,17 +310,19 @@ void PlotView::handleMenuManagerEvent(MenuActionId menuActionId)
     {
     case Menu1_Menu1_Action1:
         Singleton<Logger>::getInstance()->logMessage("菜单1-1被点击", Logger::Log);
-        saveConstantButtonClicked(index, false);
+        saveConstantButtonClicked(index, 0);
         break;
     case Menu1_Menu1_Action2:
         Singleton<Logger>::getInstance()->logMessage("菜单1-2被点击", Logger::Log);
-        saveConstantButtonClicked(index, true);
+        saveConstantButtonClicked(index, 1);
         break;
     case Menu1_Menu2_Action1:
         Singleton<Logger>::getInstance()->logMessage("菜单2-1被点击", Logger::Log);
+        saveConstantButtonClicked(index, 2);
         break;
     case Menu1_Menu2_Action2:
         Singleton<Logger>::getInstance()->logMessage("菜单2-2被点击", Logger::Log);
+        saveConstantButtonClicked(index, 3);
         break;
     case Menu2_Menu1_Action1:
         Singleton<Logger>::getInstance()->logMessage("菜单3-1被点击", Logger::Log);
@@ -368,20 +370,21 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
     }
 }
 
-void PlotView::saveConstantButtonClicked(int index, bool type)
+void PlotView::saveConstantButtonClicked(int index, int save_type)
 {
-    if (!type)
+    if (save_type == 0)
     {
         Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(index - 1);
     }
-    else
+    else if (save_type == 1)
     {
         for (int i = 0; i < plotPageIndex.size(); i++)
         {
             Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(i);
         }
     }
-    emit onSaveConstantButtonClicked(index - 1, type);
+
+    emit onSaveConstantButtonClicked(index - 1, save_type);
 }
 
 void PlotView::clearButtonClicked()

@@ -41,6 +41,8 @@ public slots:
     void storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
     void storeConstantByGroupIndex(int index);
     void storeAllConstant();
+    void storeRuntimeDataByGroupIndex(int index);
+    void storeAllRuntimeData();
 
 private:
     explicit PageDataGenerator(QObject *parent = nullptr);

@@ -121,22 +121,24 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
 {
     switch (page_index)
     {
-    case 1:
+    case 0:
         Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, curve_index), QVariant::fromValue(dataContainer));
         // 打印底层存储地址
         // qDebug() << "dataContainer: " << dataContainer.data();
         break;
-    case 2:
+    case 1:
         Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 1 + curve_index), QVariant::fromValue(dataContainer));
+        break;
 
-    case 3:
+    case 2:
         Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 4 + curve_index), QVariant::fromValue(dataContainer));
         break;
 
-    case 4:
+    case 3:
         Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 5 + curve_index), QVariant::fromValue(dataContainer));
         break;
-    case 5:
+
+    case 4:
         Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 7 + curve_index), QVariant::fromValue(dataContainer));
         break;
     }
@@ -150,4 +152,14 @@ void PageDataGenerator::storeConstantByGroupIndex(int index)
 void PageDataGenerator::storeAllConstant()
 {
     Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageConstantToJsonFile();
+}
+
+void PageDataGenerator::storeRuntimeDataByGroupIndex(int index)
+{
+    Singleton<ConstantStorage>::getInstance(nullptr)->savePageRuntimeDataToCSVFile(index);
+}
+
+void PageDataGenerator::storeAllRuntimeData()
+{
+    Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageRuntimeDataToCSVFile();
 }

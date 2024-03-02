@@ -33,6 +33,13 @@ public:
     // 保存常量到文件
     void savePageConstantToJsonFile(int index);
     void saveAllPageConstantToJsonFile();
+    void savePageRuntimeDataToCSVFile(int index);
+    void saveAllPageRuntimeDataToCSVFile();
+
+    // 将QSharedPointer<QCPGraphDataContainer>变量转换为QVector<double>变量，方便存储到csv文件中
+    void convertQSharedPointerToQVector(QSharedPointer<QCPGraphDataContainer> dataContainer,
+                                        QVector<double> *xDataVector,
+                                        QVector<double> *yDataVector);
 
 private:
     explicit ConstantStorage(QObject *parent = nullptr);

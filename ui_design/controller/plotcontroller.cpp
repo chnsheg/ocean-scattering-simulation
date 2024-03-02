@@ -78,16 +78,31 @@ void PlotController::handleTracerButtonClicked()
     view->updateViewTracerSlot();
 }
 
-void PlotController::handleSaveConstantButtonClicked(int index, bool type)
+void PlotController::handleSaveConstantButtonClicked(int index, int save_type)
 {
     // 通知model存储数据
-    if (!type)
+    // if (save_type == 0)
+    // {
+    //     model->storeConstantByGroupIndex(index);
+    // }
+    // else
+    // {
+    //     model->storeAllConstant();
+    // }
+    switch (save_type)
     {
+    case 0:
         model->storeConstantByGroupIndex(index);
-    }
-    else
-    {
+        break;
+    case 1:
         model->storeAllConstant();
+        break;
+    case 2:
+        model->storeRuntimeDataByGroupIndex(index);
+        break;
+    case 3:
+        model->storeAllRuntimeData();
+        break;
     }
 }
 
