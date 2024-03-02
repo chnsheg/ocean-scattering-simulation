@@ -11,6 +11,9 @@
 PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     : QWidget(parent), ui(_ui)
 {
+    // 挂载菜单项管理器单例
+    Singleton<MenuManager>::getInstance(_ui->menuBar);
+
     // 挂载ButtonGroups单例
     QVector<ButtonGroup> *buttonGroup = new QVector<ButtonGroup>;
     buttonGroup->push_back(ButtonGroup(_ui->show1, _ui->clear1, _ui->tracer1, _ui->back1, _ui->clear1));
@@ -47,6 +50,13 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     Singleton<LineEditGroupManager>::getInstance(lineEditsList);
 
     // 连接信号和槽
+    void (MenuManager::*menuManagerEventSignal)(MenuActionId) = &MenuManager::eventSignal;
+    void (PlotView::*handleMenuManager)(MenuActionId) = &PlotView::handleMenuManagerEvent;
+    connect(Singleton<MenuManager>::getInstance(),
+            menuManagerEventSignal,
+            this,
+            handleMenuManager);
+
     void (ButtonGroupsManager::*buttonGroupsManagerEventSignal)(ButtonGroupId) = &ButtonGroupsManager::eventSignal;
     void (PlotView::*handleButtonGroupManager)(ButtonGroupId) = &PlotView::handleButtonGroupManagerEvent;
     connect(Singleton<ButtonGroupsManager>::getInstance(),
@@ -290,6 +300,37 @@ void PlotView::startButtonClicked()
     Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
 }
 
+void PlotView::handleMenuManagerEvent(MenuActionId menuActionId)
+{
+    switch (menuActionId)
+    {
+    case Menu1_Menu1_Action1:
+        Singleton<Logger>::getInstance()->logMessage("菜单1-1被点击", Logger::Log);
+        break;
+    case Menu1_Menu1_Action2:
+        Singleton<Logger>::getInstance()->logMessage("菜单1-2被点击", Logger::Log);
+        break;
+    case Menu1_Menu2_Action1:
+        Singleton<Logger>::getInstance()->logMessage("菜单2-1被点击", Logger::Log);
+        break;
+    case Menu1_Menu2_Action2:
+        Singleton<Logger>::getInstance()->logMessage("菜单2-2被点击", Logger::Log);
+        break;
+    case Menu2_Menu1_Action1:
+        Singleton<Logger>::getInstance()->logMessage("菜单3-1被点击", Logger::Log);
+        break;
+    case Menu2_Menu1_Action2:
+        Singleton<Logger>::getInstance()->logMessage("菜单3-2被点击", Logger::Log);
+        break;
+    case Menu2_Menu2_Action1:
+        Singleton<Logger>::getInstance()->logMessage("菜单4-1被点击", Logger::Log);
+        break;
+    case Menu2_Menu2_Action2:
+        Singleton<Logger>::getInstance()->logMessage("菜单4-2被点击", Logger::Log);
+        break;
+    }
+}
+
 void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
 {
     switch (buttonGroupId)
@@ -338,6 +379,7 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
 
 void PlotView::saveConstantButtonClicked(int index)
 {
+    Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(index);
     emit onSaveConstantButtonClicked(index);
 }
 

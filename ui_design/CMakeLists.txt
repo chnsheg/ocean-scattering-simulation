@@ -59,6 +59,7 @@ set(SOURCES
     manager/customplotmanager.cpp
     manager/inputdatalistmanager.cpp
     manager/managerbase.cpp
+    manager/menuManager.cpp
     manager/lineeditgroupmanager.cpp
     manager/show1buttongroupmanager.cpp
     manager/texteditmanager.cpp
@@ -88,6 +89,7 @@ set(HEADERS
     manager/customplotmanager.h
     manager/inputdatalistmanager.h
     manager/managerbase.h
+    manager/menuManager.h
     manager/show1buttongroupmanager.h
     manager/lineeditgroupmanager.h
     manager/texteditmanager.h

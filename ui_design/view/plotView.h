@@ -7,6 +7,7 @@
 #include "manager/inputdatalistmanager.h"
 #include "manager/show1buttongroupmanager.h"
 #include "ui_mainwindow.h"
+#include "manager/menumanager.h"
 
 /***************************视图层***************************/
 
@@ -55,6 +56,7 @@ public slots:
     void updateViewPageSlot(int page_index);
 
 private:
+    void handleMenuManagerEvent(MenuActionId menuActionId);
     void handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId);
     void handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId);
     void saveConstantButtonClicked(int index);

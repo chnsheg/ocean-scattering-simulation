@@ -1169,10 +1169,162 @@ li.checked::marker { content: &quot;\2612&quot;; }
      <x>0</x>
      <y>0</y>
      <width>676</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+     <horstretch>10</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>300</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="baseSize">
+    <size>
+     <width>300</width>
+     <height>0</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="baseSize">
+     <size>
+      <width>100</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="title">
+     <string>保存</string>
+    </property>
+    <widget class="QMenu" name="menus">
+     <property name="title">
+      <string>参数保存</string>
+     </property>
+     <addaction name="action1"/>
+     <addaction name="separator"/>
+     <addaction name="action2"/>
+    </widget>
+    <widget class="QMenu" name="menub">
+     <property name="title">
+      <string>曲线保存</string>
+     </property>
+     <addaction name="action1_2"/>
+     <addaction name="separator"/>
+     <addaction name="action2_2"/>
+    </widget>
+    <addaction name="menus"/>
+    <addaction name="menub"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="title">
+     <string>导入</string>
+    </property>
+    <widget class="QMenu" name="menu1">
+     <property name="title">
+      <string>导入参数</string>
+     </property>
+     <addaction name="action1_4"/>
+     <addaction name="separator"/>
+     <addaction name="action2_5"/>
+    </widget>
+    <widget class="QMenu" name="menu2">
+     <property name="title">
+      <string>导入曲线</string>
+     </property>
+     <addaction name="action1_5"/>
+     <addaction name="separator"/>
+     <addaction name="action2_6"/>
+    </widget>
+    <addaction name="menu1"/>
+    <addaction name="menu2"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menu_4">
+    <property name="title">
+     <string>退出</string>
+    </property>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu_4"/>
   </widget>
+  <action name="action1">
+   <property name="text">
+    <string>保存当前页参数</string>
+   </property>
+  </action>
+  <action name="action2">
+   <property name="text">
+    <string>保存所有页参数</string>
+   </property>
+  </action>
+  <action name="action1_2">
+   <property name="text">
+    <string>保存当前页曲线</string>
+   </property>
+  </action>
+  <action name="action2_2">
+   <property name="text">
+    <string>保存所有页曲线</string>
+   </property>
+  </action>
+  <action name="action1_4">
+   <property name="text">
+    <string>按页导入参数</string>
+   </property>
+   <property name="iconText">
+    <string>导入当前页参数</string>
+   </property>
+   <property name="toolTip">
+    <string>导入当前页参数</string>
+   </property>
+  </action>
+  <action name="action2_4">
+   <property name="text">
+    <string>2</string>
+   </property>
+  </action>
+  <action name="action2_5">
+   <property name="text">
+    <string>导入所有页参数</string>
+   </property>
+  </action>
+  <action name="action1_5">
+   <property name="text">
+    <string>1</string>
+   </property>
+   <property name="iconText">
+    <string>导入曲线到当前页</string>
+   </property>
+  </action>
+  <action name="action2_6">
+   <property name="text">
+    <string>2</string>
+   </property>
+   <property name="iconText">
+    <string>导入多条曲线到多个页面</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

@@ -18,6 +18,7 @@ SOURCES += \
     manager/inputdatalistmanager.cpp \
     manager/lineeditgroupmanager.cpp \
     manager/managerbase.cpp \
+    manager/menumanager.cpp \
     manager/show1buttongroupmanager.cpp \
     manager/texteditmanager.cpp \
     manager/tracermanager.cpp \
@@ -45,6 +46,7 @@ HEADERS += \
     manager/inputdatalistmanager.h \
     manager/lineeditgroupmanager.h \
     manager/managerbase.h \
+    manager/menumanager.h \
     manager/show1buttongroupmanager.h \
     manager/texteditmanager.h \
     manager/tracermanager.h \
