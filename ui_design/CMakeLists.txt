@@ -71,6 +71,7 @@ set(SOURCES
     model/laserdatagenerator.cpp
     model/pagedatagenerator.cpp
     model/spectrumdatagenerator.cpp
+    module/filebrowser.cpp
     module/mycombobox.cpp
     module/mytracer.cpp
     module/qcustomplot.cpp
@@ -101,6 +102,7 @@ set(HEADERS
     model/laserdatagenerator.h
     model/pagedatagenerator.h
     model/spectrumdatagenerator.h
+    module/filebrowser.h
     module/mycombobox.h
     module/mytracer.h
     module/qcustomplot.h

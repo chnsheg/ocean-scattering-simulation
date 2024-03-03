@@ -31,10 +31,10 @@ public:
     QJsonObject getAllConstantsJson() const;
 
     // 保存常量到文件
-    void savePageConstantToJsonFile(int index);
-    void saveAllPageConstantToJsonFile();
-    void savePageRuntimeDataToCSVFile(int index);
-    void saveAllPageRuntimeDataToCSVFile();
+    void savePageConstantToJsonFile(int index, const QStringList &filePaths);
+    void saveAllPageConstantToJsonFile(const QStringList &filePaths);
+    void savePageRuntimeDataToCSVFile(int index, const QStringList &filePaths);
+    void saveAllPageRuntimeDataToCSVFile(const QStringList &filePaths);
 
     // 将QSharedPointer<QCPGraphDataContainer>变量转换为QVector<double>变量，方便存储到csv文件中
     void convertQSharedPointerToQVector(QSharedPointer<QCPGraphDataContainer> dataContainer,

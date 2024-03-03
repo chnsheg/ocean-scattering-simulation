@@ -5,6 +5,8 @@
 #include "model/spectrumdatagenerator.h"
 #include "model/constantstorage.h"
 #include "model/constantmap.h"
+#include "module/filebrowser.h"
+#include "utils/logger.h"
 
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
@@ -146,20 +148,48 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
 
 void PageDataGenerator::storeConstantByGroupIndex(int index)
 {
-    Singleton<ConstantStorage>::getInstance(nullptr)->savePageConstantToJsonFile(index);
+    FileBrowser fileBrowser;
+    QStringList filePaths = fileBrowser.saveJsonFilesDialog(QDir::currentPath(), false);
+    if (filePaths.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        return;
+    }
+    Singleton<ConstantStorage>::getInstance(nullptr)->savePageConstantToJsonFile(index, filePaths);
 }
 
 void PageDataGenerator::storeAllConstant()
 {
-    Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageConstantToJsonFile();
+    FileBrowser fileBrowser;
+    QStringList filePaths = fileBrowser.saveJsonFilesDialog(QDir::currentPath(), false);
+    if (filePaths.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        return;
+    }
+    Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageConstantToJsonFile(filePaths);
 }
 
 void PageDataGenerator::storeRuntimeDataByGroupIndex(int index)
 {
-    Singleton<ConstantStorage>::getInstance(nullptr)->savePageRuntimeDataToCSVFile(index);
+    FileBrowser fileBrowser;
+    QStringList filePaths = fileBrowser.saveCsvFilesDialog(QDir::currentPath(), false);
+    if (filePaths.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        return;
+    }
+    Singleton<ConstantStorage>::getInstance(nullptr)->savePageRuntimeDataToCSVFile(index, filePaths);
 }
 
 void PageDataGenerator::storeAllRuntimeData()
 {
-    Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageRuntimeDataToCSVFile();
+    FileBrowser fileBrowser;
+    QStringList filePaths = fileBrowser.saveCsvFilesDialog(QDir::currentPath(), true);
+    if (filePaths.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        return;
+    }
+    Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageRuntimeDataToCSVFile(filePaths);
 }

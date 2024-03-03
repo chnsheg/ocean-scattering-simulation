@@ -101,7 +101,7 @@ bool ConstantStorage::loadFromJsonFile(const QString &fileName)
     return true;
 }
 
-void ConstantStorage::savePageConstantToJsonFile(int index)
+void ConstantStorage::savePageConstantToJsonFile(int index, const QStringList &filePaths)
 {
     // 可以搞个save(all?)复选框来判断
     // 1、先根据index获取当前页面的常数名称，再根据名称去QMap<QString, QVariant> m_constants获取当前页面的常数值
@@ -120,10 +120,26 @@ void ConstantStorage::savePageConstantToJsonFile(int index)
     }
 
     // 保存当前页面的常数到"constants.json"；注意不是清空文件后再写入，而是在原有的基础上更改
-    QFile file{CONSTANT_FILE};
+    // QFile file{CONSTANT_FILE};
+    QFile file{filePaths.at(0)};
+    if (!file.exists())
+    {
+        Singleton<Logger>::getInstance()->logMessage("File " + QDir::currentPath() + "/" + CONSTANT_FILE + " does not exist", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("Try to create new files");
+        if (file.open(QIODevice::WriteOnly))
+        {
+            file.close();
+            Singleton<Logger>::getInstance()->logMessage("Create new files " + QDir::currentPath() + "/" + CONSTANT_FILE, Logger::Info);
+        }
+        else
+        {
+            Singleton<Logger>::getInstance()->logMessage("Create new files failed", Logger::Warning);
+            return;
+        }
+    }
     if (!file.open(QIODevice::ReadOnly))
     {
-        qWarning() << "Cannot open file for reading:" << CONSTANT_FILE;
+        qWarning() << "Cannot open file for reading:" << filePaths.at(0);
         return;
     }
     auto jsonDocument = QJsonDocument::fromJson(file.readAll());
@@ -144,13 +160,14 @@ void ConstantStorage::savePageConstantToJsonFile(int index)
     file.close();
 
     // 使用Logger打印保存路径
-    Singleton<Logger>::getInstance()->logMessage("Save current page's constants to " + QDir::currentPath() + "/" + CONSTANT_FILE, Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Save current page's constants to " + QDir::currentPath() + "/" + filePaths.at(0), Logger::Info);
 }
 
-void ConstantStorage::saveAllPageConstantToJsonFile()
+void ConstantStorage::saveAllPageConstantToJsonFile(const QStringList &filePaths)
 {
-    saveToJsonFile(CONSTANT_FILE);
-    Singleton<Logger>::getInstance()->logMessage("Save all pages' constants to " + QDir::currentPath() + "/" + CONSTANT_FILE, Logger::Info);
+    // saveToJsonFile(CONSTANT_FILE);
+    saveToJsonFile(filePaths.at(0));
+    Singleton<Logger>::getInstance()->logMessage("Save all pages' constants to " + QDir::currentPath() + "/" + filePaths.at(0), Logger::Info);
 }
 
 void ConstantStorage::convertQSharedPointerToQVector(QSharedPointer<QCPGraphDataContainer> dataContainer, QVector<double> *xDataVector, QVector<double> *yDataVector)
@@ -169,9 +186,10 @@ void ConstantStorage::convertQSharedPointerToQVector(QSharedPointer<QCPGraphData
     }
 }
 
-void ConstantStorage::savePageRuntimeDataToCSVFile(int index)
+void ConstantStorage::savePageRuntimeDataToCSVFile(int index, const QStringList &filePaths)
 {
     QVector<double> *xDataVector, *yDataVector;
+    QString filePath;
     // 1、先根据index获取当前页面的常数名称，再根据名称去QMap<QString, QVariant> m_constants获取当前页面的常数值
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     QSharedPointer<QCPGraphDataContainer> dataContainer;
@@ -188,7 +206,7 @@ void ConstantStorage::savePageRuntimeDataToCSVFile(int index)
             return;
         }
         convertQSharedPointerToQVector(dataContainer, xDataVector, yDataVector);
-        ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page1.csv");
+        ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, filePaths.at(0));
         delete xDataVector;
         delete yDataVector;
         xDataVector = nullptr;
@@ -209,14 +227,23 @@ void ConstantStorage::savePageRuntimeDataToCSVFile(int index)
                 continue;
             }
             convertQSharedPointerToQVector(dataContainer, xDataVector, yDataVector);
-            ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page2_" + QString::number(i) + ".csv");
+            // ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page2_" + QString::number(i) + ".csv");
+            filePath = filePaths.at(i);
+            if (filePath.isEmpty())
+            {
+                Singleton<Logger>::getInstance()->logMessage("No file path of page2_" + QString::number(i), Logger::Warning);
+            }
+            else
+            {
+                ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, filePath);
+            }
             delete xDataVector;
             delete yDataVector;
             xDataVector = nullptr;
             yDataVector = nullptr;
             dataContainer.clear();
             dataContainer = nullptr;
-            Singleton<Logger>::getInstance()->logMessage("Save runtime data of page2 to " + QDir::currentPath() + "/runtime_data_page2_" + QString::number(i) + ".csv", Logger::Info);
+            Singleton<Logger>::getInstance()->logMessage("Save runtime data of page2 to " + filePath, Logger::Info);
         }
         break;
     case 2:
@@ -229,14 +256,23 @@ void ConstantStorage::savePageRuntimeDataToCSVFile(int index)
             return;
         }
         convertQSharedPointerToQVector(dataContainer, xDataVector, yDataVector);
-        ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page3.csv");
+        // ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page3.csv");
+        filePath = filePaths.at(0);
+        if (filePath.isEmpty())
+        {
+            Singleton<Logger>::getInstance()->logMessage("No file path of page3", Logger::Warning);
+        }
+        else
+        {
+            ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, filePath);
+        }
         delete xDataVector;
         delete yDataVector;
         xDataVector = nullptr;
         yDataVector = nullptr;
         dataContainer.clear();
         dataContainer = nullptr;
-        Singleton<Logger>::getInstance()->logMessage("Save runtime data of page3 to " + QDir::currentPath() + "/runtime_data_page3.csv", Logger::Info);
+        Singleton<Logger>::getInstance()->logMessage("Save runtime data of page3 to " + filePath, Logger::Info);
         break;
     case 3:
         for (int i = 0; i < 2; i++)
@@ -250,14 +286,23 @@ void ConstantStorage::savePageRuntimeDataToCSVFile(int index)
                 continue;
             }
             convertQSharedPointerToQVector(dataContainer, xDataVector, yDataVector);
-            ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page4_" + QString::number(i) + ".csv");
+            // ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page4_" + QString::number(i) + ".csv");
+            filePath = filePaths.at(i);
+            if (filePath.isEmpty())
+            {
+                Singleton<Logger>::getInstance()->logMessage("No file path of page4_" + QString::number(i), Logger::Warning);
+            }
+            else
+            {
+                ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, filePath);
+            }
             delete xDataVector;
             delete yDataVector;
             xDataVector = nullptr;
             yDataVector = nullptr;
             dataContainer.clear();
             dataContainer = nullptr;
-            Singleton<Logger>::getInstance()->logMessage("Save runtime data of page4 to " + QDir::currentPath() + "/runtime_data_page4_" + QString::number(i) + ".csv", Logger::Info);
+            Singleton<Logger>::getInstance()->logMessage("Save runtime data of page4 to " + filePath + QString::number(i) + ".csv", Logger::Info);
         }
         break;
     case 4:
@@ -270,23 +315,34 @@ void ConstantStorage::savePageRuntimeDataToCSVFile(int index)
             return;
         }
         convertQSharedPointerToQVector(dataContainer, xDataVector, yDataVector);
-        ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page5.csv");
+        // ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page5.csv");
+        filePath = filePaths.at(0);
+        if (filePath.isEmpty())
+        {
+            Singleton<Logger>::getInstance()->logMessage("No file path of page5", Logger::Warning);
+        }
+        else
+        {
+            ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, filePath);
+        }
         delete xDataVector;
         delete yDataVector;
         xDataVector = nullptr;
         yDataVector = nullptr;
         dataContainer.clear();
         dataContainer = nullptr;
-        Singleton<Logger>::getInstance()->logMessage("Save runtime data of page5 to " + QDir::currentPath() + "/runtime_data_page5.csv", Logger::Info);
+        Singleton<Logger>::getInstance()->logMessage("Save runtime data of page5 to " + filePath, Logger::Info);
+        break;
+    default:
         break;
     }
 }
 
-void ConstantStorage::saveAllPageRuntimeDataToCSVFile()
+void ConstantStorage::saveAllPageRuntimeDataToCSVFile(const QStringList &filePaths)
 {
     for (int i = 0; i < 5; i++)
     {
-        savePageRuntimeDataToCSVFile(i);
+        savePageRuntimeDataToCSVFile(i, filePaths);
     }
     Singleton<Logger>::getInstance()->logMessage("Save all pages' runtime data to " + QDir::currentPath(), Logger::Info);
 }

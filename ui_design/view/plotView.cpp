@@ -152,35 +152,6 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     int index = ui->stackedWidget->currentIndex();
 
     Singleton<CustomPlotManager>::getInstance()->plotGraphToBuffer(xData, yData, curve_index);
-    // if (index == 3)
-    // {
-    //     // 先从存储的数据QSharedPointer<QCPGraphDataContainer>中获得xData和yData，然后再绘制
-    //  显示不在中心是x坐标轴范围设置有问题！！！！！！！！！！
-    // QVector<double> *x1Data = new QVector<double>;
-    // QVector<double> *y1Data = new QVector<double>;
-    //     // x1Data = Singleton<ConstantStorage>::getInstance(nullptr)
-    //     //              ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 0))
-    //     //              .value<QSharedPointer<QCPGraphDataContainer>>()
-    //     //              .data()->at(0).key;
-
-    //     QCPDataContainer<QCPGraphData> *dataContainer = Singleton<ConstantStorage>::getInstance(nullptr)
-    //                                                         ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 0))
-    //                                                         .value<QSharedPointer<QCPGraphDataContainer>>()
-    //                                                         .data();
-    //     int size = dataContainer->size();
-    //     for (int i = 0; i < size; i++)
-    //     {
-    //         double x = dataContainer->at(i)->mainKey();
-    //         double y = dataContainer->at(i)->mainValue();
-    //         x1Data->push_back(x);
-    //         y1Data->push_back(y);
-    //         // if (y > 0.5)
-    //         // {
-    //         //     qDebug() << "x = " << x << " y = " << y;
-    //         // }
-    //     }
-    //     Singleton<CustomPlotManager>::getInstance()->plotGraphToBuffer(x1Data, y1Data, 0);
-    // }
     // 根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
     switch (index)
     {
