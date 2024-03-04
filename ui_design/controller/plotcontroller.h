@@ -24,9 +24,12 @@ public slots:
     void handleDataGenerated(QVector<QVector<double> *> *xDataVector,
                              QVector<QVector<double> *> *yDataVector,
                              int curve_num);
+    void handleImportConstantCompleted(const int page_index, const QVector<QVector<QVector<double> *> *> *xDataVector,
+                                       const QVector<QVector<QVector<double> *> *> *yDataVector);
     void handleClearButtonClicked();
     void handleTracerButtonClicked();
     void handleSaveConstantButtonClicked(int index, int save_type);
+    void handleImportConstantButtonClicked(int index, int import_type);
     void handleSwitchPageButtonClicked(int page_index);
     void handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
 

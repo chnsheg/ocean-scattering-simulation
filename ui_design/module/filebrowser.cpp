@@ -34,19 +34,19 @@ QStringList FileBrowser::showFileDialog(QFileDialog::AcceptMode mode,
     if (mode == QFileDialog::AcceptSave)
     {
         QString selectedFilePath = dialog.getSaveFileName(this, tr("Save File"), defaultPath, filter, &defaultSuffix);
-
         if (!selectedFilePath.isEmpty())
         {
-            qDebug() << "selectedFilePath: " << selectedFilePath;
+            // qDebug() << "selectedFilePath: " << selectedFilePath;
             filePaths.append(selectedFilePath);
             return filePaths;
         }
     }
     else if (mode == QFileDialog::AcceptOpen)
     {
-        if (dialog.exec() == QDialog::Accepted)
+        QStringList selectedFilesPath = dialog.getOpenFileNames(this, tr("Open File"), defaultPath, filter);
+        if (!selectedFilesPath.isEmpty())
         {
-            return dialog.selectedFiles();
+            return selectedFilesPath;
         }
     }
 
@@ -97,6 +97,17 @@ QStringList FileBrowser::saveCsvFilesDialog(const QString &defaultPath, bool all
 
     if (!filePaths.isEmpty())
     {
+        // 先清空文件
+        QFile file(filePaths[0]);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        {
+            file.close();
+        }
+        else // 文件打开失败
+        {
+            qWarning() << "Failed to open file for writing:" << filePaths[0];
+            return QStringList();
+        }
         // 发送保存完成的信号
         emit filesSaved(filePaths);
     }

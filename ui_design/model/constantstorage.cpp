@@ -95,6 +95,11 @@ bool ConstantStorage::loadFromJsonFile(const QString &fileName)
     const auto jsonObject = jsonDocument.object();
     for (const auto &name : jsonObject.keys())
     {
+        if (!m_constants.contains(name))
+        {
+            qWarning() << "Unknown constant:" << name;
+            continue;
+        }
         m_constants[name] = jsonObject[name].toVariant();
         qDebug() << "jsonName: " << name << "jsonValue: " << m_constants[name];
     }
@@ -124,12 +129,12 @@ void ConstantStorage::savePageConstantToJsonFile(int index, const QStringList &f
     QFile file{filePaths.at(0)};
     if (!file.exists())
     {
-        Singleton<Logger>::getInstance()->logMessage("File " + QDir::currentPath() + "/" + CONSTANT_FILE + " does not exist", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("File " + filePaths.at(0) + " does not exist", Logger::Warning);
         Singleton<Logger>::getInstance()->logMessage("Try to create new files");
         if (file.open(QIODevice::WriteOnly))
         {
             file.close();
-            Singleton<Logger>::getInstance()->logMessage("Create new files " + QDir::currentPath() + "/" + CONSTANT_FILE, Logger::Info);
+            Singleton<Logger>::getInstance()->logMessage("Create new files " + filePaths.at(0), Logger::Info);
         }
         else
         {
@@ -160,14 +165,14 @@ void ConstantStorage::savePageConstantToJsonFile(int index, const QStringList &f
     file.close();
 
     // 使用Logger打印保存路径
-    Singleton<Logger>::getInstance()->logMessage("Save current page's constants to " + QDir::currentPath() + "/" + filePaths.at(0), Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Save current page's constants to " + filePaths.at(0), Logger::Info);
 }
 
 void ConstantStorage::saveAllPageConstantToJsonFile(const QStringList &filePaths)
 {
     // saveToJsonFile(CONSTANT_FILE);
     saveToJsonFile(filePaths.at(0));
-    Singleton<Logger>::getInstance()->logMessage("Save all pages' constants to " + QDir::currentPath() + "/" + filePaths.at(0), Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Save all pages' constants to " + filePaths.at(0), Logger::Info);
 }
 
 void ConstantStorage::convertQSharedPointerToQVector(QSharedPointer<QCPGraphDataContainer> dataContainer, QVector<double> *xDataVector, QVector<double> *yDataVector)
@@ -228,7 +233,7 @@ void ConstantStorage::savePageRuntimeDataToCSVFile(int index, const QStringList 
             }
             convertQSharedPointerToQVector(dataContainer, xDataVector, yDataVector);
             // ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page2_" + QString::number(i) + ".csv");
-            filePath = filePaths.at(i);
+            filePath = filePaths.at(0);
             if (filePath.isEmpty())
             {
                 Singleton<Logger>::getInstance()->logMessage("No file path of page2_" + QString::number(i), Logger::Warning);
@@ -287,7 +292,7 @@ void ConstantStorage::savePageRuntimeDataToCSVFile(int index, const QStringList 
             }
             convertQSharedPointerToQVector(dataContainer, xDataVector, yDataVector);
             // ReadFileData::saveDataToCSVFile(xDataVector, yDataVector, "runtime_data_page4_" + QString::number(i) + ".csv");
-            filePath = filePaths.at(i);
+            filePath = filePaths.at(0);
             if (filePath.isEmpty())
             {
                 Singleton<Logger>::getInstance()->logMessage("No file path of page4_" + QString::number(i), Logger::Warning);
@@ -344,5 +349,56 @@ void ConstantStorage::saveAllPageRuntimeDataToCSVFile(const QStringList &filePat
     {
         savePageRuntimeDataToCSVFile(i, filePaths);
     }
-    Singleton<Logger>::getInstance()->logMessage("Save all pages' runtime data to " + QDir::currentPath(), Logger::Info);
+}
+
+void ConstantStorage::importPageConstantFromJsonFile(const QStringList &filePaths)
+{
+    QFile file{filePaths.at(0)};
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        Singleton<Logger>::getInstance()->logMessage("Cannot open file for reading", Logger::Warning);
+        return;
+    }
+    const auto jsonDocument = QJsonDocument::fromJson(file.readAll());
+    file.close();
+    const auto jsonObject = jsonDocument.object();
+    for (const auto &name : jsonObject.keys())
+    {
+        if (!m_constants.contains(name))
+        {
+            Singleton<Logger>::getInstance()->logMessage("Unknown constant:" + name, Logger::Warning);
+            continue;
+        }
+        m_constants[name] = jsonObject[name].toVariant();
+    }
+}
+
+void ConstantStorage::importAllPageConstantFromJsonFile(const QStringList &filePaths)
+{
+    importPageConstantFromJsonFile(filePaths);
+    Singleton<Logger>::getInstance()->logMessage("Import all pages' constants from " + filePaths.at(0), Logger::Info);
+}
+
+void ConstantStorage::importPageRuntimeDataFromCSVFile(int index, const QStringList &filePaths, QVector<QVector<double> *> *xDataVector, QVector<QVector<double> *> *yDataVector)
+{
+    QString filePath;
+    // QVector<double> *xData, *yData;
+    ReadFileData *readFileData = Singleton<ReadFileData>::getInstance();
+
+    filePath = filePaths.at(0);
+    if (filePath.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("No file path of page" + QString::number(index + 1), Logger::Warning);
+        return;
+    }
+    readFileData->readCSVFileToDataVector(xDataVector, yDataVector, filePath);
+    Singleton<Logger>::getInstance()->logMessage("Import runtime data of page" + QString::number(index + 1) + " from " + filePath, Logger::Info);
+}
+
+void ConstantStorage::importAllPageRuntimeDataFromCSVFile(const QStringList &filePaths, QVector<QVector<QVector<double> *> *> *xDataVector, QVector<QVector<QVector<double> *> *> *yDataVector)
+{
+    for (int i = 0; i < filePaths.size(); i++)
+    {
+        importPageRuntimeDataFromCSVFile(i, QStringList{filePaths.at(i)}, xDataVector->at(i), yDataVector->at(i));
+    }
 }

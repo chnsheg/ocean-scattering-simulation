@@ -44,7 +44,7 @@ void ReadFileData::saveDataToCSVFile(const QVector<double> *xDataVector, const Q
 
     // 文件第一行存入xDataVector的数据，第二行存入yDataVector的数据，并且第一行表头是x，第二行表头是y
     // 打开文件
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if (!file.open(QIODevice::Append | QIODevice::Text))
     {
         // 处理文件打开失败的情况
         qDebug() << "Failed to open file for writing:" << fileName;
@@ -74,4 +74,74 @@ void ReadFileData::saveDataToCSVFile(const QVector<double> *xDataVector, const Q
     file.close();
 
     qDebug() << "Data saved to CSV file:" << fileName;
+}
+
+void ReadFileData::readCSVFileToDataVector(QVector<QVector<double> *> *xDataVector,
+                                           QVector<QVector<double> *> *yDataVector,
+                                           const QString &fileName)
+{
+    QFile file{fileName};
+
+    // 先要检查文件后缀名是否为csv
+    if (!fileName.endsWith(".csv"))
+    {
+        qWarning() << "File format error, please open a .csv file";
+        return;
+    }
+
+    // 打开文件
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        // 处理文件打开失败的情况
+        qDebug() << "Failed to open file for reading:" << fileName;
+        return;
+    }
+
+    // 创建文本流
+    QTextStream stream(&file);
+
+    // 逐行读取数据
+    while (!stream.atEnd())
+    {
+        QString line = stream.readLine();
+        QStringList elements = line.split(',');
+
+        if (elements.isEmpty())
+        {
+            continue;
+        }
+
+        QString header = elements.first();
+        elements.removeFirst();
+
+        QVector<double> *dataVector = new QVector<double>;
+        for (const QString &element : elements)
+        {
+            bool ok;
+            double value = element.toDouble(&ok);
+            if (ok)
+            {
+                dataVector->append(value);
+            }
+        }
+
+        if (header == "x")
+        {
+            xDataVector->append(dataVector);
+        }
+        else if (header == "y")
+        {
+            yDataVector->append(dataVector);
+        }
+        else
+        {
+            qWarning() << "Unknown header:" << header << "please check the file format";
+            delete dataVector;
+        }
+    }
+
+    // 关闭文件
+    file.close();
+
+    qDebug() << "Data loaded from CSV file:" << fileName;
 }

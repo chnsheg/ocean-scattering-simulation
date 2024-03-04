@@ -21,6 +21,7 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     buttonGroup->push_back(ButtonGroup(_ui->show3, _ui->clear3, _ui->tracer3, _ui->back3, _ui->clear3));
     buttonGroup->push_back(ButtonGroup(_ui->show4, _ui->clear4, _ui->tracer4, _ui->back4, _ui->clear4));
     buttonGroup->push_back(ButtonGroup(_ui->show5, _ui->clear5, _ui->tracer5, _ui->back5, _ui->clear5));
+
     // ButtonGroupsManager::getButtonGroupsManagerInstance(buttonGroup);
     Singleton<ButtonGroupsManager>::getInstance(buttonGroup);
     // 挂载show1ButtonGroupManager单例
@@ -34,6 +35,13 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     // 挂载CustomPlotManager单例
     //  Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
     Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
+
+    // 初始化CustomPlot的list
+    for (auto &&widgetName : {_ui->customPlot1, _ui->customPlot2, _ui->customPlot3, _ui->customPlot4, _ui->customPlot5})
+    {
+        customPlotList.append(widgetName);
+    }
+
     // 挂载TextEditManager单例
     Singleton<TextEditManager>::getInstance(_ui->textEdit1);
     // 挂载Logger单例
@@ -81,10 +89,53 @@ int PlotView::getCurrentPageIndex()
     return ui->stackedWidget->currentIndex();
 }
 
-QCustomPlot *PlotView::getCurrentPageCustomPlot()
+QList<QCustomPlot *> PlotView::getCurrentPageCustomPlot()
 {
-    int index = ui->stackedWidget->currentIndex(); // ui文件中对此命名产生的约束
-    return ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot%1").arg(index));
+    QList<QCustomPlot *> currentPageCustomPlot;
+
+    switch (getCurrentPageIndex())
+    {
+    case 1:
+        currentPageCustomPlot.append(customPlotList[0]);
+        break;
+    case 2:
+        currentPageCustomPlot.append(customPlotList[1]);
+        break;
+    case 3:
+        currentPageCustomPlot.append(customPlotList[2]);
+        break;
+    case 4:
+        currentPageCustomPlot.append(customPlotList[3]);
+        break;
+    case 5:
+        currentPageCustomPlot.append(customPlotList[4]);
+        break;
+    default:
+        break;
+    }
+    return currentPageCustomPlot;
+}
+
+QCustomPlot *PlotView::getCurrentAnchoredCustomPlot() // 根据锚点锚定当前页面的customPlot
+{
+    // int index = ui->stackedWidget->currentIndex(); // ui文件中对此命名产生的约束
+    // return ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot%1").arg(index));
+    int anchor = getCustomPlotManagerAnchor();
+    return customPlotList[anchor];
+}
+
+int PlotView::changeCustomPlotManagerAnchor(int index)
+{
+    Singleton<CustomPlotManager>::getInstance()->setCustomPlot(ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot%1").arg(index)));
+    return getCustomPlotManagerAnchor(); // 用于切换锚定后返回
+}
+
+int PlotView::getCustomPlotManagerAnchor()
+{
+    QCustomPlot *customPlot = Singleton<CustomPlotManager>::getInstance()->getCustomPlot();
+    int anchor = customPlotList.indexOf(customPlot) + 1;
+    qDebug() << "customPlot index = " << anchor;
+    return anchor;
 }
 
 void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
@@ -96,7 +147,10 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
         // 更新视图层中Menu的样式
         Singleton<MenuManager>::getInstance()->plotPageMenuStatus();
         // 更新视图层中CustomPlot的样式
-        Singleton<CustomPlotManager>::getInstance()->setCustomPlot(getCurrentPageCustomPlot());
+        for (auto &&customPlot : getCurrentPageCustomPlot())
+        {
+            Singleton<CustomPlotManager>::getInstance()->setCustomPlot(customPlot);
+        }
         Singleton<CustomPlotManager>::getInstance()->initCustomPlotStyle();
         // 更新视图层中TextEdit的样式
         Singleton<TextEditManager>::getInstance()->setTextEdit(
@@ -149,11 +203,11 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
                                    int curve_index)
 {
     // Update view curve accordingly
-    int index = ui->stackedWidget->currentIndex();
+    int anchor = getCustomPlotManagerAnchor();
 
     Singleton<CustomPlotManager>::getInstance()->plotGraphToBuffer(xData, yData, curve_index);
     // 根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
-    switch (index)
+    switch (anchor)
     {
     case 1:
         Singleton<CustomPlotManager>::getInstance()->setLegendName("激光光谱", 0);
@@ -206,7 +260,10 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     default:
         break;
     }
-    emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), index - 1, curve_index);
+    int index = ui->stackedWidget->currentIndex();
+    ButtonStatus ButtonWaitForClose = {true, true, true};
+    Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
+    emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), anchor - 1, curve_index);
 }
 
 void PlotView::updateViewClearSlot()
@@ -269,9 +326,6 @@ void PlotView::startButtonClicked()
     Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
     // Singleton<CustomPlotManager>::getInstance()->clearPlot();
     emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
-    int index = ui->stackedWidget->currentIndex();
-    ButtonStatus ButtonWaitForClose = {true, true, true};
-    Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
 }
 
 void PlotView::handleMenuManagerEvent(MenuActionId menuActionId)
@@ -297,15 +351,19 @@ void PlotView::handleMenuManagerEvent(MenuActionId menuActionId)
         break;
     case Menu2_Menu1_Action1:
         Singleton<Logger>::getInstance()->logMessage("菜单3-1被点击", Logger::Log);
+        importConstantButtonClicked(index, 0);
         break;
     case Menu2_Menu1_Action2:
         Singleton<Logger>::getInstance()->logMessage("菜单3-2被点击", Logger::Log);
+        importConstantButtonClicked(index, 1);
         break;
     case Menu2_Menu2_Action1:
         Singleton<Logger>::getInstance()->logMessage("菜单4-1被点击", Logger::Log);
+        importConstantButtonClicked(index, 2);
         break;
     case Menu2_Menu2_Action2:
         Singleton<Logger>::getInstance()->logMessage("菜单4-2被点击", Logger::Log);
+        importConstantButtonClicked(index, 3);
         break;
     }
 }
@@ -356,6 +414,11 @@ void PlotView::saveConstantButtonClicked(int index, int save_type)
     }
 
     emit onSaveConstantButtonClicked(index - 1, save_type);
+}
+
+void PlotView::importConstantButtonClicked(int index, int import_type)
+{
+    emit onImportConstantButtonClicked(index - 1, import_type);
 }
 
 void PlotView::clearButtonClicked()

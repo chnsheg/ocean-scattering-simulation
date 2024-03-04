@@ -36,6 +36,14 @@ public:
     void savePageRuntimeDataToCSVFile(int index, const QStringList &filePaths);
     void saveAllPageRuntimeDataToCSVFile(const QStringList &filePaths);
 
+    // 从文件中导入常量
+    void importPageConstantFromJsonFile(const QStringList &filePaths);
+    void importAllPageConstantFromJsonFile(const QStringList &filePaths);
+    void importPageRuntimeDataFromCSVFile(int index, const QStringList &filePaths, QVector<QVector<double> *> *xDataVector,
+                                          QVector<QVector<double> *> *yDataVector);
+    void importAllPageRuntimeDataFromCSVFile(const QStringList &filePaths, QVector<QVector<QVector<double> *> *> *xDataVector,
+                                             QVector<QVector<QVector<double> *> *> *yDataVector);
+
     // 将QSharedPointer<QCPGraphDataContainer>变量转换为QVector<double>变量，方便存储到csv文件中
     void convertQSharedPointerToQVector(QSharedPointer<QCPGraphDataContainer> dataContainer,
                                         QVector<double> *xDataVector,

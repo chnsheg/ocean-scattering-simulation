@@ -36,6 +36,10 @@ signals:
     void dataGenerated(QVector<QVector<double> *> *xDataVector,
                        QVector<QVector<double> *> *yDataVector,
                        int curve_num);
+
+    void importConstantCompleted(const int page_index, const QVector<QVector<QVector<double> *> *> *xDataVector,
+                                 const QVector<QVector<QVector<double> *> *> *yDataVector);
+
 public slots:
     void generatePairOfData(const int page_index);
     void storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
@@ -43,6 +47,11 @@ public slots:
     void storeAllConstant();
     void storeRuntimeDataByGroupIndex(int index);
     void storeAllRuntimeData();
+
+    void importConstantByGroupIndex(int index);
+    void importAllConstant();
+    void importRuntimeDataByGroupIndex(int index);
+    void importAllRuntimeData();
 
 private:
     explicit PageDataGenerator(QObject *parent = nullptr);

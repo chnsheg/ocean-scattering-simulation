@@ -11,6 +11,7 @@
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
 {
+    Singleton<ConstantMap>::getInstance();
     Singleton<ConstantStorage>::getInstance(nullptr);
     // 注册元类型
     qRegisterMetaType<QSharedPointer<QCPGraphDataContainer>>("QSharedPointer<QCPGraphDataContainer>");
@@ -192,4 +193,75 @@ void PageDataGenerator::storeAllRuntimeData()
         return;
     }
     Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageRuntimeDataToCSVFile(filePaths);
+}
+
+void PageDataGenerator::importConstantByGroupIndex(int index)
+{
+    FileBrowser fileBrowser;
+    QStringList filePaths = fileBrowser.openJsonFilesDialog(QDir::currentPath(), false);
+    if (filePaths.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        return;
+    }
+    Singleton<ConstantStorage>::getInstance(nullptr)->importPageConstantFromJsonFile(filePaths);
+}
+
+void PageDataGenerator::importAllConstant()
+{
+    FileBrowser fileBrowser;
+    QStringList filePaths = fileBrowser.openJsonFilesDialog(QDir::currentPath(), false);
+    if (filePaths.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        return;
+    }
+    Singleton<ConstantStorage>::getInstance(nullptr)->importAllPageConstantFromJsonFile(filePaths);
+}
+
+void PageDataGenerator::importRuntimeDataByGroupIndex(int index)
+{
+    QVector<QVector<QVector<double> *> *> *xDataVector;
+    QVector<QVector<QVector<double> *> *> *yDataVector;
+    xDataVector = new QVector<QVector<QVector<double> *> *>;
+    yDataVector = new QVector<QVector<QVector<double> *> *>;
+    xDataVector->append(new QVector<QVector<double> *>);
+    yDataVector->append(new QVector<QVector<double> *>);
+    FileBrowser fileBrowser;
+    QStringList filePaths = fileBrowser.openCsvFilesDialog(QDir::currentPath(), false);
+    if (filePaths.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        return;
+    }
+    Singleton<ConstantStorage>::getInstance(nullptr)->importPageRuntimeDataFromCSVFile(index, filePaths, xDataVector->at(0), yDataVector->at(0));
+    emit importConstantCompleted(index, xDataVector, yDataVector);
+}
+
+void PageDataGenerator::importAllRuntimeData()
+{
+    QVector<QVector<QVector<double> *> *> *xDataVector;
+    QVector<QVector<QVector<double> *> *> *yDataVector;
+    xDataVector = new QVector<QVector<QVector<double> *> *>;
+    yDataVector = new QVector<QVector<QVector<double> *> *>;
+    FileBrowser fileBrowser;
+    QStringList filePaths = fileBrowser.openCsvFilesDialog(QDir::currentPath(), true);
+    if (filePaths.isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        return;
+    }
+
+    // 提示选择了多少个文件
+    Singleton<Logger>::getInstance()->logMessage("已选择" + QString::number(filePaths.size()) + "个文件！", Logger::Info);
+
+    // 给xDataVector和yDataVector内部的QVector<QVector<double> *>分配filePaths.size()的内存
+    for (int i = 0; i < filePaths.size(); ++i)
+    {
+        xDataVector->append(new QVector<QVector<double> *>);
+        yDataVector->append(new QVector<QVector<double> *>);
+    }
+
+    Singleton<ConstantStorage>::getInstance(nullptr)->importAllPageRuntimeDataFromCSVFile(filePaths, xDataVector, yDataVector);
+    emit importConstantCompleted(0, xDataVector, yDataVector);
 }

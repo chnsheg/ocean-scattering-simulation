@@ -13,6 +13,9 @@ public:
     ReadFileData();
     static void readCSV(QVector<double> *data, QString filename);
     static void saveDataToCSVFile(const QVector<double> *xDataVector, const QVector<double> *yDataVector, const QString &fileName);
+    static void readCSVFileToDataVector(QVector<QVector<double> *> *xDataVector,
+                                        QVector<QVector<double> *> *yDataVector,
+                                        const QString &fileName);
 };
 
 #endif // READFILEDATA_H
