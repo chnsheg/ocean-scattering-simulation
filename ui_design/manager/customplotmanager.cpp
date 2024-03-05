@@ -101,7 +101,7 @@ void CustomPlotManager::initCustomPlotStyle()
     // 设置图例的位置
     customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignRight);
     // 设置legend的字体大小
-    customPlot->legend->setFont(QFont("Consolas", 12));
+    customPlot->legend->setFont(QFont("Consolas", 14));
     customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
     customPlot->axisRect()->setRangeDrag(Qt::Horizontal | Qt::Vertical);
     customPlot->axisRect()->setRangeZoom(Qt::Horizontal | Qt::Vertical);
@@ -206,19 +206,23 @@ void CustomPlotManager::hidePlot()
     customPlot->replot();
 }
 
-void CustomPlotManager::showPlot()
+bool CustomPlotManager::showPlot()
 {
     // 显示曲线显示
     for (int i = 0; i < customPlot->graphCount(); i++)
     {
         customPlot->graph(i)->setVisible(true);
+        // 显示图例显示
+        customPlot->legend->setVisible(true);
+        // 显示跟踪点
+        Singleton<TracerManager>::getInstance()->setTracerVisible(false);
+        stopGenerateTracerEventSignal();
+        // Singleton<TracerManager>::getInstance()->setTracerVisible(true);
+        // startGenerateTracerEventSignal();
+        customPlot->replot();
+        return true;
     }
-    // 显示图例显示
-    customPlot->legend->setVisible(true);
-    // 显示跟踪点
-    Singleton<TracerManager>::getInstance()->setTracerVisible(false);
-    stopGenerateTracerEventSignal();
-    customPlot->replot();
+    return false;
 }
 
 int CustomPlotManager::getCount()

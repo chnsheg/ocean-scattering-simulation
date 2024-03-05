@@ -73,11 +73,11 @@ void MenuManager::showPageMenuStatus()
     menuBar->actions().at(1)->menu()->actions().at(1)->menu()->actions().at(0)->setEnabled(false);
 }
 
-void MenuManager::plotPageMenuStatus()
+void MenuManager::plotPageMenuStatus(bool existCurve)
 {
     // 进行菜单状态初始化，你可以根据需要添加代码
     menuBar->actions().at(0)->menu()->actions().at(0)->menu()->actions().at(0)->setEnabled(true);
-    menuBar->actions().at(0)->menu()->actions().at(1)->menu()->actions().at(0)->setEnabled(true);
+    menuBar->actions().at(0)->menu()->actions().at(1)->menu()->actions().at(0)->setEnabled(existCurve);
     menuBar->actions().at(1)->menu()->actions().at(0)->menu()->actions().at(0)->setEnabled(true);
     menuBar->actions().at(1)->menu()->actions().at(1)->menu()->actions().at(0)->setEnabled(true);
 }

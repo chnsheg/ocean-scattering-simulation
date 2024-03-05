@@ -35,7 +35,7 @@ private:
 
 public:
     void showPageMenuStatus();
-    void plotPageMenuStatus();
+    void plotPageMenuStatus(bool existCurve);
 signals:
     void eventSignal(MenuActionId param);
 

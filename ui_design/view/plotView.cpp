@@ -144,14 +144,16 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
     if (plotPageIndex.contains(plotInterfaceIndex))
     {
         ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
-        // 更新视图层中Menu的样式
-        Singleton<MenuManager>::getInstance()->plotPageMenuStatus();
         // 更新视图层中CustomPlot的样式
         for (auto &&customPlot : getCurrentPageCustomPlot())
         {
-            Singleton<CustomPlotManager>::getInstance()->setCustomPlot(customPlot);
+            Singleton<CustomPlotManager>::getInstance()->setCustomPlot(customPlot); // Tracer可能会出问题，只会锚定到最后一个customPlot上
         }
-        Singleton<CustomPlotManager>::getInstance()->initCustomPlotStyle();
+        // 默认开启customPlot显示
+        bool existCurve = Singleton<CustomPlotManager>::getInstance()->showPlot();
+        // 更新视图层中Menu的样式
+        Singleton<MenuManager>::getInstance()->plotPageMenuStatus(existCurve);
+        // Singleton<CustomPlotManager>::getInstance()->initCustomPlotStyle();
         // 更新视图层中TextEdit的样式
         Singleton<TextEditManager>::getInstance()->setTextEdit(
             ui->stackedWidget->findChild<QTextEdit *>(
@@ -179,8 +181,16 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
             break;
         }
         // 更新视图层中ButtonGroups的样式和状态
-        Singleton<ButtonGroupsManager>::getInstance()->initButtonStyle(plotInterfaceIndex);
-        Singleton<ButtonGroupsManager>::getInstance()->initButtonStatus(plotInterfaceIndex);
+        if (!existCurve)
+        {
+            Singleton<ButtonGroupsManager>::getInstance()->initButtonStyle(plotInterfaceIndex);
+            Singleton<ButtonGroupsManager>::getInstance()->initButtonStatus(plotInterfaceIndex);
+        }
+        else
+        {
+            ButtonStatus ButtonWaitForClose = {true, true, true};
+            Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(plotInterfaceIndex, ButtonWaitForClose);
+        }
         // 更新视图层中show1ButtonGroup的样式和状态
         // Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStyle();
         // Singleton<Show1ButtonGroupManager>::getInstance()->initShow1ButtonGroupStatus();
@@ -260,9 +270,7 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     default:
         break;
     }
-    int index = ui->stackedWidget->currentIndex();
-    ButtonStatus ButtonWaitForClose = {true, true, true};
-    Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(index, ButtonWaitForClose);
+
     emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), anchor - 1, curve_index);
 }
 
@@ -324,6 +332,11 @@ void PlotView::startButtonClicked()
     Singleton<Logger>::getInstance()->logMessage("开始绘图...", Logger::Log);
     Singleton<CustomPlotManager>::getInstance()->clearPlot();
     Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
+
+    ButtonStatus ButtonWaitForClose = {true, true, true};
+    Singleton<ButtonGroupsManager>::getInstance()->updateButtonStatus(page_index, ButtonWaitForClose);
+    Singleton<MenuManager>::getInstance()->plotPageMenuStatus(true);
+
     // Singleton<CustomPlotManager>::getInstance()->clearPlot();
     emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
 }

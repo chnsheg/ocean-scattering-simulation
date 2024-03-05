@@ -31,7 +31,7 @@ public:
     void refreshPlot();
     void clearPlot();
     void hidePlot();
-    void showPlot();
+    bool showPlot();
     int getCount();
     bool getTracerStatus();
     void setLegendName(const QString &name, int curve_index);
