@@ -13,6 +13,9 @@ public:
     static QVector<double> *generateBriScatteringData();
     static QVector<double> *generateMieScatteringData();
     static QVector<double> *generateRayScatteringData();
+    static QVector<QVector<double> *> *generateSpectrumDataByMatlabCode();
+    // 计算激光线宽对三种散射谱的影响
+    static QVector<QVector<double> *> *generateLaserLineWidthEffectData();
 };
 
 #endif // SPECTRUMDATAGENERATOR_H

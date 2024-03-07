@@ -154,6 +154,7 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
         graphData[i].value = (*yData)[i];
     }
 
+    // customPlot->graph(curve_index)->data()->add(graphData);
     customPlot->graph(curve_index)->data()->add(graphData, true);
     // customPlot->graph(curve_index)->setData(*xData, *yData, true);
 

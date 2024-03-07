@@ -235,18 +235,32 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         }
         break;
     case 3:
-        Singleton<CustomPlotManager>::getInstance()->setLegendName("水下散射光谱", 0);
-        Singleton<CustomPlotManager>::getInstance()->refreshPlot();
-        Singleton<Logger>::getInstance()->logMessage("水下散射光谱绘制完毕！", Logger::Log);
-        // test
-        // Singleton<CustomPlotManager>::getInstance()->getCustomPlot()->addGraph();
-        // // void QCPGraph::setData ( QSharedPointer< QCPGraphDataContainer >  data)
-        // Singleton<CustomPlotManager>::getInstance()->getCustomPlot()->graph(0)->setData(Singleton<ConstantStorage>::getInstance(nullptr)
-        //                                                                                     ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 0))
-        //                                                                                     .value<QSharedPointer<QCPGraphDataContainer>>());
-        // Singleton<CustomPlotManager>::getInstance()->getCustomPlot()->replot();
+        // Singleton<CustomPlotManager>::getInstance()->setLegendName("水下散射光谱", 0);
+        // Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+        // Singleton<Logger>::getInstance()->logMessage("水下散射光谱绘制完毕！", Logger::Log);
+        if (curve_index == 3)
+        {
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("受激光线宽影响的布里渊散射光谱", 0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("受激光线宽影响的瑞利散射光谱", 1);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("受激光线宽影响的米散射光谱", 2);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("受激光线宽影响的散射光谱", 3);
+            Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+            Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱绘制完毕", Logger::Log);
+        }
+
         break;
+
     case 4:
+        if (curve_index == 3)
+        {
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激布里渊散射光谱", 0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激瑞利散射光谱", 1);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激米散射光谱", 2);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激散射光谱", 3);
+            Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+            Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱绘制完毕", Logger::Log);
+        }
+    case 5:
         // 判断是否需要创建第二个坐标轴
         if (curve_index == 0)
         {
@@ -262,11 +276,7 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
             Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱通过Fizeau后的光谱绘制完毕", Logger::Log);
         }
         break;
-    case 5:
-        Singleton<CustomPlotManager>::getInstance()->setLegendName("PMT能谱", 0);
-        Singleton<CustomPlotManager>::getInstance()->refreshPlot();
-        Singleton<Logger>::getInstance()->logMessage("PMT能谱绘制完毕！", Logger::Log);
-        break;
+
     default:
         break;
     }
@@ -306,28 +316,6 @@ void PlotView::updateViewPageSlot(int page_index)
 
 void PlotView::startButtonClicked()
 {
-    // if (Singleton<CustomPlotManager>::getInstance()->getCount() == 0)
-    // {
-    //     // Get input data from view
-    //     // InputDataListManager *inputDataList = new InputDataListManager();
-    //     // for (int i = 0; i < ui.inputLineEdits.size(); ++i) {
-    //     //     inputData.inputDataList->append(ui.inputLineEdits[i]->text());
-    //     // }
-    //     // inputDataList->setInputDataList("0.8");
-    //     // inputDataList->setInputDataList("1000");
-    //     // inputDataList->setInputDataList("model1");
-    //     // Send signal to controller
-    //     int page_index = ui->stackedWidget->currentIndex();
-    //     Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
-    //     emit onStartButtonClicked(page_index); // 只用告诉去读取哪个页面的数据就行了
-    // }
-    // else
-    // {
-    //     // Update view style accordingly
-    //     Singleton<CustomPlotManager>::getInstance()->showPlot();
-    //     bool visible = Singleton<CustomPlotManager>::getInstance()->getTracerStatus();
-    //     qDebug() << "visible = " << visible;
-    // }
     int page_index = ui->stackedWidget->currentIndex();
     Singleton<Logger>::getInstance()->logMessage("开始绘图...", Logger::Log);
     Singleton<CustomPlotManager>::getInstance()->clearPlot();

@@ -79,6 +79,10 @@ set(SOURCES
     utils/myMath.cpp
     utils/readfiledata.cpp
     view/plotView.cpp
+    model/SpectrumGeneration.cpp
+    model/convolution.cpp
+    model/CaculateScatteredPhotons.cpp
+    model/underwaterspectrumdatagenerator.cpp
 )
 
 # include_directory(${SOURCES})
@@ -110,6 +114,14 @@ set(HEADERS
     utils/myMath.h
     utils/readfiledata.h
     view/plotView.h
+    fftw3.h
+    model/tmwtypes.h
+    model/SpectrumGeneration.h
+    model/coder_array.h
+    model/rtwtypes.h
+    model/convolution.h
+    model/CaculateScatteredPhotons.h
+    model/underwaterspectrumdatagenerator.h
 )
 
 
@@ -132,5 +144,10 @@ target_compile_options(ui_design PUBLIC "/ZI")
 target_link_options(ui_design PUBLIC "/INCREMENTAL")
 endif()
 
+# LIBS += -L$$PWD/lib/ -llibfftw3-3.lib
+
 # Link the executable to the necessary libraries
 target_link_libraries(ui_design Qt5::Core Qt5::Widgets Qt5::PrintSupport Qt5::SerialPort)
+
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib)   # lib文件要放到build目录下，dll文件要放到Debug目录下
+target_link_libraries(ui_design libfftw3-3)

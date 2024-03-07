@@ -19,6 +19,15 @@ ConstantStorage::ConstantStorage(QObject *parent)
         m_constants.insert(constantMap->getConstantName(0, 4), 299792458.0);
         m_constants.insert(constantMap->getConstantName(1, 0), 20);
         m_constants.insert(constantMap->getConstantName(1, 1), 35);
+        m_constants.insert(constantMap->getConstantName(7, 0), 300e-3);
+        m_constants.insert(constantMap->getConstantName(7, 1), 0.02);
+        m_constants.insert(constantMap->getConstantName(7, 2), 7.4e-4);
+        m_constants.insert(constantMap->getConstantName(7, 3), 2.4e-4);
+        m_constants.insert(constantMap->getConstantName(7, 4), 5.32e-07);
+        m_constants.insert(constantMap->getConstantName(7, 5), 1.3333);
+        m_constants.insert(constantMap->getConstantName(7, 6), 10);
+        m_constants.insert(constantMap->getConstantName(7, 7), 150);
+        m_constants.insert(constantMap->getConstantName(7, 8), 0.00);
         // m_constants.insert(constantMap->getConstantName(1, 2), 1.0);
         // m_constants.insert(constantMap->getConstantName(1, 3), 12e9);
 

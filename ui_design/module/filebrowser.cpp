@@ -9,7 +9,7 @@ FileBrowser::FileBrowser(QWidget *parent)
 QStringList FileBrowser::showFileDialog(QFileDialog::AcceptMode mode,
                                         const QString &defaultPath,
                                         const QString &filter,
-                                        QString &defaultSuffix,
+                                        QString defaultSuffix,
                                         bool allowMultipleFiles)
 {
     QFileDialog dialog;

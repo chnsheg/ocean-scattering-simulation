@@ -15,7 +15,7 @@ Q_DECLARE_METATYPE(QSharedPointer<QCPGraphDataContainer>)
 
 class ConstantStorage : public QObject
 {
-#define CONSTANT_FILE "constants4.json"
+#define CONSTANT_FILE "constants.json"
     SINGLETON(ConstantStorage);
     Q_OBJECT
 public:

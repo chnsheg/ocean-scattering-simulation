@@ -39,7 +39,7 @@ private:
     QStringList showFileDialog(QFileDialog::AcceptMode mode,
                                const QString &defaultPath,
                                const QString &filter,
-                               QString &defaultSuffix,
+                               QString defaultSuffix,
                                bool allowMultipleFiles = false);
 };
 

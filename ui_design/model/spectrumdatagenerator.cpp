@@ -4,6 +4,10 @@
 #include "utils/mymath.h"
 #include "model/frequencedatagenerator.h"
 #include "utils/logger.h"
+#include "utils/readfiledata.h"
+#include "model/frequencedatagenerator.h"
+#include "model/SpectrumGeneration.h"
+#include "model/convolution.h"
 
 double SpectrumDataGenerator::BrillouinLine()
 {
@@ -60,9 +64,12 @@ double SpectrumDataGenerator::BrillouinLine()
     // 计算线宽linew
     double linew = 1.9850e18 * (1.0 / (4.0 * MY_PI * rho)) * qPow((4.0 * MY_PI * n / a), 2) * (4.0 / 3.0 * gs + gb);
 
-    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 2), linew);
+    linew = linew / 1e9; // 单位转换为GHz
+
+    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(7, 0), linew);
 
     Singleton<Logger>::getInstance()->logMessage("BrillouinLine: " + QString::number(linew), Logger::Info);
+
     return linew;
 }
 
@@ -83,9 +90,9 @@ double SpectrumDataGenerator::BrillouinShift()
     double n = n0 + S * (n1 + n2 * t + n3 * t * t) + n4 * t * t + (n5 + n6 * S + n7 * t) / a + n8 / a / a + n9 / a / a / a;
 
     // 计算 Brillouin 频移
-    double v = 2 * n * c / a / 1e-9; // p25面式(2.27)
-
-    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 3), v);
+    // double v = 2 * n * c / a / 1e-9; // p25面式(2.27)
+    double v = 2 * n * c / a; // p25面式(2.27)
+    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(7, 1), v);
 
     Singleton<Logger>::getInstance()->logMessage("BrillouinShift: " + QString::number(v), Logger::Info);
     return v;
@@ -184,4 +191,181 @@ QVector<double> *SpectrumDataGenerator::generateRayScatteringData()
     delete miu;
     miu = nullptr;
     return data;
+}
+
+QVector<QVector<double> *> *SpectrumDataGenerator::generateSpectrumDataByMatlabCode()
+{
+    double vr = Singleton<ConstantStorage>::getInstance(nullptr)
+                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
+                    .toDouble() /
+                Singleton<ConstantStorage>::getInstance(nullptr)
+                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
+                    .toDouble();
+    double v_b = BrillouinShift();
+
+    double delta_b = BrillouinLine();
+
+    QVector<double> *miu_vector = FrequenceDataGenerator::generateFrequenceData();
+
+    coder::array<double, 2U> S_b;
+    coder::array<double, 2U> S_m;
+    coder::array<double, 2U> S_r;
+    coder::array<double, 2U> miu;
+
+    // 将 QVector 转换为 coder::array
+    MyMath::convertQVectorToArray(miu_vector, miu);
+
+    // Call the entry-point 'SpectrumGeneration'.
+    SpectrumGeneration(vr, miu, v_b, delta_b, S_m, S_r, S_b);
+
+    // 将 coder::array 转换为 QVector
+    QVector<double> *S_m_vector = MyMath::convertArrayToQVector(S_m);
+    QVector<double> *S_r_vector = MyMath::convertArrayToQVector(S_r);
+    QVector<double> *S_b_vector = MyMath::convertArrayToQVector(S_b);
+
+    QVector<QVector<double> *> *result = new QVector<QVector<double> *>();
+    result->append(S_b_vector);
+    result->append(S_r_vector);
+    result->append(S_m_vector);
+
+    delete miu_vector;
+    miu_vector = nullptr;
+
+    return result;
+}
+
+QVector<QVector<double> *> *SpectrumDataGenerator::generateLaserLineWidthEffectData()
+{
+    QVector<QVector<double> *> *xDataVectorContainer;
+    QVector<QVector<double> *> *yDataVectorContainer;
+    xDataVectorContainer = new QVector<QVector<double> *>();
+    yDataVectorContainer = new QVector<QVector<double> *>();
+    for (int i = 0; i < 4; ++i)
+    {
+        // 预先分配4次内存
+        xDataVectorContainer->append(new QVector<double>());
+        yDataVectorContainer->append(new QVector<double>());
+    }
+
+    ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
+    ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
+    QSharedPointer<QCPGraphDataContainer> dataContainer;
+
+    // 从存储中获取激光光谱
+    dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, 0)).value<QSharedPointer<QCPGraphDataContainer>>();
+    if (dataContainer.isNull())
+    {
+        Singleton<Logger>::getInstance()->logMessage("激光光谱为空！请先生成激光光谱！", Logger::Warning);
+        return nullptr;
+    }
+    constantStorage->convertQSharedPointerToQVector(dataContainer, xDataVectorContainer->at(0), yDataVectorContainer->at(0));
+
+    // 从存储中获取散射光谱
+    for (int i = 0; i < 3; ++i)
+    {
+        dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, i + 1)).value<QSharedPointer<QCPGraphDataContainer>>();
+        if (dataContainer.isNull())
+        {
+            Singleton<Logger>::getInstance()->logMessage("散射光谱为空！请先生成散射光谱！", Logger::Warning);
+            return nullptr;
+        }
+        constantStorage->convertQSharedPointerToQVector(dataContainer, xDataVectorContainer->at(i + 1), yDataVectorContainer->at(i + 1));
+    }
+
+    QVector<double> *L_laser = yDataVectorContainer->at(0);
+    QVector<double> *L_b = yDataVectorContainer->at(1);
+    QVector<double> *L_r = yDataVectorContainer->at(2);
+    QVector<double> *L_m = yDataVectorContainer->at(3);
+
+    QVector<double> *L_mc = MyMath::convolution(L_m, L_laser);
+    QVector<double> *L_rc = MyMath::convolution(L_r, L_laser);
+    QVector<double> *L_bc = MyMath::convolution(L_b, L_laser);
+
+    // coder::array<double, 2U> S_b_array;
+    // coder::array<double, 2U> S_m_array;
+    // coder::array<double, 2U> S_r_array;
+    // coder::array<double, 2U> L_laser_array;
+
+    // coder::array<double, 2U> S_b_array_out;
+    // coder::array<double, 2U> S_r_array_out;
+    // coder::array<double, 2U> S_m_array_out;
+
+    // // 将 QVector 转换为 coder::array
+    // MyMath::convertQVectorToArray(L_laser, L_laser_array);
+    // MyMath::convertQVectorToArray(L_m, S_m_array);
+    // MyMath::convertQVectorToArray(L_r, S_r_array);
+    // MyMath::convertQVectorToArray(L_b, S_b_array);
+
+    // // convolution(S_m_array, L_laser_array, S_m_array_out);
+    // // convolution(S_r_array, L_laser_array, S_r_array_out);
+    // // convolution(S_b_array, L_laser_array, S_b_array_out);
+
+    // MyMath::convolution_fftw(S_m_array, L_laser_array, S_m_array_out);
+    // MyMath::convolution_fftw(S_r_array, L_laser_array, S_r_array_out);
+    // MyMath::convolution_fftw(S_b_array, L_laser_array, S_b_array_out);
+
+    // QVector<double> *L_mc = MyMath::convertArrayToQVector(S_m_array_out);
+    // QVector<double> *L_rc = MyMath::convertArrayToQVector(S_r_array_out);
+    // QVector<double> *L_bc = MyMath::convertArrayToQVector(S_b_array_out);
+
+    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_laser, "L_laser1.csv");
+    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_mc, "L_mc1.csv");
+    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_rc, "L_rc1.csv");
+    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_bc, "L_bc1.csv");
+
+    // L_mc = L_mc./ polyarea(miu, L_mc);
+    // L_rc = L_rc./ polyarea(miu, L_rc);
+    // L_bc = L_bc./ polyarea(miu, L_bc);
+    QVector<double> *miu = FrequenceDataGenerator::generateFrequenceData();
+    double A_mc = MyMath::polyarea(*miu, *L_mc);
+    double A_rc = MyMath::polyarea(*miu, *L_rc);
+    double A_bc = MyMath::polyarea(*miu, *L_bc);
+
+    for (int i = 0; i < L_mc->size(); i++)
+    {
+        (*L_mc)[i] = (*L_mc)[i] / A_mc;
+        (*L_rc)[i] = (*L_rc)[i] / A_rc;
+        (*L_bc)[i] = (*L_bc)[i] / A_bc;
+    }
+
+    // 保存计算结果到文件中
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_mc, "L_mc1.csv");
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_rc, "L_rc1.csv");
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_bc, "L_bc1.csv");
+
+    // 计算整体光谱
+    QVector<double> *L_total = new QVector<double>(L_mc->size());
+    for (int i = 0; i < L_mc->size(); i++)
+    {
+        (*L_total)[i] = (*L_mc)[i] + (*L_rc)[i] + (*L_bc)[i];
+    }
+
+    QVector<QVector<double> *> *result = new QVector<QVector<double> *>();
+    result->append(L_bc);
+    result->append(L_rc);
+    result->append(L_mc);
+    result->append(L_total);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        delete xDataVectorContainer->at(i);
+        delete yDataVectorContainer->at(i);
+    }
+    delete xDataVectorContainer;
+    delete yDataVectorContainer;
+    xDataVectorContainer = nullptr;
+    yDataVectorContainer = nullptr;
+
+    dataContainer.clear();
+    dataContainer = nullptr;
+
+    L_mc = nullptr;
+    L_rc = nullptr;
+    L_bc = nullptr;
+    L_total = nullptr;
+
+    delete miu;
+    miu = nullptr;
+
+    return result;
 }

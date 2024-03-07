@@ -7,6 +7,7 @@
 #include "model/constantmap.h"
 #include "module/filebrowser.h"
 #include "utils/logger.h"
+#include "model/underwaterspectrumdatagenerator.h"
 
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
@@ -69,6 +70,9 @@ void PageDataGenerator::generatePairOfData(int page_index)
     QVector<QVector<double> *> *yDataVector;
     xDataVector = new QVector<QVector<double> *>;
     yDataVector = new QVector<QVector<double> *>;
+    QVector<QVector<double> *> *SpectrumData;
+    QVector<double> *result;
+    QVector<QVector<double> *> *laserLineWidthEffectData;
 
     switch (page_index)
     {
@@ -78,10 +82,16 @@ void PageDataGenerator::generatePairOfData(int page_index)
         emit dataGenerated(xDataVector, yDataVector, 1);
         break;
     case 2:
+        // xDataVector->append(generateData(DataType::Frequence));
+        // yDataVector->append(generateData(DataType::BriScattering));
+        // yDataVector->append(generateData(DataType::RayScattering));
+        // yDataVector->append(generateData(DataType::MieScattering));
+
+        SpectrumData = SpectrumDataGenerator::generateSpectrumDataByMatlabCode();
         xDataVector->append(generateData(DataType::Frequence));
-        yDataVector->append(generateData(DataType::BriScattering));
-        yDataVector->append(generateData(DataType::RayScattering));
-        yDataVector->append(generateData(DataType::MieScattering));
+        yDataVector->append(SpectrumData->at(0));
+        yDataVector->append(SpectrumData->at(1));
+        yDataVector->append(SpectrumData->at(2));
         emit dataGenerated(xDataVector, yDataVector, 3);
         break;
     case 3:
@@ -90,14 +100,38 @@ void PageDataGenerator::generatePairOfData(int page_index)
         // yDataVector->append(
         //     PageDataGenerator::generateData(PageDataGenerator::DataType::MieScattering,
         //                                     inputDataList));
-        emit dataGenerated(xDataVector, yDataVector, 1);
+        laserLineWidthEffectData = SpectrumDataGenerator::generateLaserLineWidthEffectData();
+        if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
+        {
+            Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
+            return;
+        }
+        xDataVector->append(generateData(DataType::Frequence));
+        yDataVector->append(laserLineWidthEffectData->at(0));
+        yDataVector->append(laserLineWidthEffectData->at(1));
+        yDataVector->append(laserLineWidthEffectData->at(2));
+        yDataVector->append(laserLineWidthEffectData->at(3));
+        emit dataGenerated(xDataVector, yDataVector, 4);
         break;
-        // case 4:
-        //     xDataVector->append(generateData(DataType::Frequence));
-        //     yDataVector->append(generateData(DataType::FizeauInstrument));
-        //     yDataVector->append(generateData(DataType::FizeauSpectra));
-        //     emit dataGenerated(xDataVector, yDataVector, 2);
-        //     break;
+    case 4:
+        // xDataVector->append(generateData(DataType::Frequence));
+        // yDataVector->append(generateData(DataType::FizeauInstrument));
+        // yDataVector->append(generateData(DataType::FizeauSpectra));
+        // emit dataGenerated(xDataVector, yDataVector, 2);
+        laserLineWidthEffectData = SpectrumDataGenerator::generateLaserLineWidthEffectData();
+        if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
+        {
+            Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
+            return;
+        }
+        xDataVector->append(generateData(DataType::Frequence));
+        yDataVector->append(laserLineWidthEffectData->at(0));
+        yDataVector->append(laserLineWidthEffectData->at(1));
+        yDataVector->append(laserLineWidthEffectData->at(2));
+        yDataVector->append(laserLineWidthEffectData->at(3));
+        emit dataGenerated(xDataVector, yDataVector, 4);
+
+        break;
         // case 5:
         //     xDataVector->append(
         //         PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
@@ -138,11 +172,11 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
         break;
 
     case 3:
-        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 5 + curve_index), QVariant::fromValue(dataContainer));
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 8 + curve_index), QVariant::fromValue(dataContainer));
         break;
 
     case 4:
-        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 7 + curve_index), QVariant::fromValue(dataContainer));
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 12 + curve_index), QVariant::fromValue(dataContainer));
         break;
     }
 }

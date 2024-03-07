@@ -22,13 +22,17 @@ SOURCES += \
     manager/show1buttongroupmanager.cpp \
     manager/texteditmanager.cpp \
     manager/tracermanager.cpp \
+    model/CaculateScatteredPhotons.cpp \
+    model/SpectrumGeneration.cpp \
     model/constantmap.cpp \
     model/constantstorage.cpp \
+    model/convolution.cpp \
     model/fizeaudatagenerator.cpp \
     model/frequencedatagenerator.cpp \
     model/laserdatagenerator.cpp \
     model/pagedatagenerator.cpp \
     model/spectrumdatagenerator.cpp \
+    model/underwaterspectrumdatagenerator.cpp \
     module/filebrowser.cpp \
     module/mycombobox.cpp \
     module/mytracer.cpp \
@@ -41,6 +45,7 @@ SOURCES += \
 HEADERS += \
     base/singleton.h \
     controller/plotcontroller.h \
+    fftw3.h \
     mainwindow.h \
     manager/buttongroupmanager.h \
     manager/customplotmanager.h \
@@ -51,13 +56,20 @@ HEADERS += \
     manager/show1buttongroupmanager.h \
     manager/texteditmanager.h \
     manager/tracermanager.h \
+    model/CaculateScatteredPhotons.h \
+    model/SpectrumGeneration.h \
+    model/coder_array.h \
     model/constantmap.h \
     model/constantstorage.h \
+    model/convolution.h \
     model/fizeaudatagenerator.h \
     model/frequencedatagenerator.h \
     model/laserdatagenerator.h \
     model/pagedatagenerator.h \
+    model/rtwtypes.h \
     model/spectrumdatagenerator.h \
+    model/tmwtypes.h \
+    model/underwaterspectrumdatagenerator.h \
     module/filebrowser.h \
     module/mycombobox.h \
     module/mytracer.h \
@@ -83,6 +95,8 @@ RESOURCES += \
 DISTFILES += \
     base/singleton.cpp.txt \
     base/singleton.h.txt
+
+LIBS += -L$$PWD/lib/ -llibfftw3-3
 
 msvc:QMAKE_CXXFLAGS += -execution-charset:utf-8
 msvc:QMAKE_CXXFLAGS += -source-charset:utf-8
