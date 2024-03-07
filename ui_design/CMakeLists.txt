@@ -89,6 +89,8 @@ set(SOURCES
     model/rtGetInf.cpp
     model/rtGetNaN.cpp
     model/fizeauifgenerator.cpp
+    model/PMTReceive.cpp
+    model/PMTReceptionDataGenerator.cpp
 )
 
 # include_directory(${SOURCES})
@@ -134,6 +136,8 @@ set(HEADERS
     model/rtGetInf.h
     model/rtGetNaN.h
     model/fizeauifgenerator.h
+    model/PMTReceive.h
+    model/PMTReceptionDataGenerator.h
 )
 
 

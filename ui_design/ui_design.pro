@@ -24,6 +24,7 @@ SOURCES += \
     manager/tracermanager.cpp \
     model/CaculateScatteredPhotons.cpp \
     model/FizeauInstrument.cpp \
+    model/PMTReceive.cpp \
     model/SpectrumGeneration.cpp \
     model/colon.cpp \
     model/constantmap.cpp \
@@ -34,6 +35,7 @@ SOURCES += \
     model/frequencedatagenerator.cpp \
     model/laserdatagenerator.cpp \
     model/pagedatagenerator.cpp \
+    model/pmtreceptiondatagenerator.cpp \
     model/rtGetInf.cpp \
     model/rtGetNaN.cpp \
     model/rt_nonfinite.cpp \
@@ -64,6 +66,7 @@ HEADERS += \
     manager/tracermanager.h \
     model/CaculateScatteredPhotons.h \
     model/FizeauInstrument.h \
+    model/PMTReceive.h \
     model/SpectrumGeneration.h \
     model/coder_array.h \
     model/colon.h \
@@ -75,6 +78,7 @@ HEADERS += \
     model/frequencedatagenerator.h \
     model/laserdatagenerator.h \
     model/pagedatagenerator.h \
+    model/pmtreceptiondatagenerator.h \
     model/rtGetInf.h \
     model/rtGetNaN.h \
     model/rt_nonfinite.h \

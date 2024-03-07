@@ -9,6 +9,7 @@
 #include "utils/logger.h"
 #include "model/underwaterspectrumdatagenerator.h"
 #include "model/fizeauifgenerator.h"
+#include "model/pmtreceptiondatagenerator.h"
 
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
@@ -135,9 +136,15 @@ void PageDataGenerator::generatePairOfData(int page_index)
         break;
     case 5:
         laserLineWidthEffectData = FizeauIFGenerator::generateFizeauIFData();
+        // xDataVector->append(laserLineWidthEffectData->at(0));
+        // yDataVector->append(laserLineWidthEffectData->at(1));
+        laserLineWidthEffectData = FizeauIFGenerator::calculateSpectrumAfterFizeau(laserLineWidthEffectData->at(1));
+        // xDataVector->append(laserLineWidthEffectData->at(0));
+        // yDataVector->append(laserLineWidthEffectData->at(1));
+        laserLineWidthEffectData = PMTReceptionDataGenerator::receiveSpectrumAfterPMT(laserLineWidthEffectData->at(1));
         xDataVector->append(laserLineWidthEffectData->at(0));
         yDataVector->append(laserLineWidthEffectData->at(1));
-        laserLineWidthEffectData = FizeauIFGenerator::calculateSpectrumAfterFizeau(laserLineWidthEffectData->at(1));
+        laserLineWidthEffectData = PMTReceptionDataGenerator::receiveSpectrumAfterPMT(laserLineWidthEffectData->at(1));
         xDataVector->append(laserLineWidthEffectData->at(0));
         yDataVector->append(laserLineWidthEffectData->at(1));
         emit dataGenerated(xDataVector, yDataVector, 2);

@@ -43,7 +43,7 @@ double MyMath::polyarea(const QVector<double> &x, const QVector<double> &y)
 QVector<double> *MyMath::convolution(QVector<double> *input, QVector<double> *kernel)
 {
     int N = input->size() + kernel->size() - 1;
-    QVector<double> *L_out = new QVector<double>(N);
+    QVector<double> *L_out = new QVector<double>(input->size());
     QVector<double> *temp_out = new QVector<double>(N);
     fftw_complex *inputComplex = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * N);
     fftw_complex *kernelComplex = (fftw_complex *)fftw_malloc(sizeof(fftw_complex) * N);
