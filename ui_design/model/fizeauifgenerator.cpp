@@ -64,8 +64,8 @@ QVector<QVector<double> *> *FizeauIFGenerator::generateFizeauIFData()
         Fizeau_spectrum[i] = Fizeau_spectrum[i] / area;
     }
 
-    result->append(spectrum_vector);
     result->append(frequency_vector);
+    result->append(spectrum_vector);
 
     delete RF;
 
