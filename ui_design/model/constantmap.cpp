@@ -28,26 +28,29 @@ QVector<QString> spectrumConstantVector = QVector<QString>(
     {"Temperature", "Salinity"});
 
 QVector<QString> underWaterSpectrumConstantVector = QVector<QString>(
-    {"laserEnergy", "AlphaWater", "BetaParticulate", "BetaM", "Lambda", "WaterRefractiveIndex", "Depth",
+    {"laserEnergy", "AlphaWater", "BetaParticulate", "BetaM", "Lambda_water", "WaterRefractiveIndex", "Depth",
      "TelescopeHeight", "EnergyRatio"});
 
 QVector<QString> fizeauConstantVector = QVector<QString>(
-    {"Wavelength1", "Power1", "PulseDuration1", "PulseEnergy1"});
+    {"Fizeau_lambda", "Fizeau_plate", "Fizeau_angle", "Fizeau_index", "Fizeau_albedo"});
 QVector<QString> pmtConstantVector = QVector<QString>(
-    {"QuantumEfficiency", "DarkCountRate", "Gain", "NoiseEquivalentPower"});
-QVector<QString> runtimeCurveDataVector = QVector<QString>({"Laser",
-                                                            "BrillouinSpectrum",
-                                                            "MieSpectrum",
-                                                            "RayleighSpectrum",
-                                                            "BrillouinSpectrumLaserEffected",
-                                                            "RayleighSpectrumLaserEffected",
-                                                            "MieSpectrumLaserEffected",
-                                                            "TotalSpectrum",
-                                                            "UnderWaterSpectrum",
-                                                            "FizeauInstrument",
-                                                            "SpectrumAfterFizeau",
-                                                            "PMT",
-                                                            "SpectrumAfterPMT"});
+    {"channel_number", "channel_width", "channel_space"});
+QVector<QString> runtimeCurveDataVector = QVector<QString>({"Laser",                          // 0
+                                                            "BrillouinSpectrum",              // 1
+                                                            "MieSpectrum",                    // 2
+                                                            "RayleighSpectrum",               // 3
+                                                            "BrillouinSpectrumLaserEffected", // 4
+                                                            "RayleighSpectrumLaserEffected",  // 5
+                                                            "MieSpectrumLaserEffected",       // 6
+                                                            "TotalSpectrum",                  // 7
+                                                            "UnderWaterBrillouinSpectrum",    // 8
+                                                            "UnderWaterRayleighSpectrum",     // 9
+                                                            "UnderWaterMieSpectrum",          // 10
+                                                            "UnderWaterSpectrum",             // 11
+                                                            "FizeauInstrument",               // 12
+                                                            "SpectrumAfterFizeau",            // 13
+                                                            "PMT",                            // 14
+                                                            "SpectrumAfterPMT"});             // 15
 
 QVector<QString> runtimeResultDataVector = QVector<QString>({"BrillouinLine",
                                                              "BrillouinShift",

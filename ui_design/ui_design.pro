@@ -23,14 +23,20 @@ SOURCES += \
     manager/texteditmanager.cpp \
     manager/tracermanager.cpp \
     model/CaculateScatteredPhotons.cpp \
+    model/FizeauInstrument.cpp \
     model/SpectrumGeneration.cpp \
+    model/colon.cpp \
     model/constantmap.cpp \
     model/constantstorage.cpp \
     model/convolution.cpp \
     model/fizeaudatagenerator.cpp \
+    model/fizeauifgenerator.cpp \
     model/frequencedatagenerator.cpp \
     model/laserdatagenerator.cpp \
     model/pagedatagenerator.cpp \
+    model/rtGetInf.cpp \
+    model/rtGetNaN.cpp \
+    model/rt_nonfinite.cpp \
     model/spectrumdatagenerator.cpp \
     model/underwaterspectrumdatagenerator.cpp \
     module/filebrowser.cpp \
@@ -57,15 +63,21 @@ HEADERS += \
     manager/texteditmanager.h \
     manager/tracermanager.h \
     model/CaculateScatteredPhotons.h \
+    model/FizeauInstrument.h \
     model/SpectrumGeneration.h \
     model/coder_array.h \
+    model/colon.h \
     model/constantmap.h \
     model/constantstorage.h \
     model/convolution.h \
     model/fizeaudatagenerator.h \
+    model/fizeauifgenerator.h \
     model/frequencedatagenerator.h \
     model/laserdatagenerator.h \
     model/pagedatagenerator.h \
+    model/rtGetInf.h \
+    model/rtGetNaN.h \
+    model/rt_nonfinite.h \
     model/rtwtypes.h \
     model/spectrumdatagenerator.h \
     model/tmwtypes.h \

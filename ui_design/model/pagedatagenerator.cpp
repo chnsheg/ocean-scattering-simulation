@@ -8,6 +8,7 @@
 #include "module/filebrowser.h"
 #include "utils/logger.h"
 #include "model/underwaterspectrumdatagenerator.h"
+#include "model/fizeauifgenerator.h"
 
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
@@ -71,7 +72,7 @@ void PageDataGenerator::generatePairOfData(int page_index)
     xDataVector = new QVector<QVector<double> *>;
     yDataVector = new QVector<QVector<double> *>;
     QVector<QVector<double> *> *SpectrumData;
-    QVector<double> *result;
+    // QVector<double> *result;
     QVector<QVector<double> *> *laserLineWidthEffectData;
 
     switch (page_index)
@@ -118,7 +119,7 @@ void PageDataGenerator::generatePairOfData(int page_index)
         // yDataVector->append(generateData(DataType::FizeauInstrument));
         // yDataVector->append(generateData(DataType::FizeauSpectra));
         // emit dataGenerated(xDataVector, yDataVector, 2);
-        laserLineWidthEffectData = SpectrumDataGenerator::generateLaserLineWidthEffectData();
+        laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateUnderWaterSpectrumData();
         if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
         {
             Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
@@ -132,14 +133,15 @@ void PageDataGenerator::generatePairOfData(int page_index)
         emit dataGenerated(xDataVector, yDataVector, 4);
 
         break;
-        // case 5:
-        //     xDataVector->append(
-        //         PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
-        //     yDataVector->append(
-        //         PageDataGenerator::generateData(PageDataGenerator::DataType::UnderwaterScattering,
-        //                                         inputDataList));
-        //     emit dataGenerated(xDataVector, yDataVector, 1);
-        //     break;
+    case 5:
+        laserLineWidthEffectData = FizeauIFGenerator::generateFizeauIFData();
+        xDataVector->append(laserLineWidthEffectData->at(0));
+        yDataVector->append(laserLineWidthEffectData->at(1));
+        laserLineWidthEffectData = FizeauIFGenerator::calculateSpectrumAfterFizeau(laserLineWidthEffectData->at(1));
+        xDataVector->append(laserLineWidthEffectData->at(0));
+        yDataVector->append(laserLineWidthEffectData->at(1));
+        emit dataGenerated(xDataVector, yDataVector, 2);
+        break;
         // case 6:
         //     xDataVector->append(
         //         PageDataGenerator::generateData(PageDataGenerator::DataType::PMTFrequency,

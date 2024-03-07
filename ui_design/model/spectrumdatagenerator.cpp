@@ -281,41 +281,6 @@ QVector<QVector<double> *> *SpectrumDataGenerator::generateLaserLineWidthEffectD
     QVector<double> *L_rc = MyMath::convolution(L_r, L_laser);
     QVector<double> *L_bc = MyMath::convolution(L_b, L_laser);
 
-    // coder::array<double, 2U> S_b_array;
-    // coder::array<double, 2U> S_m_array;
-    // coder::array<double, 2U> S_r_array;
-    // coder::array<double, 2U> L_laser_array;
-
-    // coder::array<double, 2U> S_b_array_out;
-    // coder::array<double, 2U> S_r_array_out;
-    // coder::array<double, 2U> S_m_array_out;
-
-    // // 将 QVector 转换为 coder::array
-    // MyMath::convertQVectorToArray(L_laser, L_laser_array);
-    // MyMath::convertQVectorToArray(L_m, S_m_array);
-    // MyMath::convertQVectorToArray(L_r, S_r_array);
-    // MyMath::convertQVectorToArray(L_b, S_b_array);
-
-    // // convolution(S_m_array, L_laser_array, S_m_array_out);
-    // // convolution(S_r_array, L_laser_array, S_r_array_out);
-    // // convolution(S_b_array, L_laser_array, S_b_array_out);
-
-    // MyMath::convolution_fftw(S_m_array, L_laser_array, S_m_array_out);
-    // MyMath::convolution_fftw(S_r_array, L_laser_array, S_r_array_out);
-    // MyMath::convolution_fftw(S_b_array, L_laser_array, S_b_array_out);
-
-    // QVector<double> *L_mc = MyMath::convertArrayToQVector(S_m_array_out);
-    // QVector<double> *L_rc = MyMath::convertArrayToQVector(S_r_array_out);
-    // QVector<double> *L_bc = MyMath::convertArrayToQVector(S_b_array_out);
-
-    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_laser, "L_laser1.csv");
-    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_mc, "L_mc1.csv");
-    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_rc, "L_rc1.csv");
-    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_bc, "L_bc1.csv");
-
-    // L_mc = L_mc./ polyarea(miu, L_mc);
-    // L_rc = L_rc./ polyarea(miu, L_rc);
-    // L_bc = L_bc./ polyarea(miu, L_bc);
     QVector<double> *miu = FrequenceDataGenerator::generateFrequenceData();
     double A_mc = MyMath::polyarea(*miu, *L_mc);
     double A_rc = MyMath::polyarea(*miu, *L_rc);
@@ -327,11 +292,6 @@ QVector<QVector<double> *> *SpectrumDataGenerator::generateLaserLineWidthEffectD
         (*L_rc)[i] = (*L_rc)[i] / A_rc;
         (*L_bc)[i] = (*L_bc)[i] / A_bc;
     }
-
-    // 保存计算结果到文件中
-    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_mc, "L_mc1.csv");
-    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_rc, "L_rc1.csv");
-    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(1), L_bc, "L_bc1.csv");
 
     // 计算整体光谱
     QVector<double> *L_total = new QVector<double>(L_mc->size());

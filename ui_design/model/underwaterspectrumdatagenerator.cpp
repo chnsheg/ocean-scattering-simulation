@@ -2,6 +2,7 @@
 #include "model/constantstorage.h"
 #include "model/constantmap.h"
 #include "utils/logger.h"
+#include "utils/readfiledata.h"
 
 UnderWaterSpectrumDataGenerator::UnderWaterSpectrumDataGenerator() {}
 
@@ -15,15 +16,15 @@ QVector<double> *UnderWaterSpectrumDataGenerator::caculateScatteredPhotonsByMatl
 
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
-    double energe = constantStorage->getConstant(constantMap->getConstantName(3, 0)).toDouble();
-    double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(3, 1)).toDouble();
-    double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(3, 2)).toDouble();
-    double Beta_m = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
-    double lambda = constantStorage->getConstant(constantMap->getConstantName(3, 4)).toDouble();
-    double n = constantStorage->getConstant(constantMap->getConstantName(3, 5)).toDouble();
-    double z = constantStorage->getConstant(constantMap->getConstantName(3, 6)).toDouble();
-    double H = constantStorage->getConstant(constantMap->getConstantName(3, 7)).toDouble();
-    double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(3, 8)).toDouble();
+    double energe = constantStorage->getConstant(constantMap->getConstantName(7, 0)).toDouble();
+    double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
+    double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
+    double Beta_m = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
+    double lambda = constantStorage->getConstant(constantMap->getConstantName(7, 4)).toDouble();
+    double n = constantStorage->getConstant(constantMap->getConstantName(7, 5)).toDouble();
+    double z = constantStorage->getConstant(constantMap->getConstantName(7, 6)).toDouble();
+    double H = constantStorage->getConstant(constantMap->getConstantName(7, 7)).toDouble();
+    double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
     double N_Brillouin;
     double N_Mie;
     double N_Rayleigh;
@@ -41,6 +42,10 @@ QVector<double> *UnderWaterSpectrumDataGenerator::caculateScatteredPhotonsByMatl
 QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateUnderWaterSpectrumData()
 {
     QVector<double> *result = caculateScatteredPhotonsByMatlabCode();
+    for (int i = 0; i < result->size(); ++i)
+    {
+        Singleton<Logger>::getInstance()->logMessage("result: " + QString::number(result->at(i)), Logger::Log);
+    }
     QVector<QVector<double> *> *xDataVectorContainer;
     QVector<QVector<double> *> *yDataVectorContainer;
     xDataVectorContainer = new QVector<QVector<double> *>();
@@ -59,7 +64,7 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateUnderWaterS
     // 从存储中获取散射光谱
     for (int i = 0; i < 3; ++i)
     {
-        dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, i + 8)).value<QSharedPointer<QCPGraphDataContainer>>();
+        dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, i + 4)).value<QSharedPointer<QCPGraphDataContainer>>();
         if (dataContainer.isNull())
         {
             Singleton<Logger>::getInstance()->logMessage("散射光谱为空！请先生成散射光谱！", Logger::Warning);
@@ -71,6 +76,9 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateUnderWaterS
     QVector<double> *L_b = yDataVectorContainer->at(0);
     QVector<double> *L_r = yDataVectorContainer->at(1);
     QVector<double> *L_m = yDataVectorContainer->at(2);
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_r, "L_rc.csv");
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_m, "L_mc.csv");
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_b, "L_bc.csv");
 
     // SpectraR = L_rc * Num_Rayleigh; %Rayleigh Spectra   光子数*分布函数 = 光谱 I*S(v)
     // SpectraM = L_mc * Num_Mie; %Mie Spectrum?           乘以光子数后，纵轴的单位是光子数，因此可以比较不同的散射谱的强度
@@ -83,17 +91,23 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateUnderWaterS
 
     for (int i = 0; i < L_b->size(); ++i)
     {
-        L_bc->append(L_b->at(i) * result->at(0));
-        L_rc->append(L_r->at(i) * result->at(1));
-        L_mc->append(L_m->at(i) * result->at(2));
+        L_bc->replace(i, L_b->at(i) * result->at(0));
+        L_rc->replace(i, L_r->at(i) * result->at(1));
+        L_mc->replace(i, L_m->at(i) * result->at(2));
     }
 
     // Spectrum1 = SpectraR + SpectraM + SpectraB
     QVector<double> *Spectrum1 = new QVector<double>(size);
     for (int i = 0; i < size; ++i)
     {
-        Spectrum1->append(L_rc->at(i) + L_mc->at(i) + L_bc->at(i));
+        // Spectrum1->append(L_rc->at(i) + L_mc->at(i) + L_bc->at(i));
+        Spectrum1->replace(i, L_rc->at(i) + L_mc->at(i) + L_bc->at(i));
     }
+
+    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_rc, "L_rc.csv");
+    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_mc, "L_mc.csv");
+    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_bc, "L_bc.csv");
+    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), Spectrum1, "Spectrum1.csv");
 
     QVector<QVector<double> *> *resultContainer = new QVector<QVector<double> *>({L_rc, L_mc, L_bc, Spectrum1});
 

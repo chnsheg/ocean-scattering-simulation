@@ -83,6 +83,12 @@ set(SOURCES
     model/convolution.cpp
     model/CaculateScatteredPhotons.cpp
     model/underwaterspectrumdatagenerator.cpp
+    model/FizeauInstrument.cpp
+    model/colon.cpp
+    model/rt_nonfinite.cpp
+    model/rtGetInf.cpp
+    model/rtGetNaN.cpp
+    model/fizeauifgenerator.cpp
 )
 
 # include_directory(${SOURCES})
@@ -122,6 +128,12 @@ set(HEADERS
     model/convolution.h
     model/CaculateScatteredPhotons.h
     model/underwaterspectrumdatagenerator.h
+    model/FizeauInstrument.h
+    model/colon.h
+    model/rt_nonfinite.h
+    model/rtGetInf.h
+    model/rtGetNaN.h
+    model/fizeauifgenerator.h
 )
 
 
