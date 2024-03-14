@@ -2,8 +2,7 @@
 
 Show1ButtonGroupManager::Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonGroup,
                                                  QObject *parent)
-    : ManagerBase(parent)
-    , show1ButtonGroup(_show1ButtonGroup)
+    : ManagerBase(parent), show1ButtonGroup(_show1ButtonGroup)
 {
     show1ButtonGroup = _show1ButtonGroup;
     addEvent("show1ButtonClicked",
@@ -31,14 +30,30 @@ Show1ButtonGroupManager::Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonG
              show1ButtonGroup->showButton_5,
              &QPushButton::clicked,
              Show1ButtonGroupId::ShowButton_5);
+    addEvent("show6ButtonClicked",
+             "show6ButtonClicked",
+             show1ButtonGroup->showButton_6,
+             &QPushButton::clicked,
+             Show1ButtonGroupId::ShowButton_6);
+    addEvent("show7ButtonClicked",
+             "show7ButtonClicked",
+             show1ButtonGroup->showButton_7,
+             &QPushButton::clicked,
+             Show1ButtonGroupId::ShowButton_7);
+    addEvent("show8ButtonClicked",
+             "show8ButtonClicked",
+             show1ButtonGroup->showButton_8,
+             &QPushButton::clicked,
+             Show1ButtonGroupId::ShowButton_8);
 }
 
 Show1ButtonGroupManager::Show1ButtonGroupManager() {}
 
 Show1ButtonGroupManager::~Show1ButtonGroupManager()
 {
-    //释放内存
-    if (show1ButtonGroup != nullptr) {
+    // 释放内存
+    if (show1ButtonGroup != nullptr)
+    {
         delete show1ButtonGroup;
         show1ButtonGroup = nullptr;
     }

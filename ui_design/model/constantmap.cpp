@@ -48,9 +48,8 @@ QVector<QString> runtimeCurveDataVector = QVector<QString>({"Laser",            
                                                             "UnderWaterMieSpectrum",          // 10
                                                             "UnderWaterSpectrum",             // 11
                                                             "FizeauInstrument",               // 12
-                                                            "SpectrumAfterFizeau",            // 13
-                                                            "PMT",                            // 14
-                                                            "SpectrumAfterPMT"});             // 15
+                                                            "SpectrumAfterFizeau",            // 13                          // 14
+                                                            "SpectrumAfterPMT"});             // 14
 
 QVector<QString> runtimeResultDataVector = QVector<QString>({"BrillouinLine",
                                                              "BrillouinShift",

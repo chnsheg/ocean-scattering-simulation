@@ -21,6 +21,9 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     buttonGroup->push_back(ButtonGroup(_ui->show3, _ui->clear3, _ui->tracer3, _ui->back3, _ui->clear3));
     buttonGroup->push_back(ButtonGroup(_ui->show4, _ui->clear4, _ui->tracer4, _ui->back4, _ui->clear4));
     buttonGroup->push_back(ButtonGroup(_ui->show5, _ui->clear5, _ui->tracer5, _ui->back5, _ui->clear5));
+    buttonGroup->push_back(ButtonGroup(_ui->show6, _ui->clear6, _ui->tracer6, _ui->back6, _ui->clear6));
+    buttonGroup->push_back(ButtonGroup(_ui->show7, _ui->clear7, _ui->tracer7, _ui->back7, _ui->clear7));
+    buttonGroup->push_back(ButtonGroup(_ui->show8, _ui->clear8, _ui->tracer8, _ui->back8, _ui->clear8));
 
     // ButtonGroupsManager::getButtonGroupsManagerInstance(buttonGroup);
     Singleton<ButtonGroupsManager>::getInstance(buttonGroup);
@@ -29,7 +32,10 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
                                                               _ui->homeButton_2,
                                                               _ui->homeButton_3,
                                                               _ui->homeButton_4,
-                                                              _ui->homeButton_5);
+                                                              _ui->homeButton_5,
+                                                              _ui->homeButton_6,
+                                                              _ui->homeButton_7,
+                                                              _ui->homeButton_8);
     Singleton<Show1ButtonGroupManager>::getInstance(show1ButtonGroup);
 
     // 挂载CustomPlotManager单例
@@ -37,7 +43,7 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
 
     // 初始化CustomPlot的list
-    for (auto &&widgetName : {_ui->customPlot1, _ui->customPlot2, _ui->customPlot3, _ui->customPlot4, _ui->customPlot5})
+    for (auto &&widgetName : {_ui->customPlot1, _ui->customPlot2, _ui->customPlot3, _ui->customPlot4, _ui->customPlot5, _ui->customPlot6, _ui->customPlot7, _ui->customPlot8})
     {
         customPlotList.append(widgetName);
     }
@@ -48,7 +54,7 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     Singleton<Logger>::getInstance(Singleton<TextEditManager>::getInstance());
     // 挂载LineEditGroupManager单例
     QList<QList<QLineEdit *>> lineEditsList;
-    for (auto &&widgetName : {_ui->cebianlan_1, _ui->cebianlan_2, _ui->cebianlan_3, _ui->cebianlan_4, _ui->cebianlan_5})
+    for (auto &&widgetName : {_ui->cebianlan_1, _ui->cebianlan_2, _ui->cebianlan_3, _ui->cebianlan_4, _ui->cebianlan_5, _ui->cebianlan_6, _ui->cebianlan_7, _ui->cebianlan_8})
     {
         auto lineEdits = widgetName->findChildren<QLineEdit *>(QString(), Qt::FindDirectChildrenOnly);
         std::sort(lineEdits.begin(), lineEdits.end(), [](QLineEdit *a, QLineEdit *b)
@@ -109,6 +115,15 @@ QList<QCustomPlot *> PlotView::getCurrentPageCustomPlot()
         break;
     case 5:
         currentPageCustomPlot.append(customPlotList[4]);
+        break;
+    case 6:
+        currentPageCustomPlot.append(customPlotList[5]);
+        break;
+    case 7:
+        currentPageCustomPlot.append(customPlotList[6]);
+        break;
+    case 8:
+        currentPageCustomPlot.append(customPlotList[7]);
         break;
     default:
         break;
@@ -276,7 +291,14 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
             Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱通过Fizeau后的光谱绘制完毕", Logger::Log);
         }
         break;
-
+    case 6:
+        if (curve_index == 0)
+        {
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("PMT接收光谱", 0);
+            Singleton<CustomPlotManager>::getInstance()->refreshPlot();
+            Singleton<Logger>::getInstance()->logMessage("PMT接收光谱绘制完毕", Logger::Log);
+        }
+        break;
     default:
         break;
     }
@@ -397,6 +419,15 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
     case back5Button:
         switchPlotPageButtonClicked(0);
         break;
+    case back6Button:
+        switchPlotPageButtonClicked(0);
+        break;
+    case back7Button:
+        switchPlotPageButtonClicked(0);
+        break;
+    case back8Button:
+        switchPlotPageButtonClicked(0);
+        break;
     }
 }
 
@@ -458,6 +489,15 @@ void PlotView::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroup
         break;
     case ShowButton_5:
         switchShowPageButtonClicked(4);
+        break;
+    case ShowButton_6:
+        switchShowPageButtonClicked(5);
+        break;
+    case ShowButton_7:
+        switchShowPageButtonClicked(6);
+        break;
+    case ShowButton_8:
+        switchShowPageButtonClicked(7);
         break;
     }
 }

@@ -210,6 +210,10 @@ void CustomPlotManager::hidePlot()
 bool CustomPlotManager::showPlot()
 {
     // 显示曲线显示
+    if (customPlot->graphCount() == 0)
+    {
+        return false;
+    }
     for (int i = 0; i < customPlot->graphCount(); i++)
     {
         customPlot->graph(i)->setVisible(true);
@@ -221,9 +225,8 @@ bool CustomPlotManager::showPlot()
         // Singleton<TracerManager>::getInstance()->setTracerVisible(true);
         // startGenerateTracerEventSignal();
         customPlot->replot();
-        return true;
     }
-    return false;
+    return true;
 }
 
 int CustomPlotManager::getCount()

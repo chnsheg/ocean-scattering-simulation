@@ -57,6 +57,16 @@ LineEditGroup::LineEditGroup(QList<QLineEdit *> lineEdits, int index)
             break;
         case 5:
             m_lineEdits.insert(lineEdit, Singleton<ConstantMap>::getInstance()->getConstantName(3, i++));
+            break;
+        case 6:
+            m_lineEdits.insert(lineEdit, Singleton<ConstantMap>::getInstance()->getConstantName(7, i++));
+            break;
+        case 7:
+            m_lineEdits.insert(lineEdit, Singleton<ConstantMap>::getInstance()->getConstantName(7, i++));
+            break;
+        case 8:
+            m_lineEdits.insert(lineEdit, Singleton<ConstantMap>::getInstance()->getConstantName(7, i++));
+            break;
         default:
             m_lineEdits.insert(lineEdit, Singleton<ConstantMap>::getInstance()->getConstantName(index, i++));
             break;

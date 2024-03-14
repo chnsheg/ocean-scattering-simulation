@@ -21,7 +21,7 @@ private:
     PlotView(Ui::MainWindow *_ui, QWidget *parent = nullptr);
 
 private:
-    const QList<int> plotPageIndex = {1, 2, 3, 4, 5};
+    const QList<int> plotPageIndex = {1, 2, 3, 4, 5, 6, 7, 8};
     const QList<int> showPageIndex = {0}; // 用于区分展示界面和绘图界面
     QList<QCustomPlot *> customPlotList;
 

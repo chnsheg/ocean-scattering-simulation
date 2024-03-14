@@ -136,28 +136,24 @@ void PageDataGenerator::generatePairOfData(int page_index)
         break;
     case 5:
         laserLineWidthEffectData = FizeauIFGenerator::generateFizeauIFData();
-        // xDataVector->append(laserLineWidthEffectData->at(0));
-        // yDataVector->append(laserLineWidthEffectData->at(1));
+        xDataVector->append(laserLineWidthEffectData->at(0));
+        yDataVector->append(laserLineWidthEffectData->at(1));
         laserLineWidthEffectData = FizeauIFGenerator::calculateSpectrumAfterFizeau(laserLineWidthEffectData->at(1));
+        xDataVector->append(laserLineWidthEffectData->at(0));
+        yDataVector->append(laserLineWidthEffectData->at(1));
+        // laserLineWidthEffectData = PMTReceptionDataGenerator::receiveSpectrumAfterPMT(laserLineWidthEffectData->at(1));
         // xDataVector->append(laserLineWidthEffectData->at(0));
         // yDataVector->append(laserLineWidthEffectData->at(1));
-        laserLineWidthEffectData = PMTReceptionDataGenerator::receiveSpectrumAfterPMT(laserLineWidthEffectData->at(1));
-        xDataVector->append(laserLineWidthEffectData->at(0));
-        yDataVector->append(laserLineWidthEffectData->at(1));
-        laserLineWidthEffectData = PMTReceptionDataGenerator::receiveSpectrumAfterPMT(laserLineWidthEffectData->at(1));
-        xDataVector->append(laserLineWidthEffectData->at(0));
-        yDataVector->append(laserLineWidthEffectData->at(1));
+        // laserLineWidthEffectData = PMTReceptionDataGenerator::receiveSpectrumAfterPMT(laserLineWidthEffectData->at(1));
+        // xDataVector->append(laserLineWidthEffectData->at(0));
+        // yDataVector->append(laserLineWidthEffectData->at(1));
         emit dataGenerated(xDataVector, yDataVector, 2);
         break;
-        // case 6:
-        //     xDataVector->append(
-        //         PageDataGenerator::generateData(PageDataGenerator::DataType::PMTFrequency,
-        //                                         inputDataList));
-        //     yDataVector->append(
-        //         PageDataGenerator::generateData(PageDataGenerator::DataType::PMTEnergy,
-        //                                         inputDataList));
-        //     emit dataGenerated(xDataVector, yDataVector, 1);
-        //     break;
+    case 6:
+        laserLineWidthEffectData = PMTReceptionDataGenerator::generatePMTReceptionData();
+        xDataVector->append(laserLineWidthEffectData->at(0));
+        yDataVector->append(laserLineWidthEffectData->at(1));
+        emit dataGenerated(xDataVector, yDataVector, 1);
     }
     // 释放InputDataListManager内存
     // delete inputDataList;
@@ -187,6 +183,8 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
     case 4:
         Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 12 + curve_index), QVariant::fromValue(dataContainer));
         break;
+    case 5:
+        Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 14 + curve_index), QVariant::fromValue(dataContainer));
     }
 }
 

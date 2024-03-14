@@ -8,7 +8,10 @@ QWidget#cebianlan_1,
 QWidget#cebianlan_2,
 QWidget#cebianlan_3,
 QWidget#cebianlan_4,
-QWidget#cebianlan_5
+QWidget#cebianlan_5,
+QWidget#cebianlan_6,
+QWidget#cebianlan_7,
+QWidget#cebianlan_8
 {
     background-color: rgba(255, 255, 255, 1);
     /* background-color: rgba(52, 73, 94, 0.1);*/
@@ -108,13 +111,27 @@ QWidget#widget1_1,
 QWidget#widget2_1
 QWidget#widget3_1,
 QWidget#widget4_1,
-QWidget#widget5_1
+QWidget#widget5_1,
+QWidget#widget6_1,
+QWidget#widget7_1,
+QWidget#widget8_1
 {
+    position: relative;
+    margin-bottom: 20px;
+    padding: 10px;
+    height: 100px;
+    align-content: center;
+    border-color: #2f3640;
+    border-style: solid;
+    border-width: 0px,0px,4px,0px;
+    background-color: rgba(167, 184, 218,0.8);
+}
+/* {
     border-color: #2f3640;
     border-style: solid;
     border-width: 0px,4px,0px,0px;
     background-color: rgba(167, 184, 218,0.8);
-}
+} */
 
 /* QWidget#widget1_2,
 QWidget#widget2_2,
