@@ -1,8 +1,7 @@
 #ifndef UNDERWATERSPECTRUMDATAGENERATOR_H
 #define UNDERWATERSPECTRUMDATAGENERATOR_H
 
-#include "CaculateScatteredPhotons.h"
-#include "model/CaculateScatteredPhotons.h"
+#include "matlab/CaculateScatteredPhotons.h"
 #include <QVector>
 
 class UnderWaterSpectrumDataGenerator

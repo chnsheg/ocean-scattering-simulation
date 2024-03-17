@@ -1,6 +1,6 @@
 #include "pmtreceptiondatagenerator.h"
 #include "model/frequencedatagenerator.h"
-#include "model/PMTReceive.h"
+#include "matlab/PMTReceive.h"
 
 PMTReceptionDataGenerator::PMTReceptionDataGenerator() {}
 

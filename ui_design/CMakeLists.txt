@@ -64,13 +64,25 @@ set(SOURCES
     manager/show1buttongroupmanager.cpp
     manager/texteditmanager.cpp
     manager/tracermanager.cpp
+    matlab/SpectrumGeneration.cpp
+    matlab/convolution.cpp
+    matlab/CaculateScatteredPhotons.cpp
+    matlab/FizeauInstrument.cpp
+    matlab/colon.cpp
+    matlab/rt_nonfinite.cpp
+    matlab/rtGetInf.cpp
+    matlab/rtGetNaN.cpp
+    matlab/PMTReceive.cpp
     model/constantmap.cpp
     model/constantstorage.cpp
     model/fizeaudatagenerator.cpp
+    model/fizeauifgenerator.cpp
     model/frequencedatagenerator.cpp
     model/laserdatagenerator.cpp
     model/pagedatagenerator.cpp
     model/spectrumdatagenerator.cpp
+    model/underwaterspectrumdatagenerator.cpp
+    model/PMTReceptionDataGenerator.cpp
     module/filebrowser.cpp
     module/mycombobox.cpp
     module/mytracer.cpp
@@ -79,18 +91,6 @@ set(SOURCES
     utils/myMath.cpp
     utils/readfiledata.cpp
     view/plotView.cpp
-    model/SpectrumGeneration.cpp
-    model/convolution.cpp
-    model/CaculateScatteredPhotons.cpp
-    model/underwaterspectrumdatagenerator.cpp
-    model/FizeauInstrument.cpp
-    model/colon.cpp
-    model/rt_nonfinite.cpp
-    model/rtGetInf.cpp
-    model/rtGetNaN.cpp
-    model/fizeauifgenerator.cpp
-    model/PMTReceive.cpp
-    model/PMTReceptionDataGenerator.cpp
 )
 
 # include_directory(${SOURCES})
@@ -107,6 +107,18 @@ set(HEADERS
     manager/lineeditgroupmanager.h
     manager/texteditmanager.h
     manager/tracermanager.h
+    matlab/tmwtypes.h
+    matlab/SpectrumGeneration.h
+    matlab/coder_array.h
+    matlab/rtwtypes.h
+    matlab/convolution.h
+    matlab/CaculateScatteredPhotons.h
+    matlab/FizeauInstrument.h
+    matlab/colon.h
+    matlab/rt_nonfinite.h
+    matlab/rtGetInf.h
+    matlab/rtGetNaN.h
+    matlab/PMTReceive.h
     model/constantmap.h
     model/constantstorage.h
     model/fizeaudatagenerator.h
@@ -114,6 +126,9 @@ set(HEADERS
     model/laserdatagenerator.h
     model/pagedatagenerator.h
     model/spectrumdatagenerator.h
+    model/underwaterspectrumdatagenerator.h
+    model/PMTReceptionDataGenerator.h
+    model/fizeauifgenerator.h
     module/filebrowser.h
     module/mycombobox.h
     module/mytracer.h
@@ -123,21 +138,6 @@ set(HEADERS
     utils/readfiledata.h
     view/plotView.h
     fftw3.h
-    model/tmwtypes.h
-    model/SpectrumGeneration.h
-    model/coder_array.h
-    model/rtwtypes.h
-    model/convolution.h
-    model/CaculateScatteredPhotons.h
-    model/underwaterspectrumdatagenerator.h
-    model/FizeauInstrument.h
-    model/colon.h
-    model/rt_nonfinite.h
-    model/rtGetInf.h
-    model/rtGetNaN.h
-    model/fizeauifgenerator.h
-    model/PMTReceive.h
-    model/PMTReceptionDataGenerator.h
 )
 
 

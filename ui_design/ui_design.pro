@@ -22,6 +22,15 @@ SOURCES += \
     manager/show1buttongroupmanager.cpp \
     manager/texteditmanager.cpp \
     manager/tracermanager.cpp \
+    matlab/CaculateScatteredPhotons.cpp \
+    matlab/FizeauInstrument.cpp \
+    matlab/PMTReceive.cpp \
+    matlab/SpectrumGeneration.cpp \
+    matlab/colon.cpp \
+    matlab/convolution.cpp \
+    matlab/rtGetInf.cpp \
+    matlab/rtGetNaN.cpp \
+    matlab/rt_nonfinite.cpp \
     model/CaculateScatteredPhotons.cpp \
     model/FizeauInstrument.cpp \
     model/PMTReceive.cpp \
@@ -64,6 +73,18 @@ HEADERS += \
     manager/show1buttongroupmanager.h \
     manager/texteditmanager.h \
     manager/tracermanager.h \
+    matlab/CaculateScatteredPhotons.h \
+    matlab/FizeauInstrument.h \
+    matlab/PMTReceive.h \
+    matlab/SpectrumGeneration.h \
+    matlab/coder_array.h \
+    matlab/colon.h \
+    matlab/convolution.h \
+    matlab/rtGetInf.h \
+    matlab/rtGetNaN.h \
+    matlab/rt_nonfinite.h \
+    matlab/rtwtypes.h \
+    matlab/tmwtypes.h \
     model/CaculateScatteredPhotons.h \
     model/FizeauInstrument.h \
     model/PMTReceive.h \
@@ -108,9 +129,6 @@ RESOURCES += \
     images.qrc \
     qss.qrc
 
-DISTFILES += \
-    base/singleton.cpp.txt \
-    base/singleton.h.txt
 
 LIBS += -L$$PWD/lib/ -llibfftw3-3
 

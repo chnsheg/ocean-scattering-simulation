@@ -1,6 +1,6 @@
 #include "fizeauifgenerator.h"
 #include "utils/logger.h"
-#include "model/FizeauInstrument.h"
+#include "matlab/FizeauInstrument.h"
 #include "model/constantstorage.h"
 #include "model/constantmap.h"
 #include "model/frequencedatagenerator.h"

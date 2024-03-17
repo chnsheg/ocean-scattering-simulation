@@ -3,7 +3,7 @@
 
 #include <cmath>
 #include <QVector>
-#include "model/coder_array.h"
+#include "matlab/coder_array.h"
 #include "fftw3.h"
 
 #ifndef MY_PI

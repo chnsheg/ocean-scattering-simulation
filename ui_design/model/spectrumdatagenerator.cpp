@@ -6,8 +6,8 @@
 #include "utils/logger.h"
 #include "utils/readfiledata.h"
 #include "model/frequencedatagenerator.h"
-#include "model/SpectrumGeneration.h"
-#include "model/convolution.h"
+#include "matlab/SpectrumGeneration.h"
+#include "matlab/convolution.h"
 
 double SpectrumDataGenerator::BrillouinLine()
 {
