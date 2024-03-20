@@ -58,10 +58,12 @@ QVector<QVector<double> *> *FizeauIFGenerator::generateFizeauIFData()
     frequency_vector = MyMath::convertArrayToQVector(Fizeau_frequency);
 
     // Fizeau_spectrum = FizeauFunction ./ polyarea(Frequency, FizeauFunction); %Area normalization
-    double area = MyMath::polyarea(*frequency_vector, *spectrum_vector);
+    // double area = MyMath::polyarea(*frequency_vector, *spectrum_vector);
+    double area = MyMath::polyarea(*RF, *spectrum_vector);
     for (int i = 0; i < Fizeau_spectrum.size(1); ++i)
     {
-        Fizeau_spectrum[i] = Fizeau_spectrum[i] / area;
+        // spectrum_vector[i] = spectrum_vector[i] / area;
+        (*spectrum_vector)[i] = (*spectrum_vector)[i] / area;
     }
 
     result->append(frequency_vector);
