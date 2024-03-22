@@ -59,15 +59,17 @@ QVector<QVector<double> *> *FizeauIFGenerator::generateFizeauIFData()
 
     // Fizeau_spectrum = FizeauFunction ./ polyarea(Frequency, FizeauFunction); %Area normalization
     // double area = MyMath::polyarea(*frequency_vector, *spectrum_vector);
-    double area = MyMath::polyarea(*RF, *spectrum_vector);
-    for (int i = 0; i < Fizeau_spectrum.size(1); ++i)
-    {
-        // spectrum_vector[i] = spectrum_vector[i] / area;
-        (*spectrum_vector)[i] = (*spectrum_vector)[i] / area;
-    }
+    // double area = MyMath::polyarea(*RF, *spectrum_vector);
+    // for (int i = 0; i < Fizeau_spectrum.size(1); ++i)
+    // {
+    //     // spectrum_vector[i] = spectrum_vector[i] / area;
+    //     (*spectrum_vector)[i] = (*spectrum_vector)[i] / area;
+    // }
 
     result->append(frequency_vector);
     result->append(spectrum_vector);
+
+    // Singleton<Logger>::getInstance()->logMessage("频率最大值: " + QString::number(max) + "，索引: " + QString::number(index), Logger::Log);
 
     delete RF;
 
@@ -94,13 +96,22 @@ QVector<QVector<double> *> *FizeauIFGenerator::calculateSpectrumAfterFizeau(QVec
     QVector<double> *yData = new QVector<double>();
     constantStorage->convertQSharedPointerToQVector(dataContainer, xData, yData);
 
-    QVector<double> *result = MyMath::convolution(yData, fizeau_IF);
+    // 拷贝fizeau_IF，再对其进行面积归一化
+    QVector<double> *fizeau_IF_copy = new QVector<double>(*fizeau_IF);
+    double area = MyMath::polyarea(*xData, *fizeau_IF_copy);
+    for (int i = 0; i < fizeau_IF_copy->size(); ++i)
+    {
+        (*fizeau_IF_copy)[i] = (*fizeau_IF_copy)[i] / area;
+    }
+
+    QVector<double> *result = MyMath::convolution(yData, fizeau_IF_copy);
 
     QVector<QVector<double> *> *resultVector = new QVector<QVector<double> *>();
     resultVector->append(xData);
     resultVector->append(result);
 
     delete yData;
+    delete fizeau_IF_copy;
 
     return resultVector;
 }

@@ -23,13 +23,13 @@ ConstantGroup::ConstantGroup()
 QVector<QString> physicalConstantVector = QVector<QString>(
     {"SpeedOfLight", "PlanckConstant", "GravitationalConstant"});
 QVector<QString> laserConstantVector = QVector<QString>(
-    {"LaserWidth", "waveLength", "Intensity", "frequencyRange", "C"});
+    {"LaserWidth", "waveLength", "Intensity", "frequencyRange", "C", "laserEnergy"});
 QVector<QString> spectrumConstantVector = QVector<QString>(
-    {"Temperature", "Salinity"});
+    {"Temperature", "Salinity", "BetaParticulate", "BetaM", "WaterRefractiveIndex", "EnergyRatio"});
 
 QVector<QString> underWaterSpectrumConstantVector = QVector<QString>(
-    {"laserEnergy", "AlphaWater", "BetaParticulate", "BetaM", "Lambda_water", "WaterRefractiveIndex", "Depth",
-     "TelescopeHeight", "EnergyRatio"});
+    {"M", "AlphaWater", "Xi", "Xi_F", "radius", "N_dark", "Depth",
+     "TelescopeHeight", "beta"});
 
 QVector<QString> fizeauConstantVector = QVector<QString>(
     {"Fizeau_lambda", "Fizeau_plate", "Fizeau_angle", "Fizeau_index", "Fizeau_albedo"});
@@ -55,7 +55,8 @@ QVector<QString> runtimeResultDataVector = QVector<QString>({"BrillouinLine",
                                                              "BrillouinShift",
                                                              "NBrillouin",
                                                              "NMie",
-                                                             "NRayleigh"
+                                                             "NRayleigh",
+                                                             "SNR"
 
 });
 

@@ -3,6 +3,8 @@
 #include "model/constantmap.h"
 #include "utils/logger.h"
 #include "utils/readfiledata.h"
+#include "utils/mymath.h"
+#include "matlab/AddNoiseNondB.h"
 
 UnderWaterSpectrumDataGenerator::UnderWaterSpectrumDataGenerator() {}
 
@@ -16,25 +18,43 @@ QVector<double> *UnderWaterSpectrumDataGenerator::caculateScatteredPhotonsByMatl
 
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
-    double energe = constantStorage->getConstant(constantMap->getConstantName(7, 0)).toDouble();
+    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
     double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
-    double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
-    double Beta_m = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
-    double lambda = constantStorage->getConstant(constantMap->getConstantName(7, 4)).toDouble();
-    double n = constantStorage->getConstant(constantMap->getConstantName(7, 5)).toDouble();
+    double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble();
+    double Beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
+    double lambda = constantStorage->getConstant(constantMap->getConstantName(0, 1)).toDouble();
+    double n = constantStorage->getConstant(constantMap->getConstantName(1, 4)).toDouble();
     double z = constantStorage->getConstant(constantMap->getConstantName(7, 6)).toDouble();
     double H = constantStorage->getConstant(constantMap->getConstantName(7, 7)).toDouble();
-    double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
+    double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
     double N_Brillouin;
     double N_Mie;
     double N_Rayleigh;
+    double SNR;
+    double laser_width = constantStorage->getConstant(constantMap->getConstantName(0, 0)).toDouble();
+    double tau = 1 / laser_width;
+    double r = constantStorage->getConstant(constantMap->getConstantName(7, 4)).toDouble();
+    double M = constantStorage->getConstant(constantMap->getConstantName(7, 0)).toDouble();
+    double N_dark = constantStorage->getConstant(constantMap->getConstantName(7, 5)).toDouble();
+    double beta = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
+    double Xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
+    double Xi_F = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
 
-    CaculateScatteredPhotons(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, energy_ratio, &N_Brillouin, &N_Mie, &N_Rayleigh);
-    QVector<double> *result = new QVector<double>({N_Brillouin, N_Rayleigh, N_Mie});
+    // void CaculateScatteredPhotons(double energe, double Alpha_water, double Beta_p,
+    //                           double Beta_m, double lambda, double n, double z,
+    //                           double H, double tau, double r, double M,
+    //                           double energy_ratio, double N_dark, double beta,
+    //                           double Xi, double Xi_F, double *N_Brillouin,
+    //                           double *N_Mie, double *N_Rayleigh, double *SNR)
+
+    // CaculateScatteredPhotons(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, energy_ratio, &N_Brillouin, &N_Mie, &N_Rayleigh, &SNR);
+    CaculateScatteredPhotons(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, tau, r, M, energy_ratio, N_dark, beta, Xi, Xi_F, &N_Brillouin, &N_Mie, &N_Rayleigh, &SNR);
+    QVector<double> *result = new QVector<double>({N_Brillouin, N_Rayleigh, N_Mie, SNR});
 
     Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(6, 2), N_Brillouin);
     Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(6, 3), N_Mie);
     Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(6, 4), N_Rayleigh);
+    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(6, 5), SNR);
 
     return result;
 }
@@ -104,13 +124,25 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateUnderWaterS
         Spectrum1->replace(i, L_rc->at(i) + L_mc->at(i) + L_bc->at(i));
     }
 
-    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_rc, "L_rc.csv");
-    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_mc, "L_mc.csv");
-    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_bc, "L_bc.csv");
-    ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), Spectrum1, "Spectrum1.csv");
+    // 加噪
+    // void AddNoiseNondB(const coder::array<double, 2U> &Iv, double SNR,
+    //                coder::array<double, 2U> &Iv_Noised, double *SNR_cal)
+    double SNR = result->at(3);
+    coder::array<double, 2U> Iv;
+    coder::array<double, 2U> Iv_Noised;
+    QVector<double> *Spectrum_Noised;
+    MyMath::convertQVectorToArray(Spectrum1, Iv);
+    AddNoiseNondB(Iv, SNR, Iv_Noised, &SNR);
+    Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
 
-    QVector<QVector<double> *> *resultContainer = new QVector<QVector<double> *>({L_rc, L_mc, L_bc, Spectrum1});
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_rc, "L_rc.csv");
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_mc, "L_mc.csv");
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_bc, "L_bc.csv");
+    // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), Spectrum1, "Spectrum1.csv");
 
+    QVector<QVector<double> *> *resultContainer = new QVector<QVector<double> *>({L_rc, L_mc, L_bc, Spectrum_Noised});
+
+    delete Spectrum1;
     delete result;
     delete L_b;
     delete L_r;

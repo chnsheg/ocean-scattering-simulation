@@ -17,8 +17,13 @@ ConstantStorage::ConstantStorage(QObject *parent)
         m_constants.insert(constantMap->getConstantName(0, 2), 1);
         m_constants.insert(constantMap->getConstantName(0, 3), 12000000000);
         m_constants.insert(constantMap->getConstantName(0, 4), 299792458.0);
+        m_constants.insert(constantMap->getConstantName(0, 5), 20e-3);
         m_constants.insert(constantMap->getConstantName(1, 0), 20);
         m_constants.insert(constantMap->getConstantName(1, 1), 35);
+        m_constants.insert(constantMap->getConstantName(1, 2), 0.00);
+        m_constants.insert(constantMap->getConstantName(1, 3), 2.4e-4);
+        m_constants.insert(constantMap->getConstantName(1, 4), 1.3333);
+        m_constants.insert(constantMap->getConstantName(1, 5), 0.04);
         m_constants.insert(constantMap->getConstantName(2, 0), 5.32e-7);
         m_constants.insert(constantMap->getConstantName(2, 1), 6e-3);
         m_constants.insert(constantMap->getConstantName(2, 2), 1.6835e-05);
@@ -27,15 +32,15 @@ ConstantStorage::ConstantStorage(QObject *parent)
         m_constants.insert(constantMap->getConstantName(3, 0), 16);
         m_constants.insert(constantMap->getConstantName(3, 1), 0.8e-3);
         m_constants.insert(constantMap->getConstantName(3, 2), 0.2e-3);
-        m_constants.insert(constantMap->getConstantName(7, 0), 300e-3);
-        m_constants.insert(constantMap->getConstantName(7, 1), 0.02);
-        m_constants.insert(constantMap->getConstantName(7, 2), 7.4e-4);
-        m_constants.insert(constantMap->getConstantName(7, 3), 2.4e-4);
-        m_constants.insert(constantMap->getConstantName(7, 4), 5.32e-07);
-        m_constants.insert(constantMap->getConstantName(7, 5), 1.3333);
-        m_constants.insert(constantMap->getConstantName(7, 6), 10);
-        m_constants.insert(constantMap->getConstantName(7, 7), 150);
-        m_constants.insert(constantMap->getConstantName(7, 8), 0.00);
+        m_constants.insert(constantMap->getConstantName(7, 0), 1);
+        m_constants.insert(constantMap->getConstantName(7, 1), 0.08);
+        m_constants.insert(constantMap->getConstantName(7, 2), 0.13);
+        m_constants.insert(constantMap->getConstantName(7, 3), 0.4);
+        m_constants.insert(constantMap->getConstantName(7, 4), 0.05);
+        m_constants.insert(constantMap->getConstantName(7, 5), 10);
+        m_constants.insert(constantMap->getConstantName(7, 6), 27.16);
+        m_constants.insert(constantMap->getConstantName(7, 7), 100);
+        m_constants.insert(constantMap->getConstantName(7, 8), 2);
         // m_constants.insert(constantMap->getConstantName(1, 2), 1.0);
         // m_constants.insert(constantMap->getConstantName(1, 3), 12e9);
 

@@ -73,6 +73,14 @@ set(SOURCES
     matlab/rtGetInf.cpp
     matlab/rtGetNaN.cpp
     matlab/PMTReceive.cpp
+    matlab/sum.cpp
+    matlab/rand.cpp 
+    matlab/randn.cpp 
+    matlab/AddNoiseNondB.cpp
+    matlab/AddNoiseNondB_data.cpp
+    matlab/AddNoiseNondB_initialize.cpp
+    matlab/eml_rand_mt19937ar.cpp 
+    matlab/eml_rand_mt19937ar_stateful.cpp 
     model/constantmap.cpp
     model/constantstorage.cpp
     model/fizeaudatagenerator.cpp
@@ -119,6 +127,14 @@ set(HEADERS
     matlab/rtGetInf.h
     matlab/rtGetNaN.h
     matlab/PMTReceive.h
+    matlab/eml_rand_mt19937ar.h
+    matlab/eml_rand_mt19937ar_stateful.h 
+    matlab/sum.h
+    matlab/rand.h
+    matlab/randn.h
+    matlab/AddNoiseNondB.h
+    matlab/AddNoiseNondB_data.h
+    matlab/AddNoiseNondB_initialize.h
     model/constantmap.h
     model/constantstorage.h
     model/fizeaudatagenerator.h

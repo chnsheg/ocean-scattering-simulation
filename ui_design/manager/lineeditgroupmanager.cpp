@@ -30,7 +30,12 @@ LineEditGroupManager::~LineEditGroupManager()
 
 void LineEditGroupManager::saveLineEditGroupsText(int index)
 {
-    m_lineEditGroups[index].saveLineEditGroupText();
+    // m_lineEditGroups[index].saveLineEditGroupText();
+    // 保存所有页面的输入
+    for (auto lineEditGroup : m_lineEditGroups)
+    {
+        lineEditGroup.saveLineEditGroupText();
+    }
 }
 
 LineEditGroup::LineEditGroup(QList<QLineEdit *> lineEdits, int index)

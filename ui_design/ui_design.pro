@@ -22,15 +22,23 @@ SOURCES += \
     manager/show1buttongroupmanager.cpp \
     manager/texteditmanager.cpp \
     manager/tracermanager.cpp \
+    matlab/AddNoiseNondB.cpp \
+    matlab/AddNoiseNondB_data.cpp \
+    matlab/AddNoiseNondB_initialize.cpp \
     matlab/CaculateScatteredPhotons.cpp \
     matlab/FizeauInstrument.cpp \
     matlab/PMTReceive.cpp \
     matlab/SpectrumGeneration.cpp \
     matlab/colon.cpp \
     matlab/convolution.cpp \
+    matlab/eml_rand_mt19937ar.cpp \
+    matlab/eml_rand_mt19937ar_stateful.cpp \
+    matlab/rand.cpp \
+    matlab/randn.cpp \
     matlab/rtGetInf.cpp \
     matlab/rtGetNaN.cpp \
     matlab/rt_nonfinite.cpp \
+    matlab/sum.cpp \
     model/CaculateScatteredPhotons.cpp \
     model/FizeauInstrument.cpp \
     model/PMTReceive.cpp \
@@ -73,6 +81,9 @@ HEADERS += \
     manager/show1buttongroupmanager.h \
     manager/texteditmanager.h \
     manager/tracermanager.h \
+    matlab/AddNoiseNondB.h \
+    matlab/AddNoiseNondB_data.h \
+    matlab/AddNoiseNondB_initialize.h \
     matlab/CaculateScatteredPhotons.h \
     matlab/FizeauInstrument.h \
     matlab/PMTReceive.h \
@@ -80,10 +91,15 @@ HEADERS += \
     matlab/coder_array.h \
     matlab/colon.h \
     matlab/convolution.h \
+    matlab/eml_rand_mt19937ar.h \
+    matlab/eml_rand_mt19937ar_stateful.h \
+    matlab/rand.h \
+    matlab/randn.h \
     matlab/rtGetInf.h \
     matlab/rtGetNaN.h \
     matlab/rt_nonfinite.h \
     matlab/rtwtypes.h \
+    matlab/sum.h \
     matlab/tmwtypes.h \
     model/CaculateScatteredPhotons.h \
     model/FizeauInstrument.h \
