@@ -92,6 +92,32 @@ void ButtonGroupsManager::initButtonStyle(int index)
     // }
 }
 
+// 添加新按钮到布局并保存到容器中
+void ButtonGroupsManager::addDynamicButton(QWidget *parent, const QString &buttonName)
+{
+    QPushButton *newButton = new QPushButton(buttonName); // 创建新按钮
+    newButton->setObjectName(buttonName);                 // 给按钮设置一个对象名
+
+    QHBoxLayout *layout = qobject_cast<QHBoxLayout *>(parent->layout());
+    if (layout)
+    {
+        layout->addWidget(newButton); // 将新按钮添加到布局中
+        // dynamicButtons[newButton] = buttonName; // 保存按钮到容器中
+        dynamicButtons.insert(newButton, buttonName);
+
+        // 为新按钮添加事件
+        addEvent(QString("%1Clicked").arg(buttonName),
+                 QString("%1Clicked").arg(buttonName),
+                 newButton,
+                 &QPushButton::clicked,
+                 ButtonGroupId::dynamic1Button);
+    }
+    else
+    {
+        qDebug() << "Layout conversion failed or layout is null";
+    }
+}
+
 void ButtonGroupsManager::initButtonStatus(int index)
 {
     // Set button status accordingly

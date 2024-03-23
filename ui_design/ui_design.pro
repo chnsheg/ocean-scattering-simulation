@@ -65,6 +65,7 @@ SOURCES += \
     utils/logger.cpp \
     utils/mymath.cpp \
     utils/readfiledata.cpp \
+    view/dynamicview.cpp \
     view/plotView.cpp
 
 HEADERS += \
@@ -130,6 +131,7 @@ HEADERS += \
     utils/logger.h \
     utils/mymath.h \
     utils/readfiledata.h \
+    view/dynamicview.h \
     view/plotView.h
 
 FORMS += \

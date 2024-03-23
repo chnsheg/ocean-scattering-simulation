@@ -7,6 +7,7 @@
 #include <QVector>
 #include "base/singleton.h"
 #include "manager/managerbase.h"
+#include <QHBoxLayout>
 
 struct ButtonStatus // 控制按钮组状态结构体 按键组：控制显示状态的一组按键
 {
@@ -54,7 +55,8 @@ enum ButtonGroupId
     back5Button,
     back6Button,
     back7Button,
-    back8Button
+    back8Button,
+    dynamic1Button
 };
 Q_DECLARE_METATYPE(ButtonGroupId)
 
@@ -70,6 +72,7 @@ private:
 
     // 存储每个页面的按钮状态
     QVector<ButtonGroup> *buttonGroups;
+    QMap<QPushButton *, QString> dynamicButtons; // 用于存储动态创建的按钮
 
 public:
     // // 单例模式获取实例
@@ -87,6 +90,9 @@ public:
     // 更新按钮状态
     void updateButtonStatus(int index, const ButtonStatus &status);
     void updateTracerButtonText(int index, bool isVisible);
+
+    // 添加新的按钮
+    void addDynamicButton(QWidget *parent, const QString &buttonName);
 
     // 获取buttonGroups
     //  QVector<ButtonGroup> *getButtonGroups();

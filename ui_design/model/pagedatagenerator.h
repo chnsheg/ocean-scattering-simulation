@@ -31,11 +31,18 @@ public:
     };
 
     QVector<double> *generateData(DataType dataType);
+    void generateDynamicData(int index);
 
 signals:
     void dataGenerated(QVector<QVector<double> *> *xDataVector,
                        QVector<QVector<double> *> *yDataVector,
                        int curve_num);
+
+    void dynamicDataGenerated(QVector<QVector<double> *> *xDataVector,
+                              QVector<QVector<double> *> *yDataVector,
+                              int index);
+
+    void dataGenerateFinished();
 
     void importConstantCompleted(const int page_index, const QVector<QVector<QVector<double> *> *> *xDataVector,
                                  const QVector<QVector<QVector<double> *> *> *yDataVector);

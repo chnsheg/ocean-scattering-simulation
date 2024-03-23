@@ -98,6 +98,7 @@ set(SOURCES
     utils/logger.cpp
     utils/myMath.cpp
     utils/readfiledata.cpp
+    view/dynamicview.cpp
     view/plotView.cpp
 )
 
@@ -152,6 +153,7 @@ set(HEADERS
     utils/logger.h
     utils/myMath.h
     utils/readfiledata.h
+    view/dynamicview.h
     view/plotView.h
     fftw3.h
 )

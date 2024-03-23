@@ -8,6 +8,7 @@
 #include "manager/inputdatalistmanager.h"
 #include "model/pagedatagenerator.h"
 #include "view/plotView.h"
+#include "view/dynamicview.h"
 
 class PlotController : public QObject
 {
@@ -28,6 +29,7 @@ public slots:
                                        const QVector<QVector<QVector<double> *> *> *yDataVector);
     void handleClearButtonClicked();
     void handleTracerButtonClicked();
+    void handleDynamicButtonClicked(int index);
     void handleSaveConstantButtonClicked(int index, int save_type);
     void handleImportConstantButtonClicked(int index, int import_type);
     void handleSwitchPageButtonClicked(int page_index);
@@ -39,6 +41,8 @@ private:
     static PlotController *plotControllerInstance;
     PlotView *view;
     PageDataGenerator *model;
+    QThread *thread;
+    DynamicPage *dynamicView;
 
     SINGLETON(PlotController)
 };

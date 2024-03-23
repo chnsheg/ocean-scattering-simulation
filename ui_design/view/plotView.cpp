@@ -5,6 +5,7 @@
 #include "utils/logger.h"
 #include "model/constantstorage.h"
 #include "model/constantmap.h"
+#include "view/dynamicview.h"
 
 // PlotView *PlotView::plotViewInstance = nullptr;
 
@@ -25,8 +26,23 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     buttonGroup->push_back(ButtonGroup(_ui->show7, _ui->clear7, _ui->tracer7, _ui->back7, _ui->clear7));
     buttonGroup->push_back(ButtonGroup(_ui->show8, _ui->clear8, _ui->tracer8, _ui->back8, _ui->clear8));
 
+    // QPushButton *newButton = new QPushButton("新按钮"); // 创建新按钮
+    // newButton->setObjectName("newButton");              // 给按钮设置一个对象名，方便以后引用
+
+    // // 现在，我们需要将新按钮添加到widget1_3的布局中
+    // // 首先获取到widget1_3的布局
+    // QHBoxLayout *layout = qobject_cast<QHBoxLayout *>(ui->widget2_3->layout());
+    // if (layout)
+    // {                                 // 确保布局转换成功
+    //     layout->addWidget(newButton); // 将新按钮添加到布局中
+    // }
+
     // ButtonGroupsManager::getButtonGroupsManagerInstance(buttonGroup);
     Singleton<ButtonGroupsManager>::getInstance(buttonGroup);
+
+    // 添加动态按钮
+    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget2_3, "激光展宽图");
+
     // 挂载show1ButtonGroupManager单例
     Show1ButtonGroup *show1ButtonGroup = new Show1ButtonGroup(_ui->homeButton_1,
                                                               _ui->homeButton_2,
@@ -268,13 +284,14 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     case 4:
         if (curve_index == 3)
         {
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激布里渊散射光谱", 0);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激瑞利散射光谱", 1);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激米散射光谱", 2);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激瑞利散射光谱", 0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激米散射光谱", 1);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激布里渊散射光谱", 2);
             Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激散射光谱", 3);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot();
             Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱绘制完毕", Logger::Log);
         }
+        break;
     case 5:
         // 判断是否需要创建第二个坐标轴
         if (curve_index == 0)
@@ -428,6 +445,9 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
     case back8Button:
         switchPlotPageButtonClicked(0);
         break;
+    case dynamic1Button:
+        dynamicButtonClicked(0);
+        break;
     }
 }
 
@@ -460,6 +480,12 @@ void PlotView::clearButtonClicked()
 void PlotView::tracerButtonClicked()
 {
     emit onTracerButtonClicked();
+}
+
+void PlotView::dynamicButtonClicked(int index)
+{
+    // index表示是第几个动态按钮
+    emit onDynamicButtonClicked(index);
 }
 
 void PlotView::switchPlotPageButtonClicked(int index)

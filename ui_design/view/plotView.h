@@ -46,6 +46,7 @@ signals:
     void onStartButtonClicked(const int page_index);
     void onClearButtonClicked();
     void onTracerButtonClicked();
+    void onDynamicButtonClicked(int index);
     void onSaveConstantButtonClicked(int index, int save_type);                                                                    // 0: save constants to current page, 1: save constants to all pages；
                                                                                                                                    // 2: save runtime data to current page, 3: save runtime data to all pages
     void onImportConstantButtonClicked(int index, int import_type);                                                                // 0: import constants to current page, 1: import constants to all pages；
@@ -71,6 +72,7 @@ private:
     void startButtonClicked();
     void clearButtonClicked();
     void tracerButtonClicked();
+    void dynamicButtonClicked(int index);
     void switchPlotPageButtonClicked(int index);
     void switchShowPageButtonClicked(int index);
 };

@@ -1,0 +1,53 @@
+#ifndef DYNAMICVIEW_H
+#define DYNAMICVIEW_H
+
+#include <QWidget>
+#include <QStackedWidget>
+#include <QPushButton>
+#include <QVector>
+#include "qcustomplot.h"
+
+class DynamicPage : public QWidget
+{
+    Q_OBJECT
+
+public:
+    // 构造函数需要页面总数和可选的父窗口指针
+    explicit DynamicPage(int pageCount, QWidget *parent = nullptr);
+
+    // 显示指定页面的曲线，需要页码、X数据集、Y数据集和图表标题
+    void displayCurve(int pageIndex, QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, const QString &title);
+
+private slots:
+    // 处理“上一页面”按钮点击事件
+    void onPrevPageClicked();
+    // 处理“下一页面”按钮点击事件
+    void onNextPageClicked();
+    // 处理“显示光标”按钮点击事件
+    void onShowCursorClicked();
+    // 处理“关闭”按钮点击事件
+    void onCloseClicked();
+
+public slots:
+    void updateDynamicView(QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, int index);
+
+private:
+    // 存储页面切换组件
+    QStackedWidget *stackedWidget;
+    // 存储每个页面的QCustomPlot对象
+    QVector<QCustomPlot *> plots;
+    // 控制页面切换的按钮
+    QPushButton *prevPageButton;
+    QPushButton *nextPageButton;
+    // 显示光标和关闭页面的按钮
+    QPushButton *showCursorButton;
+    QPushButton *closeButton;
+    // 页面总数
+    int pageCount;
+
+    // 初始化界面元素
+    void setupUi();
+    // 创建一个页面，包括图表和必要的按钮
+    void createPage(int index);
+};
+#endif // DYNAMICVIEW_H

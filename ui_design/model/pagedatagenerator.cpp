@@ -159,6 +159,37 @@ void PageDataGenerator::generatePairOfData(int page_index)
     // delete inputDataList;
 }
 
+void PageDataGenerator::generateDynamicData(int index)
+{
+    QVector<QVector<double> *> *xDataVector;
+    QVector<QVector<double> *> *yDataVector;
+    xDataVector = new QVector<QVector<double> *>;
+    yDataVector = new QVector<QVector<double> *>;
+    QVector<QVector<double> *> *laserLineWidthEffectData;
+
+    switch (index)
+    {
+    case 0:
+        for (int i = 0; i < 1; i++)
+        {
+            laserLineWidthEffectData = SpectrumDataGenerator::generateLaserLineWidthEffectData();
+            if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
+            {
+                Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
+                return;
+            }
+            xDataVector->append(generateData(DataType::Frequence));
+            yDataVector->append(laserLineWidthEffectData->at(0));
+            yDataVector->append(laserLineWidthEffectData->at(1));
+            yDataVector->append(laserLineWidthEffectData->at(2));
+            yDataVector->append(laserLineWidthEffectData->at(3));
+            emit dynamicDataGenerated(xDataVector, yDataVector, i);
+        }
+        emit dataGenerateFinished();
+        break;
+    }
+}
+
 void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index)
 {
     switch (page_index)

@@ -25,6 +25,8 @@ PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObje
     connect(view, &PlotView::onImportConstantButtonClicked, this, &PlotController::handleImportConstantButtonClicked);
 
     connect(model, &PageDataGenerator::importConstantCompleted, this, &PlotController::handleImportConstantCompleted);
+
+    connect(view, &PlotView::onDynamicButtonClicked, this, &PlotController::handleDynamicButtonClicked);
 }
 
 // TODO: Add destructor
@@ -80,6 +82,32 @@ void PlotController::handleClearButtonClicked()
 void PlotController::handleTracerButtonClicked()
 {
     view->updateViewTracerSlot();
+}
+
+void PlotController::handleDynamicButtonClicked(int index)
+{
+    // 通知model存储数据
+    thread = new QThread;
+    switch (index)
+    {
+    case 0:
+        dynamicView = new DynamicPage(1);
+        break;
+    }
+
+    model->moveToThread(thread);
+    connect(thread, &QThread::started, this, [=]
+            { model->generateDynamicData(index); });
+
+    connect(model, &PageDataGenerator::dynamicDataGenerated, dynamicView, &DynamicPage::updateDynamicView);
+    connect(model, &PageDataGenerator::dataGenerateFinished, this, [this]
+            {
+        dynamicView->show();
+        thread->quit();
+        thread->wait();
+        thread->deleteLater(); });
+
+    thread->start();
 }
 
 void PlotController::handleSaveConstantButtonClicked(int index, int save_type)
