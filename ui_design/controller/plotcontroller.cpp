@@ -109,8 +109,8 @@ void PlotController::handleDynamicButtonClicked(int index)
     // 通知model存储数据
     // QThread *thread;
     // DynamicPage *dynamicView;
-    QThread *thread = new QThread;
-    DynamicPage *dynamicView;
+    thread = new QThread;
+    // DynamicPage *dynamicView;
     switch (index)
     {
     case 0:
@@ -120,6 +120,7 @@ void PlotController::handleDynamicButtonClicked(int index)
         dynamicView = new DynamicPage(2);
         break;
     }
+    dynamicView->show();
 
     model->moveToThread(thread);
     connect(thread, &QThread::started, this, [=]
@@ -129,12 +130,11 @@ void PlotController::handleDynamicButtonClicked(int index)
 
     connect(dynamicView, &DynamicPage::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
 
-    connect(model, &PageDataGenerator::dataGenerateFinished, this, [=]
-            {
-        dynamicView->show();
-        thread->quit();
-        thread->wait();
-        thread->deleteLater(); });
+    connect(model, &PageDataGenerator::dataGenerateFinished, this, [=] {
+        this->thread->quit();
+        this->thread->wait();
+        this->thread->deleteLater();
+    });
 
     thread->start();
 }

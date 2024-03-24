@@ -193,6 +193,8 @@ void PageDataGenerator::generateDynamicData(int index)
             }
             else if (i == 1)
             {
+                xDataVector = new QVector<QVector<double> *>;
+                yDataVector = new QVector<QVector<double> *>;
                 laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByAlphaData();
                 // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
                 yDataVector->append(laserLineWidthEffectData->at(0));

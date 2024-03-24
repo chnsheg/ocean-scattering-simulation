@@ -41,8 +41,8 @@ private:
     static PlotController *plotControllerInstance;
     PlotView *view;
     PageDataGenerator *model;
-    // QThread *thread;
-    // DynamicPage *dynamicView;
+    QThread *thread;
+    DynamicPage *dynamicView;
 
     SINGLETON(PlotController)
 };
