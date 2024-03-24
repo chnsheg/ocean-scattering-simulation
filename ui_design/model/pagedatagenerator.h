@@ -40,7 +40,7 @@ signals:
 
     void dynamicDataGenerated(QVector<QVector<double> *> *xDataVector,
                               QVector<QVector<double> *> *yDataVector,
-                              int index);
+                              int index, QString &title, QStringList &legendList = QStringList());
 
     void dataGenerateFinished();
 

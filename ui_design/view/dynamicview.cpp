@@ -40,6 +40,39 @@ void DynamicPage::setupUi()
     nextPageButton->setEnabled(pageCount > 1);
 }
 
+void DynamicPage::initCustomPlotStyle(QCustomPlot *customPlot)
+{
+    // 进行 QCustomPlot 样式初始化，你可以根据需要添加代码
+    customPlot->xAxis->setLabel("x");                         // 设置x轴名称
+    customPlot->yAxis->setLabel("y");                         // 设置y轴名称
+    customPlot->xAxis->setLabelColor(QColor(226, 60, 255));   // 设置x轴名称颜色
+    customPlot->yAxis->setLabelColor(QColor(226, 60, 255));   // 设置y轴名称颜色
+    customPlot->xAxis->setTickLabelColor(Qt::yellow);         // 设置x轴坐标颜色
+    customPlot->yAxis->setTickLabelColor(Qt::yellow);         // 设置y轴坐标颜色
+    customPlot->xAxis->setBasePen(QPen(QColor(0, 0, 0)));     // 设置x轴坐标轴颜色
+    customPlot->yAxis->setBasePen(QPen(QColor(25, 150, 92))); // 设置y轴坐标轴颜色
+    // 设置画布背景色
+    QLinearGradient plotGradient;
+    plotGradient.setStart(0, 0);
+    plotGradient.setFinalStop(0, 350);
+    plotGradient.setColorAt(0, QColor(80, 80, 80));
+    plotGradient.setColorAt(1, QColor(50, 50, 50));
+    customPlot->setBackground(plotGradient);
+
+    // 显示图例
+    customPlot->legend->setVisible(true);
+    // 设置图例的位置
+    customPlot->axisRect()->insetLayout()->setInsetAlignment(0, Qt::AlignTop | Qt::AlignRight);
+    // 设置legend的字体大小
+    customPlot->legend->setFont(QFont("Consolas", 14));
+    customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    customPlot->axisRect()->setRangeDrag(Qt::Horizontal | Qt::Vertical);
+    customPlot->axisRect()->setRangeZoom(Qt::Horizontal | Qt::Vertical);
+    customPlot->axisRect()->setRangeZoomAxes(customPlot->xAxis, nullptr);
+    customPlot->axisRect()->setRangeZoomFactor(0.8);
+    customPlot->replot(); // 重绘 每次改变完以后都要调用这个进行重新绘制
+}
+
 void DynamicPage::createPage(int index)
 {
     QWidget *page = new QWidget();
@@ -48,6 +81,7 @@ void DynamicPage::createPage(int index)
     QCustomPlot *plot = new QCustomPlot();
     plots.append(plot);
     layout->addWidget(plot);
+    initCustomPlotStyle(plot);
 
     // 如果有必要，这里可以添加更多的组件到页面
 
@@ -57,7 +91,7 @@ void DynamicPage::createPage(int index)
 void DynamicPage::displayCurve(int pageIndex,
                                QVector<QVector<double> *> *xData,
                                QVector<QVector<double> *> *yData,
-                               const QString &title)
+                               const QString &title, QStringList &legendList)
 {
     if (pageIndex >= 0 && pageIndex < plots.size())
     {
@@ -67,7 +101,12 @@ void DynamicPage::displayCurve(int pageIndex,
         for (int i = 0; i < yData->size(); ++i)
         {
             plot->addGraph();
+            plot->graph(i)->setPen(QPen(colorContainer.at(i), 3));
             plot->graph(i)->setData(*(*xData)[0], *(*yData)[i]);
+            if (legendList != QStringList() && i < legendList.size())
+            {
+                plot->graph(i)->setName(legendList.at(i));
+            }
             delete (*yData)[i];
         }
         delete (*xData)[0];
@@ -82,9 +121,9 @@ void DynamicPage::displayCurve(int pageIndex,
     }
 }
 
-void DynamicPage::updateDynamicView(QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, int index)
+void DynamicPage::updateDynamicView(QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, int index, QString &title, QStringList &legendList)
 {
-    displayCurve(index, xData, yData, QString("Page %1").arg(index + 1));
+    displayCurve(index, xData, yData, title, legendList);
 }
 
 void DynamicPage::onPrevPageClicked()

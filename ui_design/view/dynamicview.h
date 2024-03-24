@@ -12,11 +12,23 @@ class DynamicPage : public QWidget
     Q_OBJECT
 
 public:
+    QVector<QColor> colorContainer = {QColor(226, 60, 255),
+                                      QColor(64, 224, 208),
+                                      QColor(255, 99, 71),
+                                      QColor(255, 255, 0),
+                                      QColor(0, 255, 255),
+                                      QColor(255, 0, 0),
+                                      QColor(0, 255, 0),
+                                      QColor(0, 0, 255),
+                                      QColor(255, 255, 255),
+                                      QColor(0, 0, 0)};
     // 构造函数需要页面总数和可选的父窗口指针
     explicit DynamicPage(int pageCount, QWidget *parent = nullptr);
 
     // 显示指定页面的曲线，需要页码、X数据集、Y数据集和图表标题
-    void displayCurve(int pageIndex, QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, const QString &title);
+    void displayCurve(int pageIndex, QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, const QString &title, QStringList &legendList = QStringList());
+
+    void initCustomPlotStyle(QCustomPlot *customPlot);
 
 private slots:
     // 处理“上一页面”按钮点击事件
@@ -29,7 +41,7 @@ private slots:
     void onCloseClicked();
 
 public slots:
-    void updateDynamicView(QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, int index);
+    void updateDynamicView(QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, int index, QString &title, QStringList &legendList = QStringList());
 
 private:
     // 存储页面切换组件

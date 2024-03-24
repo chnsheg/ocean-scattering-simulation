@@ -166,24 +166,32 @@ void PageDataGenerator::generateDynamicData(int index)
     xDataVector = new QVector<QVector<double> *>;
     yDataVector = new QVector<QVector<double> *>;
     QVector<QVector<double> *> *laserLineWidthEffectData;
+    QStringList legendList;
 
     switch (index)
     {
     case 0:
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 1; i++) // 总共有几个页面
         {
-            laserLineWidthEffectData = SpectrumDataGenerator::generateLaserLineWidthEffectData();
-            if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
+            if (i == 0)
             {
-                Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
-                return;
+                laserLineWidthEffectData = SpectrumDataGenerator::generateLaserLineWidthEffectData();
+                if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
+                {
+                    Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
+                    return;
+                }
+                xDataVector->append(generateData(DataType::Frequence));
+                yDataVector->append(laserLineWidthEffectData->at(0));
+                yDataVector->append(laserLineWidthEffectData->at(1));
+                yDataVector->append(laserLineWidthEffectData->at(2));
+                yDataVector->append(laserLineWidthEffectData->at(3));
+                legendList.append("布里渊散射谱");
+                legendList.append("瑞利散射谱");
+                legendList.append("米散射谱");
+                legendList.append("整体散射谱");
+                emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("受激光拓宽的散射谱"), legendList); // i 表示第几面的曲线
             }
-            xDataVector->append(generateData(DataType::Frequence));
-            yDataVector->append(laserLineWidthEffectData->at(0));
-            yDataVector->append(laserLineWidthEffectData->at(1));
-            yDataVector->append(laserLineWidthEffectData->at(2));
-            yDataVector->append(laserLineWidthEffectData->at(3));
-            emit dynamicDataGenerated(xDataVector, yDataVector, i);
         }
         emit dataGenerateFinished();
         break;
