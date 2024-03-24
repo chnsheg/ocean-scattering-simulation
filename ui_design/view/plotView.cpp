@@ -42,6 +42,7 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
 
     // 添加动态按钮
     Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget2_3, "激光展宽图");
+    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget3_3, "扩展分析");
 
     // 挂载show1ButtonGroupManager单例
     Show1ButtonGroup *show1ButtonGroup = new Show1ButtonGroup(_ui->homeButton_1,
@@ -265,23 +266,8 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
             Singleton<Logger>::getInstance()->logMessage("散射光谱绘制完毕！", Logger::Log);
         }
         break;
+
     case 3:
-        // Singleton<CustomPlotManager>::getInstance()->setLegendName("水下散射光谱", 0);
-        // Singleton<CustomPlotManager>::getInstance()->refreshPlot();
-        // Singleton<Logger>::getInstance()->logMessage("水下散射光谱绘制完毕！", Logger::Log);
-        if (curve_index == 3)
-        {
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("受激光线宽影响的布里渊散射光谱", 0);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("受激光线宽影响的瑞利散射光谱", 1);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("受激光线宽影响的米散射光谱", 2);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("受激光线宽影响的散射光谱", 3);
-            Singleton<CustomPlotManager>::getInstance()->refreshPlot();
-            Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱绘制完毕", Logger::Log);
-        }
-
-        break;
-
-    case 4:
         if (curve_index == 3)
         {
             Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激瑞利散射光谱", 0);
@@ -292,7 +278,7 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
             Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱绘制完毕", Logger::Log);
         }
         break;
-    case 5:
+    case 4:
         // 判断是否需要创建第二个坐标轴
         if (curve_index == 0)
         {
@@ -308,7 +294,7 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
             Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱通过Fizeau后的光谱绘制完毕", Logger::Log);
         }
         break;
-    case 6:
+    case 5:
         if (curve_index == 0)
         {
             Singleton<CustomPlotManager>::getInstance()->setLegendName("PMT接收光谱", 0);
@@ -447,6 +433,9 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
         break;
     case dynamic1Button:
         dynamicButtonClicked(0);
+        break;
+    case dynamic2Button:
+        dynamicButtonClicked(1);
         break;
     }
 }

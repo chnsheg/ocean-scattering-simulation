@@ -16,6 +16,22 @@ QVector<double> *MyMath::convertArrayToQVector(const coder::array<double, 2U> &a
     return vector;
 }
 
+// 将多维的coder::array 转换为 QVector<QVector<double> *>*
+QVector<QVector<double> *> *MyMath::convertMultiArrayToQVector(const coder::array<double, 2U> &array)
+{
+    QVector<QVector<double> *> *vector = new QVector<QVector<double> *>();
+    for (int i = 0; i < array.size(0); i++)
+    {
+        QVector<double> *temp = new QVector<double>(array.size(1));
+        for (int j = 0; j < array.size(1); j++)
+        {
+            (*temp)[j] = array.at(i, j);
+        }
+        vector->append(temp);
+    }
+    return vector;
+}
+
 // 将 QVector 转换为 coder::array
 void MyMath::convertQVectorToArray(const QVector<double> *vector, coder::array<double, 2U> &array)
 {

@@ -1,11 +1,11 @@
 #ifndef DYNAMICVIEW_H
 #define DYNAMICVIEW_H
 
-#include <QWidget>
-#include <QStackedWidget>
 #include <QPushButton>
+#include <QStackedWidget>
 #include <QVector>
-#include "qcustomplot.h"
+#include <QWidget>
+#include "module/qcustomplot.h"
 
 class DynamicPage : public QWidget
 {
@@ -26,7 +26,11 @@ public:
     explicit DynamicPage(int pageCount, QWidget *parent = nullptr);
 
     // 显示指定页面的曲线，需要页码、X数据集、Y数据集和图表标题
-    void displayCurve(int pageIndex, QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, const QString &title, QStringList &legendList = QStringList());
+    void displayCurve(int pageIndex,
+                      QVector<QVector<double> *> *xData,
+                      QVector<QVector<double> *> *yData,
+                      QString title,
+                      QStringList legendList = QStringList());
 
     void initCustomPlotStyle(QCustomPlot *customPlot);
 
@@ -43,7 +47,11 @@ private slots:
     void onCloseClicked();
 
 public slots:
-    void updateDynamicView(QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, int index, QString &title, QStringList &legendList = QStringList());
+    void updateDynamicView(QVector<QVector<double> *> *xData,
+                           QVector<QVector<double> *> *yData,
+                           int index,
+                           QString title,
+                           QStringList legendList = QStringList());
 
 signals:
     void storeRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index); // 用于存储运行时数据
@@ -52,7 +60,7 @@ private:
     // 存储页面切换组件
     QStackedWidget *stackedWidget;
     // 存储每个页面的QCustomPlot对象
-    QVector<QCustomPlot *> plots;
+    QVector<QCustomPlot *> *plots;
     // 控制页面切换的按钮
     QPushButton *prevPageButton;
     QPushButton *nextPageButton;

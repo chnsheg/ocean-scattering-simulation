@@ -107,11 +107,17 @@ void PlotController::handleTracerButtonClicked()
 void PlotController::handleDynamicButtonClicked(int index)
 {
     // 通知model存储数据
-    thread = new QThread;
+    // QThread *thread;
+    // DynamicPage *dynamicView;
+    QThread *thread = new QThread;
+    DynamicPage *dynamicView;
     switch (index)
     {
     case 0:
         dynamicView = new DynamicPage(1);
+        break;
+    case 1:
+        dynamicView = new DynamicPage(2);
         break;
     }
 
@@ -123,7 +129,7 @@ void PlotController::handleDynamicButtonClicked(int index)
 
     connect(dynamicView, &DynamicPage::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
 
-    connect(model, &PageDataGenerator::dataGenerateFinished, this, [this]
+    connect(model, &PageDataGenerator::dataGenerateFinished, this, [=]
             {
         dynamicView->show();
         thread->quit();

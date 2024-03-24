@@ -79,8 +79,11 @@ set(SOURCES
     matlab/AddNoiseNondB.cpp
     matlab/AddNoiseNondB_data.cpp
     matlab/AddNoiseNondB_initialize.cpp
+    matlab/drawSNRDepthByM.cpp
+    matlab/div.cpp
     matlab/eml_rand_mt19937ar.cpp 
     matlab/eml_rand_mt19937ar_stateful.cpp 
+    matlab/drawSNRDepthByAlpha.cpp 
     model/constantmap.cpp
     model/constantstorage.cpp
     model/fizeaudatagenerator.cpp
@@ -136,6 +139,9 @@ set(HEADERS
     matlab/AddNoiseNondB.h
     matlab/AddNoiseNondB_data.h
     matlab/AddNoiseNondB_initialize.h
+    matlab/drawSNRDepthByM.h 
+    matlab/div.h
+    matlab/drawSNRDepthByAlpha.h
     model/constantmap.h
     model/constantstorage.h
     model/fizeaudatagenerator.h

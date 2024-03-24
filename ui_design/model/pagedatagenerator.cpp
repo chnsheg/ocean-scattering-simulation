@@ -97,25 +97,6 @@ void PageDataGenerator::generatePairOfData(int page_index)
         emit dataGenerated(xDataVector, yDataVector, 3);
         break;
     case 3:
-        // xDataVector->append(
-        //     PageDataGenerator::generateData(PageDataGenerator::DataType::Frequence, inputDataList));
-        // yDataVector->append(
-        //     PageDataGenerator::generateData(PageDataGenerator::DataType::MieScattering,
-        //                                     inputDataList));
-        laserLineWidthEffectData = SpectrumDataGenerator::generateLaserLineWidthEffectData();
-        if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
-        {
-            Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
-            return;
-        }
-        xDataVector->append(generateData(DataType::Frequence));
-        yDataVector->append(laserLineWidthEffectData->at(0));
-        yDataVector->append(laserLineWidthEffectData->at(1));
-        yDataVector->append(laserLineWidthEffectData->at(2));
-        yDataVector->append(laserLineWidthEffectData->at(3));
-        emit dataGenerated(xDataVector, yDataVector, 4);
-        break;
-    case 4:
         // xDataVector->append(generateData(DataType::Frequence));
         // yDataVector->append(generateData(DataType::FizeauInstrument));
         // yDataVector->append(generateData(DataType::FizeauSpectra));
@@ -134,7 +115,7 @@ void PageDataGenerator::generatePairOfData(int page_index)
         emit dataGenerated(xDataVector, yDataVector, 4);
 
         break;
-    case 5:
+    case 4:
         laserLineWidthEffectData = FizeauIFGenerator::generateFizeauIFData();
         xDataVector->append(laserLineWidthEffectData->at(0));
         yDataVector->append(laserLineWidthEffectData->at(1));
@@ -149,7 +130,7 @@ void PageDataGenerator::generatePairOfData(int page_index)
         // yDataVector->append(laserLineWidthEffectData->at(1));
         emit dataGenerated(xDataVector, yDataVector, 2);
         break;
-    case 6:
+    case 5:
         laserLineWidthEffectData = PMTReceptionDataGenerator::generatePMTReceptionData();
         xDataVector->append(laserLineWidthEffectData->at(0));
         yDataVector->append(laserLineWidthEffectData->at(1));
@@ -195,6 +176,36 @@ void PageDataGenerator::generateDynamicData(int index)
         }
         emit dataGenerateFinished();
         break;
+    case 1:
+        for (int i = 0; i < 2; i++) // 总共有几个页面
+        {
+            if (i == 0)
+            {
+                laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByMData();
+                // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
+                yDataVector->append(laserLineWidthEffectData->at(0));
+                for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
+                {
+                    xDataVector->append(laserLineWidthEffectData->at(j + 1));
+                    legendList.append("M = " + QString::number(laserLineWidthEffectData->last()->at(j)));
+                }
+                emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("SNR随深度变化"), legendList); // i 表示第几面的曲线
+            }
+            else if (i == 1)
+            {
+                laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByAlphaData();
+                // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
+                yDataVector->append(laserLineWidthEffectData->at(0));
+                for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
+                {
+                    xDataVector->append(laserLineWidthEffectData->at(j + 1));
+                    legendList.append("Alpha = " + QString::number(laserLineWidthEffectData->last()->at(j)));
+                }
+                emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("SNR随深度变化"), legendList); // i 表示第几面的曲线
+            }
+        }
+        emit dataGenerateFinished();
+        break;
     }
 }
 
@@ -214,18 +225,19 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
             break;
 
         case 2:
-            Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 4 + curve_index), QVariant::fromValue(dataContainer));
-            break;
-
-        case 3:
             Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 8 + curve_index), QVariant::fromValue(dataContainer));
             break;
 
-        case 4:
+        case 3:
             Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 12 + curve_index), QVariant::fromValue(dataContainer));
             break;
-        case 5:
+
+        case 4:
             Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 14 + curve_index), QVariant::fromValue(dataContainer));
+            break;
+        case 5:
+            // Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 14 + curve_index), QVariant::fromValue(dataContainer));
+            break;
         }
     }
     else if (page_type == 1) // 在扩展页面中，page_type表示pageObjectId，curve_num是整个pageObject的所有页面的curve的索引

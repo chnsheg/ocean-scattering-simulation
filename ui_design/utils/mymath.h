@@ -16,6 +16,8 @@ public:
     MyMath();
     static QVector<double> *convertArrayToQVector(const coder::array<double, 2U> &array);
     static void convertQVectorToArray(const QVector<double> *vector, coder::array<double, 2U> &array);
+    // 将多维的coder::array 转换为 QVector<QVector<double> *>*
+    static QVector<QVector<double> *> *convertMultiArrayToQVector(const coder::array<double, 2U> &array);
     static double polyarea(const QVector<double> &x, const QVector<double> &y);
     static QVector<double> *convolution(QVector<double> *input, QVector<double> *kernel);
     static void myFFT(QVector<double> *input, fftw_complex *out, int N);

@@ -110,7 +110,7 @@ void ButtonGroupsManager::addDynamicButton(QWidget *parent, const QString &butto
                  QString("%1Clicked").arg(buttonName),
                  newButton,
                  &QPushButton::clicked,
-                 ButtonGroupId::dynamic1Button);
+                 ButtonGroupId::dynamic1Button + dynamicButtons.size() - 1);
     }
     else
     {

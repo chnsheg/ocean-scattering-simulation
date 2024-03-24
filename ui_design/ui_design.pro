@@ -31,6 +31,9 @@ SOURCES += \
     matlab/SpectrumGeneration.cpp \
     matlab/colon.cpp \
     matlab/convolution.cpp \
+    matlab/div.cpp \
+    matlab/drawSNRDepthByAlpha.cpp \
+    matlab/drawSNRDepthByM.cpp \
     matlab/eml_rand_mt19937ar.cpp \
     matlab/eml_rand_mt19937ar_stateful.cpp \
     matlab/rand.cpp \
@@ -39,23 +42,23 @@ SOURCES += \
     matlab/rtGetNaN.cpp \
     matlab/rt_nonfinite.cpp \
     matlab/sum.cpp \
-    model/CaculateScatteredPhotons.cpp \
-    model/FizeauInstrument.cpp \
-    model/PMTReceive.cpp \
-    model/SpectrumGeneration.cpp \
-    model/colon.cpp \
+    # model/CaculateScatteredPhotons.cpp \
+    # model/FizeauInstrument.cpp \
+    # model/PMTReceive.cpp \
+    # model/SpectrumGeneration.cpp \
+    # model/colon.cpp \
     model/constantmap.cpp \
     model/constantstorage.cpp \
-    model/convolution.cpp \
+    # model/convolution.cpp \
     model/fizeaudatagenerator.cpp \
     model/fizeauifgenerator.cpp \
     model/frequencedatagenerator.cpp \
     model/laserdatagenerator.cpp \
     model/pagedatagenerator.cpp \
     model/pmtreceptiondatagenerator.cpp \
-    model/rtGetInf.cpp \
-    model/rtGetNaN.cpp \
-    model/rt_nonfinite.cpp \
+    # model/rtGetInf.cpp \
+    # model/rtGetNaN.cpp \
+    # model/rt_nonfinite.cpp \
     model/spectrumdatagenerator.cpp \
     model/underwaterspectrumdatagenerator.cpp \
     module/filebrowser.cpp \
@@ -92,6 +95,9 @@ HEADERS += \
     matlab/coder_array.h \
     matlab/colon.h \
     matlab/convolution.h \
+    matlab/div.h \
+    matlab/drawSNRDepthByAlpha.h \
+    matlab/drawSNRDepthByM.h \
     matlab/eml_rand_mt19937ar.h \
     matlab/eml_rand_mt19937ar_stateful.h \
     matlab/rand.h \
@@ -102,27 +108,27 @@ HEADERS += \
     matlab/rtwtypes.h \
     matlab/sum.h \
     matlab/tmwtypes.h \
-    model/CaculateScatteredPhotons.h \
-    model/FizeauInstrument.h \
-    model/PMTReceive.h \
-    model/SpectrumGeneration.h \
-    model/coder_array.h \
-    model/colon.h \
+    # model/CaculateScatteredPhotons.h \
+    # model/FizeauInstrument.h \
+    # model/PMTReceive.h \
+    # model/SpectrumGeneration.h \
+    # model/coder_array.h \
+    # model/colon.h \
     model/constantmap.h \
     model/constantstorage.h \
-    model/convolution.h \
+    # model/convolution.h \
     model/fizeaudatagenerator.h \
     model/fizeauifgenerator.h \
     model/frequencedatagenerator.h \
     model/laserdatagenerator.h \
     model/pagedatagenerator.h \
     model/pmtreceptiondatagenerator.h \
-    model/rtGetInf.h \
-    model/rtGetNaN.h \
-    model/rt_nonfinite.h \
-    model/rtwtypes.h \
+    # model/rtGetInf.h \
+    # model/rtGetNaN.h \
+    # model/rt_nonfinite.h \
+    # model/rtwtypes.h \
     model/spectrumdatagenerator.h \
-    model/tmwtypes.h \
+    # model/tmwtypes.h \
     model/underwaterspectrumdatagenerator.h \
     module/filebrowser.h \
     module/mycombobox.h \

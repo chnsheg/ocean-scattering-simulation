@@ -7,6 +7,7 @@ int DynamicPage::dynamicPageObjectNum = 0; // 初始化静态成员变量
 DynamicPage::DynamicPage(int pageCount, QWidget *parent)
     : QWidget(parent), pageCount(pageCount)
 {
+    plots = new QVector<QCustomPlot *>(); // 初始化QCustomPlot容器
     setupUi();
     setAttribute(Qt::WA_DeleteOnClose);
     pageObjectId = dynamicPageObjectNum++;
@@ -84,10 +85,9 @@ void DynamicPage::createPage(int index)
     QVBoxLayout *layout = new QVBoxLayout(page);
 
     QCustomPlot *plot = new QCustomPlot();
-    plots.append(plot);
+    plots->append(plot);
     layout->addWidget(plot);
     initCustomPlotStyle(plot);
-
     // 如果有必要，这里可以添加更多的组件到页面
 
     stackedWidget->addWidget(page);
@@ -96,38 +96,76 @@ void DynamicPage::createPage(int index)
 void DynamicPage::displayCurve(int pageIndex,
                                QVector<QVector<double> *> *xData,
                                QVector<QVector<double> *> *yData,
-                               const QString &title, QStringList &legendList)
+                               QString title,
+                               QStringList legendList)
 {
-    if (pageIndex >= 0 && pageIndex < plots.size())
-    {
-        QCustomPlot *plot = plots[pageIndex];
-        plot->clearGraphs();
-
-        for (int i = 0; i < yData->size(); ++i)
+    QCustomPlot *plot;
+    if (pageIndex >= 0 && pageIndex < plots->size()) {
+        if (xData->size() == 1 && yData->size() >= 1)
         {
-            plot->addGraph();
-            plot->graph(i)->setPen(QPen(colorContainer.at(i), 3));
-            plot->graph(i)->setData(*(*xData)[0], *(*yData)[i]);
-            if (legendList != QStringList() && i < legendList.size())
+            plot = (*plots)[pageIndex];
+
+            plot->clearGraphs();
+
+            for (int i = 0; i < yData->size(); ++i)
             {
-                plot->graph(i)->setName(legendList.at(i));
+                plot->addGraph();
+                plot->graph(i)->setPen(QPen(colorContainer.at(i), 3));
+                plot->graph(i)->setData(*(*xData)[0], *(*yData)[i]);
+                if (legendList != QStringList() && i < legendList.size())
+                {
+                    plot->graph(i)->setName(legendList.at(i));
+                }
+                emit storeRuntimeDataSignal(plot->graph(i)->data(),
+                                            this->pageObjectId,
+                                            this->getCurveNum(pageIndex) + i);
+                delete (*yData)[i];
             }
-            emit storeRuntimeDataSignal(plot->graph(i)->data(), pageObjectId, getCurveNum(pageIndex) + i);
-            delete (*yData)[i];
+            delete (*xData)[0];
+
+            plot->rescaleAxes();
+            plot->replot();
+
+            plot->plotLayout()->insertRow(0);
+            plot->plotLayout()
+                ->addElement(0, 0, new QCPTextElement(plot, title, QFont("sans", 12, QFont::Bold)));
         }
-        delete (*xData)[0];
+        else if (xData->size() > 1 && yData->size() == 1)
+        {
+            plot = (*plots)[pageIndex];
+            plot->clearGraphs();
+
+            for (int i = 0; i < xData->size(); ++i)
+            {
+                plot->addGraph();
+                plot->graph(i)->setPen(QPen(colorContainer.at(i), 3));
+                plot->graph(i)->setData(*(*xData)[i], *(*yData)[0]);
+                if (legendList != QStringList() && i < legendList.size())
+                {
+                    plot->graph(i)->setName(legendList.at(i));
+                }
+                // emit storeRuntimeDataSignal(plot->graph(i)->data(), pageObjectId, getCurveNum(pageIndex) + i);
+                delete (*xData)[i];
+            }
+            delete (*yData)[0];
+            plot->rescaleAxes();
+            plot->replot();
+
+            plot->plotLayout()->insertRow(0);
+            plot->plotLayout()
+                ->addElement(0, 0, new QCPTextElement(plot, title, QFont("sans", 12, QFont::Bold)));
+        }
+
         delete xData;
         delete yData;
-
-        plot->rescaleAxes();
-        plot->replot();
-
-        plot->plotLayout()->insertRow(0);
-        plot->plotLayout()->addElement(0, 0, new QCPTextElement(plot, title, QFont("sans", 12, QFont::Bold)));
     }
 }
 
-void DynamicPage::updateDynamicView(QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, int index, QString &title, QStringList &legendList)
+void DynamicPage::updateDynamicView(QVector<QVector<double> *> *xData,
+                                    QVector<QVector<double> *> *yData,
+                                    int index,
+                                    QString title,
+                                    QStringList legendList)
 {
     displayCurve(index, xData, yData, title, legendList);
 }
@@ -169,7 +207,7 @@ int DynamicPage::getCurveNum(int pageIndex)
     int totalGraphCount = 0;
     for (int i = 0; i < pageIndex; ++i)
     {
-        totalGraphCount += this->plots[i]->graphCount();
+        totalGraphCount += (*plots)[i]->graphCount();
     }
     return totalGraphCount;
 }
