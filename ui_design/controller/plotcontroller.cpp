@@ -70,8 +70,28 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
 
 void PlotController::handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index)
 {
-    // 通知model存储数据
-    model->storeRuntimeDataByIndex(dataContainer, page_index, curve_index);
+    // // 通知model存储数据
+    // model->storeRuntimeDataByIndex(dataContainer, page_index, curve_index);
+    // 获取信号发送者
+    QObject *sender = QObject::sender();
+    if (sender == nullptr)
+    {
+        return;
+    }
+    // 获取发送者的类名
+    QString senderClassName = sender->metaObject()->className();
+    if (senderClassName == "PlotView")
+    {
+        model->storeRuntimeDataByIndex(dataContainer, page_index, curve_index);
+    }
+    else if (senderClassName == "DynamicPage")
+    {
+        model->storeRuntimeDataByIndex(dataContainer, page_index, curve_index, 1);
+    }
+    else
+    {
+        Singleton<Logger>::getInstance()->logMessage("未知的信号发送者！", Logger::Warning);
+    }
 }
 
 void PlotController::handleClearButtonClicked()
@@ -100,6 +120,9 @@ void PlotController::handleDynamicButtonClicked(int index)
             { model->generateDynamicData(index); });
 
     connect(model, &PageDataGenerator::dynamicDataGenerated, dynamicView, &DynamicPage::updateDynamicView);
+
+    connect(dynamicView, &DynamicPage::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
+
     connect(model, &PageDataGenerator::dataGenerateFinished, this, [this]
             {
         dynamicView->show();
@@ -112,15 +135,6 @@ void PlotController::handleDynamicButtonClicked(int index)
 
 void PlotController::handleSaveConstantButtonClicked(int index, int save_type)
 {
-    // 通知model存储数据
-    // if (save_type == 0)
-    // {
-    //     model->storeConstantByGroupIndex(index);
-    // }
-    // else
-    // {
-    //     model->storeAllConstant();
-    // }
     switch (save_type)
     {
     case 0:

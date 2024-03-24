@@ -49,7 +49,7 @@ signals:
 
 public slots:
     void generatePairOfData(const int page_index);
-    void storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
+    void storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index, int page_type = 0); // 0 表示主要的绘图界面；1表示扩展的绘图界面
     void storeConstantByGroupIndex(int index);
     void storeAllConstant();
     void storeRuntimeDataByGroupIndex(int index);

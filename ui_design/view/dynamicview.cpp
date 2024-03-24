@@ -1,10 +1,15 @@
 #include "dynamicview.h"
+#include "model/constantmap.h"
+#include "model/constantstorage.h"
+
+int DynamicPage::dynamicPageObjectNum = 0; // 初始化静态成员变量
 
 DynamicPage::DynamicPage(int pageCount, QWidget *parent)
     : QWidget(parent), pageCount(pageCount)
 {
     setupUi();
     setAttribute(Qt::WA_DeleteOnClose);
+    pageObjectId = dynamicPageObjectNum++;
 }
 
 void DynamicPage::setupUi()
@@ -107,6 +112,7 @@ void DynamicPage::displayCurve(int pageIndex,
             {
                 plot->graph(i)->setName(legendList.at(i));
             }
+            emit storeRuntimeDataSignal(plot->graph(i)->data(), pageObjectId, getCurveNum(pageIndex) + i);
             delete (*yData)[i];
         }
         delete (*xData)[0];
@@ -155,4 +161,15 @@ void DynamicPage::onShowCursorClicked()
 void DynamicPage::onCloseClicked()
 {
     this->close(); // 直接关闭当前窗口
+}
+
+int DynamicPage::getCurveNum(int pageIndex)
+{
+    // 获取plots容器中的所有plot的graph数量总和
+    int totalGraphCount = 0;
+    for (int i = 0; i < pageIndex; ++i)
+    {
+        totalGraphCount += this->plots[i]->graphCount();
+    }
+    return totalGraphCount;
 }

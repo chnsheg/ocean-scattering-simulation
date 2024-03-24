@@ -30,6 +30,8 @@ public:
 
     void initCustomPlotStyle(QCustomPlot *customPlot);
 
+    int getCurveNum(int pageIndex);
+
 private slots:
     // 处理“上一页面”按钮点击事件
     void onPrevPageClicked();
@@ -42,6 +44,9 @@ private slots:
 
 public slots:
     void updateDynamicView(QVector<QVector<double> *> *xData, QVector<QVector<double> *> *yData, int index, QString &title, QStringList &legendList = QStringList());
+
+signals:
+    void storeRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index); // 用于存储运行时数据
 
 private:
     // 存储页面切换组件
@@ -56,6 +61,10 @@ private:
     QPushButton *closeButton;
     // 页面总数
     int pageCount;
+
+    static int dynamicPageObjectNum; // 用于追踪DynamicPage对象的数量
+
+    int pageObjectId;
 
     // 初始化界面元素
     void setupUi();
