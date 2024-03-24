@@ -120,7 +120,6 @@ void PlotController::handleDynamicButtonClicked(int index)
         dynamicView = new DynamicPage(2);
         break;
     }
-    dynamicView->show();
 
     model->moveToThread(thread);
     connect(thread, &QThread::started, this, [=]
@@ -131,9 +130,14 @@ void PlotController::handleDynamicButtonClicked(int index)
     connect(dynamicView, &DynamicPage::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
 
     connect(model, &PageDataGenerator::dataGenerateFinished, this, [=] {
+        this->dynamicView->show();
         this->thread->quit();
         this->thread->wait();
         this->thread->deleteLater();
+        disconnect(this->model,
+                   &PageDataGenerator::dynamicDataGenerated,
+                   this->dynamicView,
+                   &DynamicPage::updateDynamicView);
     });
 
     thread->start();
