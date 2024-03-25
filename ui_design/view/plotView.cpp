@@ -71,14 +71,19 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     Singleton<Logger>::getInstance(Singleton<TextEditManager>::getInstance());
     // 挂载LineEditGroupManager单例
     QList<QList<QLineEdit *>> lineEditsList;
+    QList<QList<QLabel *>> labelsList;
     for (auto &&widgetName : {_ui->cebianlan_1, _ui->cebianlan_2, _ui->cebianlan_3, _ui->cebianlan_4, _ui->cebianlan_5, _ui->cebianlan_6, _ui->cebianlan_7, _ui->cebianlan_8})
     {
         auto lineEdits = widgetName->findChildren<QLineEdit *>(QString(), Qt::FindDirectChildrenOnly);
+        auto labels = widgetName->findChildren<QLabel *>(QString(), Qt::FindDirectChildrenOnly);
         std::sort(lineEdits.begin(), lineEdits.end(), [](QLineEdit *a, QLineEdit *b)
                   { return a->objectName() < b->objectName(); });
+        std::sort(labels.begin(), labels.end(), [](QLabel *a, QLabel *b)
+                  { return a->objectName() < b->objectName(); });
         lineEditsList.append(lineEdits);
+        labelsList.append(labels);
     }
-    Singleton<LineEditGroupManager>::getInstance(lineEditsList);
+    Singleton<LineEditGroupManager>::getInstance(lineEditsList, labelsList);
 
     // 连接信号和槽
     void (MenuManager::*menuManagerEventSignal)(MenuActionId) = &MenuManager::eventSignal;

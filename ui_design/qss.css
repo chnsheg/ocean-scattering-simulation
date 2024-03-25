@@ -104,7 +104,7 @@ QLabel
 {
     font-size: 25px;
     font-weight: 450;
-    font-family: "微软雅黑";
+    font-family: "Lato", Helvetica, Arial, sans-serif;
 }
 
 QWidget#widget1_1,
