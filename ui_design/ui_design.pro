@@ -32,8 +32,10 @@ SOURCES += \
     matlab/colon.cpp \
     matlab/convolution.cpp \
     matlab/div.cpp \
+    matlab/drawNsMByDepth.cpp \
     matlab/drawSNRDepthByAlpha.cpp \
     matlab/drawSNRDepthByM.cpp \
+    matlab/eml_mtimes_helper.cpp \
     matlab/eml_rand_mt19937ar.cpp \
     matlab/eml_rand_mt19937ar_stateful.cpp \
     matlab/rand.cpp \
@@ -96,8 +98,10 @@ HEADERS += \
     matlab/colon.h \
     matlab/convolution.h \
     matlab/div.h \
+    matlab/drawNsMByDepth.h \
     matlab/drawSNRDepthByAlpha.h \
     matlab/drawSNRDepthByM.h \
+    matlab/eml_mtimes_helper.h \
     matlab/eml_rand_mt19937ar.h \
     matlab/eml_rand_mt19937ar_stateful.h \
     matlab/rand.h \

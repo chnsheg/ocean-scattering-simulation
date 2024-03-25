@@ -117,7 +117,7 @@ void PlotController::handleDynamicButtonClicked(int index)
         dynamicView = new DynamicPage(1);
         break;
     case 1:
-        dynamicView = new DynamicPage(2);
+        dynamicView = new DynamicPage(3);
         break;
     }
 
@@ -129,7 +129,8 @@ void PlotController::handleDynamicButtonClicked(int index)
 
     connect(dynamicView, &DynamicPage::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
 
-    connect(model, &PageDataGenerator::dataGenerateFinished, this, [=] {
+    connect(model, &PageDataGenerator::dataGenerateFinished, this, [=]
+            {
         this->dynamicView->show();
         this->thread->quit();
         this->thread->wait();
@@ -137,8 +138,7 @@ void PlotController::handleDynamicButtonClicked(int index)
         disconnect(this->model,
                    &PageDataGenerator::dynamicDataGenerated,
                    this->dynamicView,
-                   &DynamicPage::updateDynamicView);
-    });
+                   &DynamicPage::updateDynamicView); });
 
     thread->start();
 }

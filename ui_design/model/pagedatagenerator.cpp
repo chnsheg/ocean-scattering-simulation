@@ -177,7 +177,7 @@ void PageDataGenerator::generateDynamicData(int index)
         emit dataGenerateFinished();
         break;
     case 1:
-        for (int i = 0; i < 2; i++) // 总共有几个页面
+        for (int i = 0; i < 3; i++) // 总共有几个页面
         {
             if (i == 0)
             {
@@ -195,6 +195,20 @@ void PageDataGenerator::generateDynamicData(int index)
             {
                 xDataVector = new QVector<QVector<double> *>;
                 yDataVector = new QVector<QVector<double> *>;
+                laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateNsMByDepthData();
+                // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
+                yDataVector->append(laserLineWidthEffectData->at(0));
+                for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
+                {
+                    xDataVector->append(laserLineWidthEffectData->at(j + 1));
+                    legendList.append("M = " + QString::number(laserLineWidthEffectData->last()->at(j)));
+                }
+                emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("Ns/M随深度变化"), legendList); // i 表示第几面的曲线
+            }
+            else if (i == 2)
+            {
+                xDataVector = new QVector<QVector<double> *>;
+                yDataVector = new QVector<QVector<double> *>;
                 laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByAlphaData();
                 // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
                 yDataVector->append(laserLineWidthEffectData->at(0));
@@ -203,7 +217,7 @@ void PageDataGenerator::generateDynamicData(int index)
                     xDataVector->append(laserLineWidthEffectData->at(j + 1));
                     legendList.append("Alpha = " + QString::number(laserLineWidthEffectData->last()->at(j)));
                 }
-                emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("SNR随深度变化"), legendList); // i 表示第几面的曲线
+                emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("不同alpha下SNR随深度变化"), legendList); // i 表示第几面的曲线
             }
         }
         emit dataGenerateFinished();

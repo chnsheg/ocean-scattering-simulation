@@ -83,7 +83,9 @@ set(SOURCES
     matlab/div.cpp
     matlab/eml_rand_mt19937ar.cpp 
     matlab/eml_rand_mt19937ar_stateful.cpp 
+    matlab/eml_mtimes_helper.cpp 
     matlab/drawSNRDepthByAlpha.cpp 
+    matlab/drawNsMByDepth.cpp 
     model/constantmap.cpp
     model/constantstorage.cpp
     model/fizeaudatagenerator.cpp
@@ -133,6 +135,7 @@ set(HEADERS
     matlab/PMTReceive.h
     matlab/eml_rand_mt19937ar.h
     matlab/eml_rand_mt19937ar_stateful.h 
+    matlab/eml_mtimes_helper.h
     matlab/sum.h
     matlab/rand.h
     matlab/randn.h
@@ -140,6 +143,7 @@ set(HEADERS
     matlab/AddNoiseNondB_data.h
     matlab/AddNoiseNondB_initialize.h
     matlab/drawSNRDepthByM.h 
+    matlab/drawNsMByDepth.h
     matlab/div.h
     matlab/drawSNRDepthByAlpha.h
     model/constantmap.h

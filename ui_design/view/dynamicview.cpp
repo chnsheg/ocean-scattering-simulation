@@ -100,7 +100,8 @@ void DynamicPage::displayCurve(int pageIndex,
                                QStringList legendList)
 {
     QCustomPlot *plot;
-    if (pageIndex >= 0 && pageIndex < plots->size()) {
+    if (pageIndex >= 0 && pageIndex < plots->size())
+    {
         if (xData->size() == 1 && yData->size() >= 1)
         {
             plot = (*plots)[pageIndex];
@@ -115,6 +116,8 @@ void DynamicPage::displayCurve(int pageIndex,
                 if (legendList != QStringList() && i < legendList.size())
                 {
                     plot->graph(i)->setName(legendList.at(i));
+                    // 删除取出的legendList中的元素
+                    legendList.removeAt(i);
                 }
                 emit storeRuntimeDataSignal(plot->graph(i)->data(),
                                             this->pageObjectId,

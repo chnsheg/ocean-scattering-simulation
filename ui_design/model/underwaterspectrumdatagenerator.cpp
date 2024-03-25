@@ -7,6 +7,7 @@
 #include "matlab/AddNoiseNondB.h"
 #include "matlab/drawSNRDepthByM.h"
 #include "matlab/drawSNRDepthByAlpha.h"
+#include "matlab/drawNsMByDepth.h"
 
 UnderWaterSpectrumDataGenerator::UnderWaterSpectrumDataGenerator() {}
 
@@ -300,6 +301,90 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateSNRDepthByA
         resultContainer->append(SNR_dbVector->at(i));
     }
     resultContainer->append(AlphaVector);
+
+    return resultContainer;
+}
+
+QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateNsMByDepthData()
+{
+    ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
+    ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
+    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
+    double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble();
+    double Beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
+    double lambda = constantStorage->getConstant(constantMap->getConstantName(0, 1)).toDouble();
+    double n = constantStorage->getConstant(constantMap->getConstantName(1, 4)).toDouble();
+    // double z = constantStorage->getConstant(constantMap->getConstantName(7, 6)).toDouble();
+    double H = constantStorage->getConstant(constantMap->getConstantName(7, 7)).toDouble();
+    double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
+    // double N_Brillouin;
+    // double N_Mie;
+    // double N_Rayleigh;
+    // double SNR;
+    double laser_width = constantStorage->getConstant(constantMap->getConstantName(0, 0)).toDouble();
+    double tau = 1 / laser_width;
+    double r = constantStorage->getConstant(constantMap->getConstantName(7, 4)).toDouble();
+    // double M = constantStorage->getConstant(constantMap->getConstantName(7, 0)).toDouble();
+    double N_dark = constantStorage->getConstant(constantMap->getConstantName(7, 5)).toDouble();
+    double beta = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
+    double Xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
+    double Xi_F = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
+
+    // void drawSNRDepthByM(double energe, double Alpha_water, double Beta_p,
+    //                  double Beta_m, double lambda, double n,
+    //                  const coder::array<double, 2U> &z, double H, double tau,
+    //                  double r, const coder::array<double, 2U> &M,
+    //                  double energy_ratio, double N_dark, double beta, double Xi,
+    //                  double Xi_F, coder::array<double, 2U> &N_Brillouin,
+    //                  coder::array<double, 2U> &N_Mie,
+    //                  coder::array<double, 2U> &N_Rayleigh,
+    //                  coder::array<double, 2U> &SNR_db)
+
+    coder::array<double, 2U> z;
+    coder::array<double, 2U> M;
+    coder::array<double, 2U> N_Brillouin;
+    coder::array<double, 2U> N_Mie;
+    coder::array<double, 2U> N_Rayleigh;
+    coder::array<double, 2U> Ns;
+    QVector<double> *zVector = new QVector<double>();
+    QVector<double> *MVector = new QVector<double>();
+    QVector<double> *N_BrillouinVector;
+    QVector<double> *N_MieVector;
+    QVector<double> *N_RayleighVector;
+    QVector<QVector<double> *> *NsVector;
+
+    for (int i = 0; i < 150; ++i)
+    {
+        zVector->append(i);
+    }
+
+    MVector->append(10);
+    MVector->append(100);
+    MVector->append(1000);
+    MVector->append(10000);
+
+    MyMath::convertQVectorToArray(zVector, z);
+    MyMath::convertQVectorToArray(MVector, M);
+
+    drawNsMByDepth(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, tau, r, M, energy_ratio, N_dark, beta, Xi, Xi_F, N_Brillouin, N_Mie, N_Rayleigh, Ns);
+
+    N_BrillouinVector = MyMath::convertArrayToQVector(N_Brillouin);
+    N_MieVector = MyMath::convertArrayToQVector(N_Mie);
+    N_RayleighVector = MyMath::convertArrayToQVector(N_Rayleigh);
+    NsVector = MyMath::convertMultiArrayToQVector(Ns);
+
+    QVector<QVector<double> *> *resultContainer = new QVector<QVector<double> *>();
+    resultContainer->append(zVector);
+    for (int i = 0; i < MVector->size(); ++i)
+    {
+        resultContainer->append(NsVector->at(i));
+    }
+    resultContainer->append(MVector);
+
+    delete N_BrillouinVector;
+    delete N_MieVector;
+    delete N_RayleighVector;
 
     return resultContainer;
 }
