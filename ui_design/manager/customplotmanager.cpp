@@ -88,6 +88,7 @@ void CustomPlotManager::initCustomPlotStyle()
     customPlot->yAxis->setTickLabelColor(Qt::yellow);         // 设置y轴坐标颜色
     customPlot->xAxis->setBasePen(QPen(QColor(0, 0, 0)));     // 设置x轴坐标轴颜色
     customPlot->yAxis->setBasePen(QPen(QColor(25, 150, 92))); // 设置y轴坐标轴颜色
+
     // 设置画布背景色
     QLinearGradient plotGradient;
     plotGradient.setStart(0, 0);
@@ -147,16 +148,16 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
     customPlot->graph(curve_index)->setPen(QPen(colorContainer.at(curve_index), 3)); // 设置曲线颜色
     // customPlot->graph(curve_index)->setData(*xData, *yData, true);                   // 必须确保数据是有序的
     // 补充代码：用下述方法：void QCPDataContainer< DataType >::add ( const QVector< DataType > &  data, bool  alreadySorted = false  )
-    // QVector<QCPGraphData> graphData(xData->size());
-    // for (int i = 0; i < xData->size(); ++i)
-    // {
-    //     graphData[i].key = (*xData)[i];
-    //     graphData[i].value = (*yData)[i];
-    // }
+    QVector<QCPGraphData> graphData(xData->size());
+    for (int i = 0; i < xData->size(); ++i)
+    {
+        graphData[i].key = (*xData)[i];
+        graphData[i].value = (*yData)[i];
+    }
 
     // customPlot->graph(curve_index)->data()->add(graphData);
-    // customPlot->graph(curve_index)->data()->add(graphData, true);
-    customPlot->graph(curve_index)->setData(*xData, *yData, true);
+    customPlot->graph(curve_index)->data()->add(graphData, true);
+    // customPlot->graph(curve_index)->setData(*xData, *yData, true);
 
     customPlot->legend->setVisible(true);
     // customPlot->xAxis->setRange(floor(*xData->begin()), ceil(*xData->end()));
@@ -164,6 +165,13 @@ void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
     // customPlot->yAxis->setRange(0, *maxElement);
     customPlot->graph(curve_index)->rescaleAxes(); // 此处不能设置为true，会导致连续点击时坐标轴无法正常缩放
     // customPlot->replot();                              // 重绘 此处若不断重绘会导致坐标轴范围出现问题
+}
+
+/// @brief 设置画笔粗细为1，用于流畅绘制
+/// @param curve_index
+void CustomPlotManager::setPenToRunFluently(int curve_index)
+{
+    customPlot->graph(curve_index)->setPen(QPen(colorContainer.at(curve_index), 1));
 }
 
 void CustomPlotManager::plotGraph(const QVector<double> *xData,
@@ -292,7 +300,7 @@ void CustomPlotManager::setLegendName(const QString &name, int curve_index)
 
 void CustomPlotManager::refreshPlot()
 {
-    customPlot->replot();
+    customPlot->replot(QCustomPlot::rpQueuedReplot);
 }
 
 void CustomPlotManager::clearPlot()

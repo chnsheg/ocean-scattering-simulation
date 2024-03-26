@@ -22,6 +22,7 @@ public:
                                       QColor(0, 0, 0)};
 
     void setCustomPlot(QCustomPlot *newCustomPlot);
+    void setPenToRunFluently(int curve_index);
     QCustomPlot *getCustomPlot();
     void initCustomPlotStyle();
     void plotGraphToBuffer(const QVector<double> *xData,

@@ -280,6 +280,7 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         break;
 
     case 3:
+        Singleton<CustomPlotManager>::getInstance()->setPenToRunFluently(curve_index);
         if (curve_index == 3)
         {
             Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激瑞利散射光谱", 0);
