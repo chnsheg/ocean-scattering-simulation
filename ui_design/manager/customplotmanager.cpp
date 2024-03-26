@@ -176,7 +176,7 @@ void CustomPlotManager::plotGraph(const QVector<double> *xData,
 
 void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
                                              const QVector<double> *yData,
-                                             int curve_index)
+                                             int curve_index, QString legendName)
 {
     auto maxElement = std::max_element(yData->begin(), yData->end(), [](double a, double b)
                                        {
@@ -232,10 +232,10 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     if (!bars)
     {
         bars = new QCPBars(xAxis, yAxis);
-        bars->setName("Bars"); // 仅在创建新实例时设置名称
+        // bars->setName(legendName); // 仅在创建新实例时设置名称
     }
     bars->setAntialiased(false);                          // 为了更好的边框效果，关闭抗齿锯
-    bars->setName("Bars");                                // 设置图例
+    bars->setName(legendName);                            // 设置图例
     bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
     bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
 
