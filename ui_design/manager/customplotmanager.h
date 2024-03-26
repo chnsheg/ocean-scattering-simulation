@@ -28,6 +28,9 @@ public:
                            const QVector<double> *yData,
                            int curve_index);
     void plotGraph(const QVector<double> *xData, const QVector<double> *yData, int curve_index);
+
+    void plotBarGraphToBuffer(const QVector<double> *xData, const QVector<double> *yData, int curve_index);
+
     void refreshPlot();
     void clearPlot();
     void hidePlot();

@@ -50,18 +50,36 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
         Singleton<Logger>::getInstance()->logMessage("请设置所有输入变量！", Logger::Warning);
         return;
     }
-    xData = xDataVector->at(0); // 默认所有曲线的x轴数据都是一样的
-    for (int i = 0; i < curve_num; ++i)
+    if (xDataVector->size() == yDataVector->size())
     {
-        yData = yDataVector->at(i);
-        view->updateViewCurveSlot(xData, yData, i);
-        // 释放内存，如果每次开始绘图导致系统卡顿，可以不释放内存，仅在切换页面时释放内存
-        delete yData;
-        yData = nullptr;
-        // yDataVector->replace(i, nullptr); // 设置为 nullptr 避免悬空指针
+        for (int i = 0; i < xDataVector->size(); ++i)
+        {
+            xData = xDataVector->at(i);
+            yData = yDataVector->at(i);
+            view->updateViewCurveSlot(xData, yData, i);
+            // 释放内存，如果每次开始绘图导致系统卡顿，可以不释放内存，仅在切换页面时释放内存
+            delete xData;
+            delete yData;
+            yData = nullptr;
+            xData = nullptr;
+            // yDataVector->replace(i, nullptr); // 设置为 nullptr 避免悬空指针
+        }
     }
-    delete xData;
-    xData = nullptr;
+    else
+    {
+        xData = xDataVector->at(0); // 默认所有曲线的x轴数据都是一样的
+        for (int i = 0; i < curve_num; ++i)
+        {
+            yData = yDataVector->at(i);
+            view->updateViewCurveSlot(xData, yData, i);
+            // 释放内存，如果每次开始绘图导致系统卡顿，可以不释放内存，仅在切换页面时释放内存
+            delete yData;
+            yData = nullptr;
+            // yDataVector->replace(i, nullptr); // 设置为 nullptr 避免悬空指针
+        }
+        delete xData;
+        xData = nullptr;
+    }
     delete xDataVector;
     xDataVector = nullptr;
     delete yDataVector;

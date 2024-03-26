@@ -174,6 +174,117 @@ void CustomPlotManager::plotGraph(const QVector<double> *xData,
     refreshPlot();
 }
 
+void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
+                                             const QVector<double> *yData,
+                                             int curve_index)
+{
+    auto maxElement = std::max_element(yData->begin(), yData->end(), [](double a, double b)
+                                       {
+                                           return a < b; // 使用正确的比较器条件
+                                       });
+    // 绘制柱状图
+    QCPAxis *xAxis = customPlot->xAxis2; // x轴
+    QCPAxis *yAxis = customPlot->yAxis2; // y轴
+
+    QCPBars *bars = nullptr; // 初始化bars为null指针
+
+    // 检查是否已存在名为"Bars"的QCPBars实例
+    for (int i = 0; i < customPlot->plottableCount(); ++i)
+    {
+        if (customPlot->plottable(i)->name() == "Bars")
+        {
+            bars = qobject_cast<QCPBars *>(customPlot->plottable(i));
+            break;
+        }
+    }
+
+    customPlot->yAxis2->setVisible(true);
+    customPlot->yAxis2->setTickLabels(true);
+    customPlot->yAxis2->setTickLabelColor(Qt::yellow);
+    customPlot->yAxis2->setLabelColor(QColor(226, 60, 255));
+    // 等比例移动第二条坐标轴
+    void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
+    connect(customPlot->yAxis,
+            rangeChanged,
+            customPlot->yAxis2,
+            [=](const QCPRange &newRange, const QCPRange &oldRange)
+            {
+                QCPRange y2Range = customPlot->yAxis2->range();
+                double dy = newRange.lower - oldRange.lower;
+                double rate = dy / (oldRange.upper - oldRange.lower);
+                double y2Lower = y2Range.lower + rate * (y2Range.upper - y2Range.lower);
+                double y2Upper = y2Range.upper + rate * (y2Range.upper - y2Range.lower);
+                customPlot->yAxis2->setRange(y2Lower, y2Upper);
+            });
+    connect(customPlot->xAxis,
+            rangeChanged,
+            customPlot->xAxis2,
+            [=](const QCPRange &newRange, const QCPRange &oldRange)
+            {
+                QCPRange x2Range = customPlot->xAxis2->range();
+                double dx = newRange.lower - oldRange.lower;
+                double rate = dx / (oldRange.upper - oldRange.lower);
+                double x2Lower = x2Range.lower + rate * (x2Range.upper - x2Range.lower);
+                double x2Upper = x2Range.upper + rate * (x2Range.upper - x2Range.lower);
+                customPlot->xAxis2->setRange(x2Lower, x2Upper);
+            });
+
+    if (!bars)
+    {
+        bars = new QCPBars(xAxis, yAxis);
+        bars->setName("Bars"); // 仅在创建新实例时设置名称
+    }
+    bars->setAntialiased(false);                          // 为了更好的边框效果，关闭抗齿锯
+    bars->setName("Bars");                                // 设置图例
+    bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
+    bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
+
+    // QVector<double> ticks;
+    // QVector<QString> labels;
+    // ticks << 1 << 2 << 3 << 4 << 5 << 6 << 7; // 轴的范围
+    // labels << "A"
+    //        << "B"
+    //        << "C"
+    //        << "D"
+    //        << "E"
+    //        << "F"
+    //        << "G"; // 轴的刻度文字显示
+    // QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
+    // textTicker->addTicks(ticks, labels);
+    // xAxis->setTicker(textTicker);    // 设置为文字轴
+    // xAxis->setTickLabelRotation(60); // 轴刻度文字旋转60度
+    // xAxis->setSubTicks(false);       // 不显示子刻度
+    // xAxis->setTickLength(0, 4);      // 轴内外刻度的长度分别是0,4,也就是轴内的刻度线不显示
+    QCPRange x1Range = customPlot->xAxis->range();
+    xAxis->setRange(x1Range.lower, x1Range.upper); // 设置x轴范围
+    xAxis->setLabel("x");
+    xAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
+
+    // yAxis->setRange(0, 12.1); // 设置y轴范围
+    yAxis->setRange(0, *maxElement); // 设置y轴范围
+    yAxis->setPadding(35);           // 轴的内边距
+    yAxis->setLabel("y");
+    yAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
+    bars->setData(*xData, *yData);
+
+    // 设置宽度为4/5
+    bars->setWidthType(QCPBars::WidthType::wtPlotCoords);
+    bars->setWidth(1.2);
+    // 设置透明度
+    bars->setBrush(QColor(20, 68, 106, 128));
+
+    // 使bar切换到第二个坐标轴
+    bars->setValueAxis(customPlot->yAxis2);
+    bars->rescaleAxes();
+
+    // 显示bars
+    bars->setVisible(true);
+    customPlot->replot();
+    // customPlot->graph(index)->setValueAxis(customPlot->yAxis2);
+    // // let the ranges scale themselves so graph 0 fits perfectly in the visible area:
+    // customPlot->graph(index)->rescaleAxes(true);
+}
+
 void CustomPlotManager::setLegendName(const QString &name, int curve_index)
 {
     customPlot->graph(curve_index)->setName(name);
@@ -209,6 +320,14 @@ void CustomPlotManager::hidePlot()
 
 bool CustomPlotManager::showPlot()
 {
+    // 如果存在bar，则先显示
+    for (int i = 0; i < customPlot->plottableCount(); ++i)
+    {
+        if (customPlot->plottable(i)->name() == "Bars")
+        {
+            customPlot->plottable(i)->setVisible(true);
+        }
+    }
     // 显示曲线显示
     if (customPlot->graphCount() == 0)
     {

@@ -252,7 +252,14 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     // Update view curve accordingly
     int anchor = getCustomPlotManagerAnchor();
 
-    Singleton<CustomPlotManager>::getInstance()->plotGraphToBuffer(xData, yData, curve_index);
+    if (anchor != 5 || (anchor == 5 && curve_index == 0))
+    {
+        Singleton<CustomPlotManager>::getInstance()->plotGraphToBuffer(xData, yData, curve_index);
+    }
+    else if (anchor == 5 && curve_index == 1)
+    {
+        Singleton<CustomPlotManager>::getInstance()->plotBarGraphToBuffer(xData, yData, curve_index);
+    }
     // 根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
     switch (anchor)
     {
@@ -302,7 +309,9 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     case 5:
         if (curve_index == 0)
         {
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("PMT接收光谱", 0);
+            // Singleton<CustomPlotManager>::getInstance()->setLegendName("PMT接收光谱", 0);
+            // Singleton<CustomPlotManager>::getInstance()->createSecondAxis(0, 1, "y2");
+            // Singleton<CustomPlotManager>::getInstance()->switchToSecondAxis(0);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot();
             Singleton<Logger>::getInstance()->logMessage("PMT接收光谱绘制完毕", Logger::Log);
         }
@@ -311,7 +320,10 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         break;
     }
 
-    emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), anchor - 1, curve_index);
+    if (anchor != 5 || curve_index == 0)
+    {
+        emit storeRuntimeDataSignal(Singleton<CustomPlotManager>::getInstance()->getDataContainer(curve_index), anchor - 1, curve_index);
+    }
 }
 
 void PlotView::updateViewClearSlot()

@@ -49,12 +49,14 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     energy_vector = MyMath::convertArrayToQVector(channel_energy);
     sign_vector = MyMath::convertArrayToQVector(channel_sign);
 
+    result->append(RF);
+    result->append(yData);
     result->append(sign_vector);
     result->append(energy_vector);
 
-    delete RF;
+    // delete RF;
     delete xData;
-    delete yData;
+    // delete yData;
 
     return result;
 }

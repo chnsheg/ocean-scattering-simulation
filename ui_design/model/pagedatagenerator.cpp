@@ -120,7 +120,7 @@ void PageDataGenerator::generatePairOfData(int page_index)
         xDataVector->append(laserLineWidthEffectData->at(0));
         yDataVector->append(laserLineWidthEffectData->at(1));
         laserLineWidthEffectData = FizeauIFGenerator::calculateSpectrumAfterFizeau(laserLineWidthEffectData->at(1));
-        xDataVector->append(laserLineWidthEffectData->at(0));
+        // xDataVector->append(laserLineWidthEffectData->at(0));
         yDataVector->append(laserLineWidthEffectData->at(1));
         // laserLineWidthEffectData = PMTReceptionDataGenerator::receiveSpectrumAfterPMT(laserLineWidthEffectData->at(1));
         // xDataVector->append(laserLineWidthEffectData->at(0));
@@ -132,9 +132,13 @@ void PageDataGenerator::generatePairOfData(int page_index)
         break;
     case 5:
         laserLineWidthEffectData = PMTReceptionDataGenerator::generatePMTReceptionData();
+        // 从constantstorage中拿到SpectrumAfterFizeau的数据
+
         xDataVector->append(laserLineWidthEffectData->at(0));
+        xDataVector->append(laserLineWidthEffectData->at(2));
         yDataVector->append(laserLineWidthEffectData->at(1));
-        emit dataGenerated(xDataVector, yDataVector, 1);
+        yDataVector->append(laserLineWidthEffectData->at(3));
+        emit dataGenerated(xDataVector, yDataVector, 2);
     }
     // 释放InputDataListManager内存
     // delete inputDataList;
