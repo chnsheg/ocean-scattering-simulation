@@ -14,6 +14,7 @@ public:
 
     static QVector<QVector<double> *> *generatePMTReceptionData();
     static QVector<QVector<double> *> *receiveSpectrumAfterPMT(QVector<double> *spectrum);
+    static void retrievalFormPMT();
 };
 
 #endif // PMTRECEPTIONDATAGENERATOR_H

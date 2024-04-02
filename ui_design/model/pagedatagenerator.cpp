@@ -132,6 +132,7 @@ void PageDataGenerator::generatePairOfData(int page_index)
         break;
     case 5:
         laserLineWidthEffectData = PMTReceptionDataGenerator::generatePMTReceptionData();
+        PMTReceptionDataGenerator::retrievalFormPMT();
         // 从constantstorage中拿到SpectrumAfterFizeau的数据
 
         xDataVector->append(laserLineWidthEffectData->at(0));

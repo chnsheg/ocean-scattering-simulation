@@ -28,6 +28,28 @@ SOURCES += \
     matlab/CaculateScatteredPhotons.cpp \
     matlab/FizeauInstrument.cpp \
     matlab/PMTReceive.cpp \
+    matlab/Retrieval/GenerationSpectrum.cpp \
+    matlab/Retrieval/PMTFMethods.cpp \
+    matlab/Retrieval/RetrievalAlgorithm.cpp \
+    matlab/Retrieval/RetrievalAlgorithm_data.cpp \
+    matlab/Retrieval/RetrievalAlgorithm_initialize.cpp \
+    matlab/Retrieval/checkStoppingCriteria.cpp \
+    matlab/Retrieval/computeFiniteDifferences.cpp \
+    matlab/Retrieval/conv.cpp \
+    matlab/Retrieval/driver.cpp \
+    matlab/Retrieval/eml_rand_mt19937ar_1.cpp \
+    matlab/Retrieval/eml_rand_mt19937ar_stateful_1.cpp \
+    matlab/Retrieval/error_fitted_power.cpp \
+    matlab/Retrieval/factoryConstruct.cpp \
+    matlab/Retrieval/hasFiniteBounds.cpp \
+    matlab/Retrieval/linearLeastSquares.cpp \
+    matlab/Retrieval/minOrMax.cpp \
+    matlab/Retrieval/poissrnd.cpp \
+    matlab/Retrieval/projectBox.cpp \
+    matlab/Retrieval/xgemv.cpp \
+    matlab/Retrieval/xnrm2.cpp \
+    matlab/Retrieval/xzlarf.cpp \
+    matlab/Retrieval/xzlarfg.cpp \
     matlab/SpectrumGeneration.cpp \
     matlab/colon.cpp \
     matlab/convolution.cpp \
@@ -93,6 +115,34 @@ HEADERS += \
     matlab/CaculateScatteredPhotons.h \
     matlab/FizeauInstrument.h \
     matlab/PMTReceive.h \
+    matlab/Retrieval/GenerationSpectrum.h \
+    matlab/Retrieval/PMTFMethods.h \
+    matlab/Retrieval/RetrievalAlgorithm.h \
+    matlab/Retrieval/RetrievalAlgorithm_data.h \
+    matlab/Retrieval/RetrievalAlgorithm_initialize.h \
+    matlab/Retrieval/RetrievalAlgorithm_internal_types.h \
+    matlab/Retrieval/RetrievalAlgorithm_internal_types1.h \
+    matlab/Retrieval/RetrievalAlgorithm_internal_types11.h \
+    matlab/Retrieval/RetrievalAlgorithm_types.h \
+    matlab/Retrieval/anonymous_function.h \
+    matlab/Retrieval/anonymous_function1.h \
+    matlab/Retrieval/checkStoppingCriteria.h \
+    matlab/Retrieval/computeFiniteDifferences.h \
+    matlab/Retrieval/conv.h \
+    matlab/Retrieval/driver.h \
+    matlab/Retrieval/eml_rand_mt19937ar_1.h \
+    matlab/Retrieval/eml_rand_mt19937ar_stateful_1.h \
+    matlab/Retrieval/error_fitted_power.h \
+    matlab/Retrieval/factoryConstruct.h \
+    matlab/Retrieval/hasFiniteBounds.h \
+    matlab/Retrieval/linearLeastSquares.h \
+    matlab/Retrieval/minOrMax.h \
+    matlab/Retrieval/poissrnd.h \
+    matlab/Retrieval/projectBox.h \
+    matlab/Retrieval/xgemv.h \
+    matlab/Retrieval/xnrm2.h \
+    matlab/Retrieval/xzlarf.h \
+    matlab/Retrieval/xzlarfg.h \
     matlab/SpectrumGeneration.h \
     matlab/coder_array.h \
     matlab/colon.h \
