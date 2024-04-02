@@ -72,6 +72,7 @@ matlab/FizeauInstrument.cpp
 matlab/PMTReceive.cpp 
 matlab/Retrieval/GenerationSpectrum.cpp 
 matlab/Retrieval/PMTFMethods.cpp 
+matlab/Retrieval/Retrieval_TS.cpp
 matlab/Retrieval/RetrievalAlgorithm.cpp 
 matlab/Retrieval/RetrievalAlgorithm_data.cpp 
 matlab/Retrieval/RetrievalAlgorithm_initialize.cpp 
@@ -158,6 +159,7 @@ matlab/FizeauInstrument.h
 matlab/PMTReceive.h 
 matlab/Retrieval/GenerationSpectrum.h 
 matlab/Retrieval/PMTFMethods.h 
+matlab/Retrieval/Retrieval_TS.h
 matlab/Retrieval/RetrievalAlgorithm.h 
 matlab/Retrieval/RetrievalAlgorithm_data.h 
 matlab/Retrieval/RetrievalAlgorithm_initialize.h 

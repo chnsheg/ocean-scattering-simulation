@@ -35,6 +35,10 @@
 #include <algorithm>
 #include <cmath>
 
+#include <qDebug>
+
+QVector<double> resnormVector;
+
 // Function Definitions
 //
 // UNTITLED5 Summary of this function goes here
@@ -256,6 +260,7 @@ void RetrievalAlgorithm(double number,
       *resnorm += tolActive * tolActive;
     }
   }
+
   JacCeqTrans.set_size(4, residual.size(1));
   coder::optim::coder::utils::FiniteDifferences::factoryConstruct(
       &b_this, f_temp.size(1), Initial_lower, Initial_upper,
@@ -319,10 +324,12 @@ void RetrievalAlgorithm(double number,
         gradf, relFactor, FiniteDifferences.numEvals + 1, t, hasFiniteBounds);
   }
   exitg1 = false;
-  while ((!exitg1) && (bIdx == -5))
+  while ((!exitg1) && (bIdx == -5)) // 循环条件
   {
     boolean_T evalOK;
     boolean_T guard1{false};
+    static int count = 0;
+
     f_temp.set_size(1, residual.size(1));
     aIdx = residual.size(1);
     for (i = 0; i < aIdx; i++)
@@ -462,6 +469,7 @@ void RetrievalAlgorithm(double number,
     }
     RetrievalAlgorithm_anonFcn1(PMT_energy, number, Fizeau_spectrum, params, xp,
                                 f_temp);
+
     for (int b_i{0}; b_i <= m; b_i++)
     {
       fNew[b_i] = f_temp[b_i];
@@ -475,6 +483,7 @@ void RetrievalAlgorithm(double number,
         resnormNew += tolActive * tolActive;
       }
     }
+
     evalOK = true;
     for (int b_i{0}; b_i < m_temp; b_i++)
     {
@@ -512,7 +521,7 @@ void RetrievalAlgorithm(double number,
       b_FiniteDifferences = FiniteDifferences;
       evalOK = coder::optim::coder::utils::FiniteDifferences::
           computeFiniteDifferences(&b_FiniteDifferences, fNew, b_Initial_upper,
-                                   JacCeqTrans, Initial_lower, Initial_upper);
+                                   JacCeqTrans, Initial_lower, Initial_upper); // 这个地方会执行匿名函数
       funcCount += b_FiniteDifferences.numEvals;
       aIdx = JacCeqTrans.size(1);
       for (i = 0; i < 4; i++)
@@ -856,6 +865,9 @@ void RetrievalAlgorithm_anonFcn1(
   //     %% Scattering Spectrum
   //  fprintf('%8.6e %8.6e %8.6e %8.6e \n', Shift_Bri, Width_Bri, Width_Ray,
   //  Width_Mie);
+
+  fprintf(stdout, "%8.6e %8.6e %8.6e %8.6e \n", Initial_value[0], Initial_value[1], Initial_value[2], Initial_value[3]);
+
   // UNTITLED5 Summary of this function goes here
   //    Detailed explanation goes here
   //
@@ -1376,6 +1388,20 @@ void RetrievalAlgorithm_anonFcn1(
   // legend('Fitted', 'Measured');
   // title('Fitted and Measured Energy');
   // hold on;
+
+  //  %% Error Analysis
+  double resnorm = 0.0;
+  for (int j{0}; j <= MeasurementEnergy.size(1); j++)
+  {
+    resnorm += varargout_1[j] * varargout_1[j];
+  }
+  resnorm = std::sqrt(resnorm);
+  fprintf(stdout, "resnorm: %8.6e\n", resnorm);
+  resnormVector.push_back(resnorm);
+
+  static int iter = 0;
+  iter++;
+  // qDebug() << "iter: " << iter;
 }
 
 //

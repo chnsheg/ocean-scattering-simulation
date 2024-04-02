@@ -66,7 +66,7 @@ double SpectrumDataGenerator::BrillouinLine()
 
     linew = linew / 1e9; // 单位转换为GHz
 
-    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(7, 0), linew);
+    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(6, 0), linew);
 
     Singleton<Logger>::getInstance()->logMessage("BrillouinLine: " + QString::number(linew), Logger::Info);
 
@@ -92,7 +92,7 @@ double SpectrumDataGenerator::BrillouinShift()
     // 计算 Brillouin 频移
     // double v = 2 * n * c / a / 1e-9; // p25面式(2.27)
     double v = 2 * n * c / a; // p25面式(2.27)
-    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(7, 1), v);
+    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(6, 1), v);
 
     Singleton<Logger>::getInstance()->logMessage("BrillouinShift: " + QString::number(v), Logger::Info);
     return v;

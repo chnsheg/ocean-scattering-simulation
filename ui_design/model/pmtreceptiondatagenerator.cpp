@@ -2,6 +2,7 @@
 #include "model/frequencedatagenerator.h"
 #include "matlab/PMTReceive.h"
 #include "matlab/Retrieval/RetrievalAlgorithm.h"
+#include "matlab/Retrieval/Retrieval_TS.h"
 
 PMTReceptionDataGenerator::PMTReceptionDataGenerator() {}
 
@@ -162,10 +163,113 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     RetrievalAlgorithm(number, PMT_energy, Fizeau_spectrum, Initial_lower, Initial_upper, Initial_value, params, fitted_value, &resnorm, residual, &exitflag, &output, &lambda, jacobia);
 
     Singleton<Logger>::getInstance()->logMessage("PMT接收数据处理完成！", Logger::Info);
+
+    //% 处理结果：
+    // res.B_shift = fitted_value(1);
+    // res.B_width = fitted_value(2);
+    // res.R_width = fitted_value(3);
+    // res.N_photo = fitted_value(4);
+
+    double res_B_shift = fitted_value[0];
+    double res_B_width = fitted_value[1];
+    double res_R_width = fitted_value[2];
+    // double res_N_photo = fitted_value[3];
+
+    // % Original Parameters
+    // EnvironmentalFactors.Bri_Shift = Bri_shift;
+    // EnvironmentalFactors.Bri_Width = Bri_width;
+    // EnvironmentalFactors.Ray_Width = 0.15e9;
+    // EnvironmentalFactors.Num_Photo = PhotonNum;
+    // EnvironmentalFactors.tem = Water_Temperature;
+    // EnvironmentalFactors.sal = Water_Salinity;
+
+    double Bri_shift = constantStorage->getConstant(constantMap->getConstantName(6, 1)).toDouble() * 1e9;
+    double Bri_width = constantStorage->getConstant(constantMap->getConstantName(6, 0)).toDouble() * 1e9;
+    double Ray_Width = 0.15e9;
+    // double PhotonNum = constantStorage->getConstant(constantMap->getConstantName(6, 6)).toDouble();
+    double Water_Temperature = constantStorage->getConstant(constantMap->getConstantName(1, 0)).toDouble();
+    double Water_Salinity = constantStorage->getConstant(constantMap->getConstantName(1, 1)).toDouble();
+
+    // % 反演环境要素：
+    // [REF.Tem, REF.Sal] = Retrieval_TS(res.B_shift, res.B_width);
+
+    double REF_Tem;
+    double REF_Sal;
+    Retrieval_TS(res_B_shift, res_B_width, &REF_Tem, &REF_Sal);
+
+    // % 计算误差：
+    // Error.shift = res.B_shift - EnvironmentalFactors.Bri_Shift;
+    // Error.width = res.B_width - EnvironmentalFactors.Bri_Width;
+    // Error.Rwidth = res.R_width - EnvironmentalFactors.Ray_Width;
+    // Error.Photon = res.N_photo - EnvironmentalFactors.Num_Photo;
+
+    double Error_shift = res_B_shift - Bri_shift;
+    double Error_width = res_B_width - Bri_width;
+    double Error_Rwidth = res_R_width - Ray_Width;
+    // double Error_Photon = res_N_photo - PhotonNum;
+
+    // Error.tem = REF.Tem - EnvironmentalFactors.tem;
+    // Error.sal = REF.Sal - EnvironmentalFactors.sal;
+
+    double Error_tem = REF_Tem - Water_Temperature;
+    double Error_sal = REF_Sal - Water_Salinity;
+
+    //     % 显示结果：
+    // fprintf('Result')
+    // fprintf('------------------------------------------------------------------------- \n');
+    // fprintf('Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz) \n');
+    // fprintf(' Brillouin width   %8.4f  %8.4f  %8.4f \n', res.B_width / 1e9, EnvironmentalFactors.Bri_Width / 1e9, Error.width / 1e9);
+    // fprintf(' Brillouin shift   %8.4f  %8.4f  %8.4f \n', res.B_shift / 1e9, EnvironmentalFactors.Bri_Shift / 1e9, Error.shift / 1e9);
+    // fprintf(' RAyleigh width    %8.4f  %8.4f  %8.4f \n', res.R_width / 1e9, EnvironmentalFactors.Ray_Width / 1e9, Error.Rwidth / 1e9);
+    // fprintf(' Photon Number     %8.4e  %8.4e  %8.4e \n', res.N_photo, EnvironmentalFactors.Num_Photo, Error.Photon);
+
+    // 打印结果
+    qDebug() << "Result";
+    qDebug() << "-------------------------------------------------------------------------";
+    qDebug() << "Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz)";
+    qDebug() << QString(" Brillouin width   %1    %2    %3")
+                    .arg(res_B_width / 1e9, 8, 'f', 4)
+                    .arg(Bri_width / 1e9, 8, 'f', 4)
+                    .arg(Error_width / 1e9, 8, 'f', 4);
+    qDebug() << QString(" Brillouin shift   %1  %2  %3")
+                    .arg(res_B_shift / 1e9, 8, 'f', 4)
+                    .arg(Bri_shift / 1e9, 8, 'f', 4)
+                    .arg(Error_shift / 1e9, 8, 'f', 4);
+    qDebug() << QString(" RAyleigh width    %1  %2  %3")
+                    .arg(res_R_width / 1e9, 8, 'f', 4)
+                    .arg(Ray_Width / 1e9, 8, 'f', 4)
+                    .arg(Error_Rwidth / 1e9, 8, 'f', 4);
+    // fprintf(stdout, " Photon Number     %8.4e  %8.4e  %8.4e \n", res_N_photo, PhotonNum, Error_Photon);
+
+    // fprintf('------------------------------------------------------------------------- \n');
+    // fprintf('Parameters       |   Measured  | Theoretical | error (%4.2f m: %4.2f)| \n', System_Depth, N_SNR);
+    // fprintf('Environmental tem| %8.4f°C | %8.4f°C | %8.4f°C | \n', REF.Tem, EnvironmentalFactors.tem, Error.tem);
+    // fprintf('Environmental Sal| %8.4f ‰ | %8.4f ‰ | %8.4f‰  | \n', REF.Sal, EnvironmentalFactors.sal, Error.sal);
+    // fprintf('-------------------------------------------------------------------------\n');
+
+    // fprintf(stdout, "------------------------------------------------------------------------- \n");
+    // fprintf(stdout, "Parameters       |   Measured  | Theoretical | error (%4.2f m: %4.2f)| \n", 0.0, 0.0);
+    // fprintf(stdout, "Environmental tem| %8.4f ℃ | %8.4f ℃  | %8.4f ℃ | \n", REF_Tem, Water_Temperature, Error_tem);
+    // fprintf(stdout, "Environmental Sal| %8.4f ‰ | %8.4f ‰ | %8.4f ‰  | \n", REF_Sal, Water_Salinity, Error_sal);
+    // fprintf(stdout, "-------------------------------------------------------------------------\n");
+
+    qDebug() << "-------------------------------------------------------------------------";
+    qDebug() << "Parameters       |   Measured  | Theoretical | error (%4.2f m: %4.2f)|";
+    qDebug() << QString("Environmental tem| %1 °C | %2 °C | %3 °C |")
+                    .arg(REF_Tem, 8, 'f', 4)
+                    .arg(Water_Temperature, 8, 'f', 4)
+                    .arg(Error_tem, 8, 'f', 4);
+    qDebug() << QString("Environmental Sal| %1 ‰ | %2 ‰  | %3 ‰ |")
+                    .arg(REF_Sal, 8, 'f', 4)
+                    .arg(Water_Salinity, 8, 'f', 4)
+                    .arg(Error_sal, 8, 'f', 4);
+    qDebug() << "-------------------------------------------------------------------------";
+
     // 输出fitted_value
     for (int i = 0; i < 4; ++i)
     {
-        Singleton<Logger>::getInstance()->logMessage("fitted_value[" + QString::number(i) + "]: " + QString::number(fitted_value[i]), Logger::Info);
+        // Singleton<Logger>::getInstance()->logMessage("fitted_value[" + QString::number(i) + "]: " + QString::number(fitted_value[i] / 1e9, Logger::Info);
+        Singleton<Logger>::getInstance()->logMessage("fitted_value[" + QString::number(i) + "]: " + QString::number(fitted_value[i] / 1e9), Logger::Info);
     }
 
     delete xData;

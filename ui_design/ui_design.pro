@@ -33,6 +33,7 @@ SOURCES += \
     matlab/Retrieval/RetrievalAlgorithm.cpp \
     matlab/Retrieval/RetrievalAlgorithm_data.cpp \
     matlab/Retrieval/RetrievalAlgorithm_initialize.cpp \
+    matlab/Retrieval/Retrieval_TS.cpp \
     matlab/Retrieval/checkStoppingCriteria.cpp \
     matlab/Retrieval/computeFiniteDifferences.cpp \
     matlab/Retrieval/conv.cpp \
@@ -124,6 +125,7 @@ HEADERS += \
     matlab/Retrieval/RetrievalAlgorithm_internal_types1.h \
     matlab/Retrieval/RetrievalAlgorithm_internal_types11.h \
     matlab/Retrieval/RetrievalAlgorithm_types.h \
+    matlab/Retrieval/Retrieval_TS.h \
     matlab/Retrieval/anonymous_function.h \
     matlab/Retrieval/anonymous_function1.h \
     matlab/Retrieval/checkStoppingCriteria.h \

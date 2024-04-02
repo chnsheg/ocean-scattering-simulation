@@ -14,6 +14,9 @@
 #include "matlab/coder_array.h"
 #include <cstddef>
 #include <cstdlib>
+#include <QVector>
+
+extern QVector<double> resnormVector;
 
 // Function Declarations
 extern void

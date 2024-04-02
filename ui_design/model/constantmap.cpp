@@ -56,7 +56,8 @@ QVector<QString> runtimeResultDataVector = QVector<QString>({"BrillouinLine",
                                                              "NBrillouin",
                                                              "NMie",
                                                              "NRayleigh",
-                                                             "SNR"
+                                                             "SNR",
+                                                             "PhotonNum"
 
 });
 
