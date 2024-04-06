@@ -24,6 +24,8 @@ public:
                                       QColor(0, 0, 0)};
     // 构造函数需要页面总数和可选的父窗口指针
     explicit DynamicPage(int pageCount, QWidget *parent = nullptr);
+    // 析构函数
+    ~DynamicPage();
 
     // 显示指定页面的曲线，需要页码、X数据集、Y数据集和图表标题
     void displayCurve(int pageIndex,
@@ -55,7 +57,7 @@ public slots:
 
 signals:
     void storeRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index); // 用于存储运行时数据
-
+    void closeDynamicPageSignal(int index);                                                                                        // 用于关闭动态页面
 private:
     // 存储页面切换组件
     QStackedWidget *stackedWidget;

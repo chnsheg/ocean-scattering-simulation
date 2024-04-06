@@ -88,7 +88,7 @@ QVector<QVector<double> *> *FizeauIFGenerator::calculateSpectrumAfterFizeau(QVec
 
     if (dataContainer.isNull())
     {
-        Singleton<Logger>::getInstance()->logMessage("菲涅尔干涉仪数据为空！请先生成菲涅尔干涉仪数据！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("水下光谱数据为空！请先生成水下光谱数据！", Logger::Warning);
         return nullptr;
     }
 

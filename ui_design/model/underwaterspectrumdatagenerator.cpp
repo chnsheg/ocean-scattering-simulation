@@ -145,7 +145,7 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateUnderWaterS
     // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), Spectrum1, "Spectrum1.csv");
 
     QVector<QVector<double> *> *resultContainer = new QVector<QVector<double> *>({L_rc, L_mc, L_bc, Spectrum_Noised});
-
+    // QVector<QVector<double> *> *resultContainer = new QVector<QVector<double> *>({L_b, L_r, L_m, L_mc});
     delete Spectrum1;
     delete result;
     delete L_b;

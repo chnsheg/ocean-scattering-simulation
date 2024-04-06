@@ -42,7 +42,9 @@ private:
     PlotView *view;
     PageDataGenerator *model;
     QThread *thread;
-    DynamicPage *dynamicView;
+    // DynamicPage *dynamicView;
+    QVector<DynamicPage *> dynamicViewVector;
+    QVector<int> dynamicViewOpened;
 
     SINGLETON(PlotController)
 };

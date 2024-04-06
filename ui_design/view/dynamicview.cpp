@@ -13,6 +13,25 @@ DynamicPage::DynamicPage(int pageCount, QWidget *parent)
     pageObjectId = dynamicPageObjectNum++;
 }
 
+// 在页面关闭时，释放QCustomPlot容器
+DynamicPage::~DynamicPage()
+{
+    for (int i = 0; i < plots->size(); ++i)
+    {
+        delete (*plots)[i];
+    }
+    delete plots;
+    delete stackedWidget;
+    delete prevPageButton;
+    delete nextPageButton;
+    delete showCursorButton;
+    delete closeButton;
+
+    emit closeDynamicPageSignal(pageObjectId);
+
+    qDebug() << "DynamicPage object deleted";
+}
+
 void DynamicPage::setupUi()
 {
     QVBoxLayout *mainLayout = new QVBoxLayout(this);

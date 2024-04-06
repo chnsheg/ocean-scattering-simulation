@@ -72,11 +72,12 @@ ConstantStorage::~ConstantStorage()
 void ConstantStorage::setConstant(const QString &name, const QVariant &value)
 {
     m_constants[name] = value;
+    qDebug() << "setName: " << name << "setValue: " << value << "setAddr" << &m_constants[name];
 }
 
 QVariant ConstantStorage::getConstant(const QString &name) const
 {
-    qDebug() << "name: " << name << "value: " << m_constants[name];
+    qDebug() << "name: " << name << "value: " << m_constants[name] << "addr" << &m_constants[name];
     return m_constants[name];
 }
 

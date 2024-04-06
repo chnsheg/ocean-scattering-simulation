@@ -128,15 +128,26 @@ void PlotController::handleDynamicButtonClicked(int index)
     // QThread *thread;
     // DynamicPage *dynamicView;
     thread = new QThread;
-    // DynamicPage *dynamicView;
-    switch (index)
+    DynamicPage *dynamicView;
+
+    if (dynamicViewOpened.contains(index))
     {
-    case 0:
-        dynamicView = new DynamicPage(1);
-        break;
-    case 1:
-        dynamicView = new DynamicPage(3);
-        break;
+        dynamicView = dynamicViewVector.at(index);
+    }
+    else
+    {
+        dynamicViewOpened.append(index);
+
+        switch (index)
+        {
+        case 0:
+            dynamicView = new DynamicPage(1);
+            break;
+        case 1:
+            dynamicView = new DynamicPage(3);
+            break;
+        }
+        dynamicViewVector.append(dynamicView);
     }
 
     model->moveToThread(thread);
@@ -147,15 +158,21 @@ void PlotController::handleDynamicButtonClicked(int index)
 
     connect(dynamicView, &DynamicPage::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
 
+    // dynamicView被关闭时，清除动态页面的指针和opened列表中的索引
+    connect(dynamicView, &DynamicPage::closeDynamicPageSignal, this, [=]
+            {
+        dynamicViewVector.removeOne(dynamicView);
+        dynamicViewOpened.removeOne(index); });
+
     connect(model, &PageDataGenerator::dataGenerateFinished, this, [=]
             {
-        this->dynamicView->show();
+        this->dynamicViewVector.at(index)->show();
         this->thread->quit();
         this->thread->wait();
         this->thread->deleteLater();
         disconnect(this->model,
                    &PageDataGenerator::dynamicDataGenerated,
-                   this->dynamicView,
+                   this->dynamicViewVector.at(index),
                    &DynamicPage::updateDynamicView); });
 
     thread->start();

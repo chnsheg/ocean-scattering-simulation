@@ -51,6 +51,9 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     energy_vector = MyMath::convertArrayToQVector(channel_energy);
     sign_vector = MyMath::convertArrayToQVector(channel_sign);
 
+    // 存储energy_vector指向的内存地址
+    constantStorage->setConstant(constantMap->getConstantName(5, 14), QVariant::fromValue(new QVector<double>(*energy_vector)));
+
     result->append(RF);
     result->append(yData);
     result->append(sign_vector);
@@ -127,8 +130,15 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     double number = constantStorage->getConstant(constantMap->getConstantName(3, 0)).toDouble();
     // QVector<double> *PMT_energy_vector = new QVector<double>();
     // 0.000500951818447207	0.00126892042344298	0.00418905457824441	0.00363221019365598	0.00110851062510006	0.000566371696804416	0.000442973766125158	0.000638886278194898	0.000629230476113756	0.000443742611150079	0.000577954102157679	0.00114477405738897	0.00373425200890559	0.00409628632197294	0.00121853330725838	0.000488091198032589
-    QVector<double> *PMT_energy_vector = new QVector<double>(
-        {0.000500951818447207, 0.00126892042344298, 0.00418905457824441, 0.00363221019365598, 0.00110851062510006, 0.000566371696804416, 0.000442973766125158, 0.000638886278194898, 0.000629230476113756, 0.000443742611150079, 0.000577954102157679, 0.00114477405738897, 0.00373425200890559, 0.00409628632197294, 0.00121853330725838, 0.000488091198032589});
+    // QVector<double> *PMT_energy_vector = new QVector<double>(
+    //     {0.000500951818447207, 0.00126892042344298, 0.00418905457824441, 0.00363221019365598, 0.00110851062510006, 0.000566371696804416, 0.000442973766125158, 0.000638886278194898, 0.000629230476113756, 0.000443742611150079, 0.000577954102157679, 0.00114477405738897, 0.00373425200890559, 0.00409628632197294, 0.00121853330725838, 0.000488091198032589});
+
+    QVector<double> *PMT_energy_vector = constantStorage->getConstant(constantMap->getConstantName(5, 14)).value<QVector<double> *>();
+
+    for (int i = 0; i < PMT_energy_vector->size(); ++i)
+    {
+        qDebug() << "PMT_energy_vector[" << i << "]: " << PMT_energy_vector->at(i) << Qt::endl;
+    }
 
     QSharedPointer<QCPGraphDataContainer> dataContainer;
     //  constantStorage->getConstant(constantMap->getConstantName(5, 11))
@@ -152,7 +162,28 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     double Initial_value[4] = {7.6732e9, 0.617e9, 0.13e9, 0.03e9};
 
     // params = [532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.3333, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4];
-    double params[19] = {532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.3333, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4};
+    // double params[19] = {532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.3333, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4};
+
+    double wave_length = constantStorage->getConstant(constantMap->getConstantName(0, 1)).toDouble();
+    double freq_range = constantStorage->getConstant(constantMap->getConstantName(0, 3)).toDouble();
+    double intensity = constantStorage->getConstant(constantMap->getConstantName(0, 2)).toDouble();
+    double laser_width = constantStorage->getConstant(constantMap->getConstantName(0, 0)).toDouble();
+    double laser_energy = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double alpha = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
+    double beta_p = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble(); // 有一个参数没用到
+    double beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
+    double n = constantStorage->getConstant(constantMap->getConstantName(1, 4)).toDouble();
+    double z = constantStorage->getConstant(constantMap->getConstantName(7, 6)).toDouble();
+    double H = constantStorage->getConstant(constantMap->getConstantName(7, 7)).toDouble();
+    double r = constantStorage->getConstant(constantMap->getConstantName(7, 4)).toDouble();
+    double M = constantStorage->getConstant(constantMap->getConstantName(7, 0)).toDouble();
+    double N_dark = constantStorage->getConstant(constantMap->getConstantName(7, 5)).toDouble();
+    double beta = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
+    double xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
+    double xi_f = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
+    double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
+
+    double params[19] = {wave_length, freq_range, intensity, laser_width, laser_energy, alpha, beta_p, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f};
 
     double fitted_value[4];
     double resnorm;
@@ -274,5 +305,5 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
 
     delete xData;
     delete yData;
-    delete PMT_energy_vector;
+    // delete PMT_energy_vector;
 }

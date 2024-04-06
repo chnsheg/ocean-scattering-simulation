@@ -10,8 +10,10 @@
 #include <QFile>
 #include "model/constantmap.h"
 #include "module/qcustomplot.h"
+#include <QVector>
 
 Q_DECLARE_METATYPE(QSharedPointer<QCPGraphDataContainer>)
+Q_DECLARE_METATYPE(QVector<double> *)
 
 class ConstantStorage : public QObject
 {
