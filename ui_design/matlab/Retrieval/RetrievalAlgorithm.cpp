@@ -30,6 +30,7 @@
 #include "coder_array.h"
 #include <algorithm>
 #include <cmath>
+#include <QDebug>
 
 // Function Definitions
 //
@@ -139,13 +140,15 @@ void RetrievalAlgorithm(double number,
   b_this.workspace.fun.workspace.MeasurementEnergy.set_size(1,
                                                             PMT_energy.size(1));
   aIdx = PMT_energy.size(1);
-  for (i = 0; i < aIdx; i++) {
+  for (i = 0; i < aIdx; i++)
+  {
     b_this.workspace.fun.workspace.MeasurementEnergy[i] = PMT_energy[i];
   }
   b_this.workspace.fun.workspace.Fizeau_spectrum.set_size(
       1, Fizeau_spectrum.size(1));
   aIdx = Fizeau_spectrum.size(1);
-  for (i = 0; i < aIdx; i++) {
+  for (i = 0; i < aIdx; i++)
+  {
     b_this.workspace.fun.workspace.Fizeau_spectrum[i] = Fizeau_spectrum[i];
   }
   std::copy(&params[0], &params[19], &b_this.workspace.fun.workspace.params[0]);
@@ -163,38 +166,47 @@ void RetrievalAlgorithm(double number,
   minWidth = coder::internal::minimum(b_Initial_upper);
   hasFiniteBounds = coder::optim::coder::utils::hasFiniteBounds(
       hasLB, hasUB, Initial_lower, Initial_upper);
-  if ((!hasFiniteBounds) || (minWidth < 0.0)) {
+  if ((!hasFiniteBounds) || (minWidth < 0.0))
+  {
     fitted_value[0] = Initial_value[0];
     fitted_value[1] = Initial_value[1];
     fitted_value[2] = Initial_value[2];
-  } else {
+  }
+  else
+  {
     tolActive = Initial_value[0];
     fitted_value[0] = Initial_value[0];
-    if (hasLB[0]) {
+    if (hasLB[0])
+    {
       tolActive = std::fmax(Initial_lower[0], Initial_value[0]);
       fitted_value[0] = tolActive;
     }
-    if (hasUB[0]) {
+    if (hasUB[0])
+    {
       tolActive = std::fmin(Initial_upper[0], tolActive);
       fitted_value[0] = tolActive;
     }
     tolActive = Initial_value[1];
     fitted_value[1] = Initial_value[1];
-    if (hasLB[1]) {
+    if (hasLB[1])
+    {
       tolActive = std::fmax(Initial_lower[1], Initial_value[1]);
       fitted_value[1] = tolActive;
     }
-    if (hasUB[1]) {
+    if (hasUB[1])
+    {
       tolActive = std::fmin(Initial_upper[1], tolActive);
       fitted_value[1] = tolActive;
     }
     tolActive = Initial_value[2];
     fitted_value[2] = Initial_value[2];
-    if (hasLB[2]) {
+    if (hasLB[2])
+    {
       tolActive = std::fmax(Initial_lower[2], Initial_value[2]);
       fitted_value[2] = tolActive;
     }
-    if (hasUB[2]) {
+    if (hasUB[2])
+    {
       tolActive = std::fmin(Initial_upper[2], tolActive);
       fitted_value[2] = tolActive;
     }
@@ -206,23 +218,28 @@ void RetrievalAlgorithm(double number,
   m = f_temp.size(1) - 1;
   residual.set_size(1, f_temp.size(1));
   fNew.set_size(1, f_temp.size(1));
-  for (int b_i{0}; b_i <= m; b_i++) {
+  for (int b_i{0}; b_i <= m; b_i++)
+  {
     residual[b_i] = f_temp[b_i];
   }
   augJacobian.set_size(f_temp.size(1) + 3, 3);
   rhs.set_size(f_temp.size(1) + 3);
   i = f_temp.size(1) - 1;
-  for (int j{0}; j < 3; j++) {
+  for (int j{0}; j < 3; j++)
+  {
     aIdx = j * m_temp;
     bIdx = j * (m + 4);
-    for (int b_i{0}; b_i <= i; b_i++) {
+    for (int b_i{0}; b_i <= i; b_i++)
+    {
       augJacobian[bIdx + b_i] = jacobia[aIdx + b_i];
     }
   }
   *resnorm = 0.0;
-  if (f_temp.size(1) >= 1) {
+  if (f_temp.size(1) >= 1)
+  {
     aIdx = f_temp.size(1);
-    for (int j{0}; j < aIdx; j++) {
+    for (int j{0}; j < aIdx; j++)
+    {
       tolActive = residual[j];
       *resnorm += tolActive * tolActive;
     }
@@ -238,14 +255,18 @@ void RetrievalAlgorithm(double number,
       &FiniteDifferences, residual, b_Initial_upper, JacCeqTrans, Initial_lower,
       Initial_upper);
   aIdx = JacCeqTrans.size(1);
-  for (i = 0; i < 3; i++) {
-    for (bIdx = 0; bIdx < aIdx; bIdx++) {
+  for (i = 0; i < 3; i++)
+  {
+    for (bIdx = 0; bIdx < aIdx; bIdx++)
+    {
       augJacobian[bIdx + augJacobian.size(0) * i] = JacCeqTrans[i + 3 * bIdx];
     }
   }
   funcCount = FiniteDifferences.numEvals + 1;
+  // b_gamma = 1.0E-100; // InitDamping
   b_gamma = 1.0E-100;
-  for (int b_i{0}; b_i < 3; b_i++) {
+  for (int b_i{0}; b_i < 3; b_i++)
+  {
     aIdx = (m_temp + 3) * (b_i + 1);
     augJacobian[aIdx - 3] = 0.0;
     augJacobian[aIdx - 2] = 0.0;
@@ -253,10 +274,12 @@ void RetrievalAlgorithm(double number,
     augJacobian[(m_temp + b_i) + augJacobian.size(0) * b_i] = 1.0E-50;
   }
   i = f_temp.size(1) - 1;
-  for (int j{0}; j < 3; j++) {
+  for (int j{0}; j < 3; j++)
+  {
     aIdx = j * (m + 4);
     bIdx = j * m_temp;
-    for (int b_i{0}; b_i <= i; b_i++) {
+    for (int b_i{0}; b_i <= i; b_i++)
+    {
       jacobia[bIdx + b_i] = augJacobian[aIdx + b_i];
     }
   }
@@ -272,28 +295,35 @@ void RetrievalAlgorithm(double number,
       gradf, hasFiniteBounds, &t);
   relFactor = std::fmax(tolActive, 1.0);
   stepSuccessful = true;
-  if (minWidth < 0.0) {
+  if (minWidth < 0.0)
+  {
     bIdx = -2;
-  } else {
+  }
+  else
+  {
     bIdx = coder::optim::coder::levenbergMarquardt::checkStoppingCriteria(
         gradf, relFactor, FiniteDifferences.numEvals + 1, t, hasFiniteBounds);
   }
   exitg1 = false;
-  while ((!exitg1) && (bIdx == -5)) {
+  while ((!exitg1) && (bIdx == -5))
+  {
     boolean_T evalOK;
     boolean_T guard1{false};
     f_temp.set_size(1, residual.size(1));
     aIdx = residual.size(1);
-    for (i = 0; i < aIdx; i++) {
+    for (i = 0; i < aIdx; i++)
+    {
       f_temp[i] = -residual[i];
     }
-    for (int j{0}; j <= m; j++) {
+    for (int j{0}; j <= m; j++)
+    {
       rhs[j] = f_temp[j];
     }
     rhs[m + 1] = 0.0;
     rhs[m + 2] = 0.0;
     rhs[m + 3] = 0.0;
-    if (hasFiniteBounds) {
+    if (hasFiniteBounds)
+    {
       b_Initial_upper[0] = -gradf[0] / (b_gamma + 1.0);
       b_Initial_upper[1] = -gradf[1] / (b_gamma + 1.0);
       b_Initial_upper[2] = -gradf[2] / (b_gamma + 1.0);
@@ -301,27 +331,38 @@ void RetrievalAlgorithm(double number,
           fitted_value, b_Initial_upper, Initial_lower, Initial_upper, hasLB,
           hasUB);
       tolActive = std::fmin(t, minWidth / 2.0);
-      for (int b_i{0}; b_i < 3; b_i++) {
-        if (hasLB[b_i]) {
+      for (int b_i{0}; b_i < 3; b_i++)
+      {
+        if (hasLB[b_i])
+        {
           if ((fitted_value[b_i] - Initial_lower[b_i] <= tolActive) &&
-              (gradf[b_i] > 0.0)) {
+              (gradf[b_i] > 0.0))
+          {
             indActive[b_i] = true;
-          } else {
+          }
+          else
+          {
             indActive[b_i] = false;
           }
         }
-        if (hasUB[b_i]) {
+        if (hasUB[b_i])
+        {
           if (indActive[b_i] ||
               ((Initial_upper[b_i] - fitted_value[b_i] <= tolActive) &&
-               (gradf[b_i] < 0.0))) {
+               (gradf[b_i] < 0.0)))
+          {
             indActive[b_i] = true;
-          } else {
+          }
+          else
+          {
             indActive[b_i] = false;
           }
         }
-        if (indActive[b_i]) {
+        if (indActive[b_i])
+        {
           aIdx = (m_temp + 3) * b_i;
-          for (int j{0}; j <= m; j++) {
+          for (int j{0}; j <= m; j++)
+          {
             augJacobian[aIdx + j] = 0.0;
           }
         }
@@ -329,83 +370,105 @@ void RetrievalAlgorithm(double number,
     }
     coder::optim::coder::levenbergMarquardt::linearLeastSquares(
         augJacobian, rhs, dx, m_temp + 3);
-    if (hasFiniteBounds) {
-      if (indActive[0]) {
+    if (hasFiniteBounds)
+    {
+      if (indActive[0])
+      {
         dx[0] = -gradf[0] / (b_gamma + 1.0);
       }
       tolActive = fitted_value[0] + dx[0];
       xp[0] = tolActive;
-      if (hasLB[0]) {
+      if (hasLB[0])
+      {
         tolActive = std::fmax(Initial_lower[0], tolActive);
         xp[0] = tolActive;
       }
-      if (hasUB[0]) {
+      if (hasUB[0])
+      {
         tolActive = std::fmin(Initial_upper[0], tolActive);
         xp[0] = tolActive;
       }
-      if (indActive[1]) {
+      if (indActive[1])
+      {
         dx[1] = -gradf[1] / (b_gamma + 1.0);
       }
       tolActive = fitted_value[1] + dx[1];
       xp[1] = tolActive;
-      if (hasLB[1]) {
+      if (hasLB[1])
+      {
         tolActive = std::fmax(Initial_lower[1], tolActive);
         xp[1] = tolActive;
       }
-      if (hasUB[1]) {
+      if (hasUB[1])
+      {
         tolActive = std::fmin(Initial_upper[1], tolActive);
         xp[1] = tolActive;
       }
-      if (indActive[2]) {
+      if (indActive[2])
+      {
         dx[2] = -gradf[2] / (b_gamma + 1.0);
       }
       tolActive = fitted_value[2] + dx[2];
       xp[2] = tolActive;
-      if (hasLB[2]) {
+      if (hasLB[2])
+      {
         tolActive = std::fmax(Initial_lower[2], tolActive);
         xp[2] = tolActive;
       }
-      if (hasUB[2]) {
+      if (hasUB[2])
+      {
         tolActive = std::fmin(Initial_upper[2], tolActive);
         xp[2] = tolActive;
       }
-    } else {
+    }
+    else
+    {
       xp[0] = fitted_value[0] + dx[0];
       xp[1] = fitted_value[1] + dx[1];
       xp[2] = fitted_value[2] + dx[2];
     }
     RetrievalAlgorithm_anonFcn1(PMT_energy, number, Fizeau_spectrum, params, xp,
                                 f_temp);
-    for (int b_i{0}; b_i <= m; b_i++) {
+    for (int b_i{0}; b_i <= m; b_i++)
+    {
       fNew[b_i] = f_temp[b_i];
     }
     resnormNew = 0.0;
-    if (m_temp >= 1) {
-      for (int j{0}; j <= m; j++) {
+    if (m_temp >= 1)
+    {
+      for (int j{0}; j <= m; j++)
+      {
         tolActive = fNew[j];
         resnormNew += tolActive * tolActive;
       }
     }
     evalOK = true;
-    for (int b_i{0}; b_i < m_temp; b_i++) {
-      if (evalOK) {
+    for (int b_i{0}; b_i < m_temp; b_i++)
+    {
+      if (evalOK)
+      {
         tolActive = fNew[b_i];
-        if (std::isinf(tolActive) || std::isnan(tolActive)) {
+        if (std::isinf(tolActive) || std::isnan(tolActive))
+        {
           evalOK = false;
         }
-      } else {
+      }
+      else
+      {
         evalOK = false;
       }
     }
     funcCount++;
     guard1 = false;
-    if ((resnormNew < *resnorm) && evalOK) {
+    if ((resnormNew < *resnorm) && evalOK)
+    {
       iter++;
-      funDiff = std::abs(resnormNew - *resnorm) / *resnorm;
+      funDiff = std::abs(resnormNew - *resnorm) / *resnorm; // 计算相对残差
       *resnorm = resnormNew;
       residual.set_size(1, fNew.size(1));
       aIdx = fNew.size(1);
-      for (i = 0; i < aIdx; i++) {
+      for (i = 0; i < aIdx; i++)
+      {
         residual[i] = fNew[i];
       }
       JacCeqTrans.set_size(3, fNew.size(1));
@@ -418,53 +481,68 @@ void RetrievalAlgorithm(double number,
                                    JacCeqTrans, Initial_lower, Initial_upper);
       funcCount += b_FiniteDifferences.numEvals;
       aIdx = JacCeqTrans.size(1);
-      for (i = 0; i < 3; i++) {
-        for (bIdx = 0; bIdx < aIdx; bIdx++) {
+      for (i = 0; i < 3; i++)
+      {
+        for (bIdx = 0; bIdx < aIdx; bIdx++)
+        {
           augJacobian[bIdx + augJacobian.size(0) * i] =
               JacCeqTrans[i + 3 * bIdx];
         }
       }
       i = m_temp - 1;
-      for (int j{0}; j < 3; j++) {
+      for (int j{0}; j < 3; j++)
+      {
         aIdx = j * (m + 4);
         bIdx = j * m_temp;
-        for (int b_i{0}; b_i <= i; b_i++) {
+        for (int b_i{0}; b_i <= i; b_i++)
+        {
           jacobia[bIdx + b_i] = augJacobian[aIdx + b_i];
         }
       }
-      if (evalOK) {
+      if (evalOK)
+      {
         fitted_value[0] = xp[0];
         fitted_value[1] = xp[1];
         fitted_value[2] = xp[2];
-        if (stepSuccessful) {
+        if (stepSuccessful)
+        {
           b_gamma *= 0.1;
         }
         stepSuccessful = true;
         guard1 = true;
-      } else {
+      }
+      else
+      {
         bIdx = 2;
         aIdx = m_temp * 3;
-        for (int j{0}; j < aIdx; j++) {
+        for (int j{0}; j < aIdx; j++)
+        {
           jacobia[j] = rtNaN;
         }
         exitg1 = true;
       }
-    } else {
+    }
+    else
+    {
       b_gamma *= 10.0;
       stepSuccessful = false;
       i = m_temp - 1;
-      for (int j{0}; j < 3; j++) {
+      for (int j{0}; j < 3; j++)
+      {
         aIdx = j * m_temp;
         bIdx = j * (m + 4);
-        for (int b_i{0}; b_i <= i; b_i++) {
+        for (int b_i{0}; b_i <= i; b_i++)
+        {
           augJacobian[bIdx + b_i] = jacobia[aIdx + b_i];
         }
       }
       guard1 = true;
     }
-    if (guard1) {
+    if (guard1)
+    {
       tolActive = std::sqrt(b_gamma);
-      for (int b_i{0}; b_i < 3; b_i++) {
+      for (int b_i{0}; b_i < 3; b_i++)
+      {
         aIdx = (m_temp + 3) * (b_i + 1);
         augJacobian[aIdx - 3] = 0.0;
         augJacobian[aIdx - 2] = 0.0;
@@ -481,7 +559,12 @@ void RetrievalAlgorithm(double number,
       bIdx = coder::optim::coder::levenbergMarquardt::b_checkStoppingCriteria(
           gradf, relFactor, funDiff, fitted_value, dx, funcCount,
           stepSuccessful, &iter, t, hasFiniteBounds);
-      if (bIdx != -5) {
+
+      // 打印迭代次数和funDiff
+      qDebug() << "iter: " << iter << "resnorm: " << resnormNew << "funDiff: " << funDiff;
+
+      if (bIdx != -5)
+      {
         exitg1 = true;
       }
     }
@@ -493,33 +576,43 @@ void RetrievalAlgorithm(double number,
   output->funcCount = funcCount;
   tolActive = 3.3121686421112381E-170;
   resnormNew = std::abs(dx[0]);
-  if (resnormNew > 3.3121686421112381E-170) {
+  if (resnormNew > 3.3121686421112381E-170)
+  {
     funDiff = 1.0;
     tolActive = resnormNew;
-  } else {
+  }
+  else
+  {
     t = resnormNew / 3.3121686421112381E-170;
     funDiff = t * t;
   }
   resnormNew = std::abs(dx[1]);
-  if (resnormNew > tolActive) {
+  if (resnormNew > tolActive)
+  {
     t = tolActive / resnormNew;
     funDiff = funDiff * t * t + 1.0;
     tolActive = resnormNew;
-  } else {
+  }
+  else
+  {
     t = resnormNew / tolActive;
     funDiff += t * t;
   }
   resnormNew = std::abs(dx[2]);
-  if (resnormNew > tolActive) {
+  if (resnormNew > tolActive)
+  {
     t = tolActive / resnormNew;
     funDiff = funDiff * t * t + 1.0;
     tolActive = resnormNew;
-  } else {
+  }
+  else
+  {
     t = resnormNew / tolActive;
     funDiff += t * t;
   }
   output->stepsize = tolActive * std::sqrt(funDiff);
-  for (i = 0; i < 19; i++) {
+  for (i = 0; i < 19; i++)
+  {
     output->algorithm[i] = cv[i];
   }
   lambda->lower[0] = 0.0;
@@ -528,7 +621,8 @@ void RetrievalAlgorithm(double number,
   lambda->upper[1] = 0.0;
   lambda->lower[2] = 0.0;
   lambda->upper[2] = 0.0;
-  if (hasFiniteBounds) {
+  if (hasFiniteBounds)
+  {
     b_Initial_upper[0] = -gradf[0] / (b_gamma + 1.0);
     b_Initial_upper[1] = -gradf[1] / (b_gamma + 1.0);
     b_Initial_upper[2] = -gradf[2] / (b_gamma + 1.0);
@@ -537,27 +631,33 @@ void RetrievalAlgorithm(double number,
         hasUB);
     tolActive = std::fmin(tolActive, minWidth / 2.0);
     if (hasLB[0] && (fitted_value[0] - Initial_lower[0] <= tolActive) &&
-        (gradf[0] > 0.0)) {
+        (gradf[0] > 0.0))
+    {
       lambda->lower[0] = 2.0 * gradf[0];
     }
     if (hasUB[0] && (Initial_upper[0] - fitted_value[0] <= tolActive) &&
-        (gradf[0] < 0.0)) {
+        (gradf[0] < 0.0))
+    {
       lambda->upper[0] = -2.0 * gradf[0];
     }
     if (hasLB[1] && (fitted_value[1] - Initial_lower[1] <= tolActive) &&
-        (gradf[1] > 0.0)) {
+        (gradf[1] > 0.0))
+    {
       lambda->lower[1] = 2.0 * gradf[1];
     }
     if (hasUB[1] && (Initial_upper[1] - fitted_value[1] <= tolActive) &&
-        (gradf[1] < 0.0)) {
+        (gradf[1] < 0.0))
+    {
       lambda->upper[1] = -2.0 * gradf[1];
     }
     if (hasLB[2] && (fitted_value[2] - Initial_lower[2] <= tolActive) &&
-        (gradf[2] > 0.0)) {
+        (gradf[2] > 0.0))
+    {
       lambda->lower[2] = 2.0 * gradf[2];
     }
     if (hasUB[2] && (Initial_upper[2] - fitted_value[2] <= tolActive) &&
-        (gradf[2] < 0.0)) {
+        (gradf[2] < 0.0))
+    {
       lambda->upper[2] = -2.0 * gradf[2];
     }
   }
@@ -610,52 +710,76 @@ void RetrievalAlgorithm_anonFcn1(
   // Laser center frequency
   a_tmp = miu_0 - params[1];
   b_tmp = miu_0 + params[1];
-  if (std::isnan(a_tmp) || std::isnan(b_tmp)) {
+  if (std::isnan(a_tmp) || std::isnan(b_tmp))
+  {
     miu.set_size(1, 1);
     miu[0] = rtNaN;
-  } else if (b_tmp < a_tmp) {
+  }
+  else if (b_tmp < a_tmp)
+  {
     miu.set_size(1, 0);
-  } else if ((std::isinf(a_tmp) || std::isinf(b_tmp)) && (a_tmp == b_tmp)) {
+  }
+  else if ((std::isinf(a_tmp) || std::isinf(b_tmp)) && (a_tmp == b_tmp))
+  {
     miu.set_size(1, 1);
     miu[0] = rtNaN;
-  } else if (std::floor(a_tmp) == a_tmp) {
+  }
+  else if (std::floor(a_tmp) == a_tmp)
+  {
     loop_ub = static_cast<int>((b_tmp - a_tmp) / 1.0E+6);
     miu.set_size(1, loop_ub + 1);
-    for (i = 0; i <= loop_ub; i++) {
+    for (i = 0; i <= loop_ub; i++)
+    {
       miu[i] = a_tmp + 1.0E+6 * static_cast<double>(i);
     }
-  } else {
+  }
+  else
+  {
     ndbl = std::floor((b_tmp - a_tmp) / 1.0E+6 + 0.5);
     apnd = a_tmp + ndbl * 1.0E+6;
     cdiff = apnd - b_tmp;
     if (std::abs(cdiff) <
-        4.4408920985006262E-16 * std::fmax(std::abs(a_tmp), std::abs(b_tmp))) {
+        4.4408920985006262E-16 * std::fmax(std::abs(a_tmp), std::abs(b_tmp)))
+    {
       ndbl++;
       apnd = b_tmp;
-    } else if (cdiff > 0.0) {
+    }
+    else if (cdiff > 0.0)
+    {
       apnd = a_tmp + (ndbl - 1.0) * 1.0E+6;
-    } else {
+    }
+    else
+    {
       ndbl++;
     }
-    if (ndbl >= 0.0) {
+    if (ndbl >= 0.0)
+    {
       idx = static_cast<int>(ndbl);
-    } else {
+    }
+    else
+    {
       idx = 0;
     }
     miu.set_size(1, idx);
-    if (idx > 0) {
+    if (idx > 0)
+    {
       miu[0] = a_tmp;
-      if (idx > 1) {
+      if (idx > 1)
+      {
         miu[idx - 1] = apnd;
         nm1d2 = (idx - 1) / 2;
-        for (k = 0; k <= nm1d2 - 2; k++) {
+        for (k = 0; k <= nm1d2 - 2; k++)
+        {
           cdiff = (static_cast<double>(k) + 1.0) * 1.0E+6;
           miu[k + 1] = a_tmp + cdiff;
           miu[(idx - k) - 2] = apnd - cdiff;
         }
-        if (nm1d2 << 1 == idx - 1) {
+        if (nm1d2 << 1 == idx - 1)
+        {
           miu[nm1d2] = (a_tmp + apnd) / 2.0;
-        } else {
+        }
+        else
+        {
           cdiff = static_cast<double>(nm1d2) * 1.0E+6;
           miu[nm1d2] = a_tmp + cdiff;
           miu[nm1d2 + 1] = apnd - cdiff;
@@ -666,7 +790,8 @@ void RetrievalAlgorithm_anonFcn1(
   // Frequency ranges
   RF.set_size(1, miu.size(1));
   loop_ub = miu.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     RF[i] = (miu[i] - miu_0) / 1.0E+9;
   }
   // Relative frequency
@@ -684,23 +809,29 @@ void RetrievalAlgorithm_anonFcn1(
   ndbl = Initial_value[2] * Initial_value[2];
   L_r.set_size(1, miu.size(1));
   loop_ub = miu.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     cdiff = miu[i] - miu_0;
     L_r[i] = cdiff * cdiff;
   }
   L_r.set_size(1, L_r.size(1));
   loop_ub = L_r.size(1) - 1;
-  for (i = 0; i <= loop_ub; i++) {
+  for (i = 0; i <= loop_ub; i++)
+  {
     L_r[i] = Initial_value[2] / (4.0 * L_r[i] + ndbl);
   }
   //
-  if (miu.size(1) == 0) {
+  if (miu.size(1) == 0)
+  {
     B = 0.0;
-  } else {
+  }
+  else
+  {
     ndbl =
         (miu[0] - miu[miu.size(1) - 1]) * (L_r[0] + L_r[miu.size(1) - 1]) / 2.0;
     i = miu.size(1);
-    for (k = 0; k <= i - 2; k++) {
+    for (k = 0; k <= i - 2; k++)
+    {
       ndbl += (miu[k + 1] - miu[k]) * (L_r[k + 1] + L_r[k]) / 2.0;
     }
     B = std::abs(ndbl);
@@ -709,33 +840,43 @@ void RetrievalAlgorithm_anonFcn1(
   ndbl = Initial_value[1] * Initial_value[1];
   L_b.set_size(1, miu.size(1));
   loop_ub = miu.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     cdiff = miu[i] - apnd;
     L_b[i] = cdiff * cdiff;
   }
   col_LS.set_size(1, miu.size(1));
   loop_ub = miu.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     cdiff = miu[i] - vb2;
     col_LS[i] = cdiff * cdiff;
   }
-  if (L_b.size(1) == col_LS.size(1)) {
+  if (L_b.size(1) == col_LS.size(1))
+  {
     loop_ub = L_b.size(1) - 1;
     L_b.set_size(1, L_b.size(1));
-    for (i = 0; i <= loop_ub; i++) {
+    for (i = 0; i <= loop_ub; i++)
+    {
       L_b[i] = Initial_value[1] / (4.0 * L_b[i] + ndbl) +
                Initial_value[1] / (4.0 * col_LS[i] + ndbl);
     }
-  } else {
+  }
+  else
+  {
     binary_expand_op(L_b, Initial_value, ndbl, col_LS, ndbl);
   }
-  if (miu.size(1) == 0) {
+  if (miu.size(1) == 0)
+  {
     apnd = 0.0;
-  } else {
+  }
+  else
+  {
     ndbl =
         (miu[0] - miu[miu.size(1) - 1]) * (L_b[0] + L_b[miu.size(1) - 1]) / 2.0;
     i = miu.size(1);
-    for (k = 0; k <= i - 2; k++) {
+    for (k = 0; k <= i - 2; k++)
+    {
       ndbl += (miu[k + 1] - miu[k]) * (L_b[k + 1] + L_b[k]) / 2.0;
     }
     apnd = std::abs(ndbl);
@@ -750,21 +891,27 @@ void RetrievalAlgorithm_anonFcn1(
   // 此处对应半高半宽
   idx = miu.size(1);
   fx.set_size(1, miu.size(1));
-  for (i = 0; i < idx; i++) {
+  for (i = 0; i < idx; i++)
+  {
     fx[i] = 0.0;
   }
   i = static_cast<int>((b_tmp + (1.0E+6 - a_tmp)) / 1.0E+6);
-  for (nm1d2 = 0; nm1d2 < i; nm1d2++) {
+  for (nm1d2 = 0; nm1d2 < i; nm1d2++)
+  {
     ndbl = (a_tmp + static_cast<double>(nm1d2) * 1.0E+6) - miu_0;
     fx[nm1d2] = params[2] * std::exp(-(ndbl * ndbl) / (2.0 * (cdiff * cdiff)));
   }
-  if (miu.size(1) == 0) {
+  if (miu.size(1) == 0)
+  {
     ndbl = 0.0;
-  } else {
+  }
+  else
+  {
     ndbl =
         (miu[0] - miu[miu.size(1) - 1]) * (fx[0] + fx[miu.size(1) - 1]) / 2.0;
     i = miu.size(1);
-    for (k = 0; k <= i - 2; k++) {
+    for (k = 0; k <= i - 2; k++)
+    {
       ndbl += (miu[k + 1] - miu[k]) * (fx[k + 1] + fx[k]) / 2.0;
     }
     ndbl = std::abs(ndbl);
@@ -772,45 +919,66 @@ void RetrievalAlgorithm_anonFcn1(
   //  求面积，面积归一化
   fx.set_size(1, fx.size(1));
   loop_ub = fx.size(1) - 1;
-  for (i = 0; i <= loop_ub; i++) {
+  for (i = 0; i <= loop_ub; i++)
+  {
     fx[i] = fx[i] / ndbl;
   }
   //  激光脉冲峰归一化
   nm1d2 = fx.size(1);
-  if (fx.size(1) <= 2) {
-    if (fx.size(1) == 1) {
-      cdiff = fx[0];
-    } else if ((fx[0] < fx[fx.size(1) - 1]) ||
-               (std::isnan(fx[0]) && (!std::isnan(fx[fx.size(1) - 1])))) {
-      cdiff = fx[fx.size(1) - 1];
-    } else {
+  if (fx.size(1) <= 2)
+  {
+    if (fx.size(1) == 1)
+    {
       cdiff = fx[0];
     }
-  } else {
-    if (!std::isnan(fx[0])) {
+    else if ((fx[0] < fx[fx.size(1) - 1]) ||
+             (std::isnan(fx[0]) && (!std::isnan(fx[fx.size(1) - 1]))))
+    {
+      cdiff = fx[fx.size(1) - 1];
+    }
+    else
+    {
+      cdiff = fx[0];
+    }
+  }
+  else
+  {
+    if (!std::isnan(fx[0]))
+    {
       idx = 1;
-    } else {
+    }
+    else
+    {
       boolean_T exitg1;
       idx = 0;
       k = 2;
       exitg1 = false;
-      while ((!exitg1) && (k <= nm1d2)) {
-        if (!std::isnan(fx[k - 1])) {
+      while ((!exitg1) && (k <= nm1d2))
+      {
+        if (!std::isnan(fx[k - 1]))
+        {
           idx = k;
           exitg1 = true;
-        } else {
+        }
+        else
+        {
           k++;
         }
       }
     }
-    if (idx == 0) {
+    if (idx == 0)
+    {
       cdiff = fx[0];
-    } else {
+    }
+    else
+    {
       cdiff = fx[idx - 1];
       i = idx + 1;
-      for (k = i; k <= nm1d2; k++) {
+      for (k = i; k <= nm1d2; k++)
+      {
         ndbl = fx[k - 1];
-        if (cdiff < ndbl) {
+        if (cdiff < ndbl)
+        {
           cdiff = ndbl;
         }
       }
@@ -818,7 +986,8 @@ void RetrievalAlgorithm_anonFcn1(
   }
   fx.set_size(1, fx.size(1));
   loop_ub = fx.size(1) - 1;
-  for (i = 0; i <= loop_ub; i++) {
+  for (i = 0; i <= loop_ub; i++)
+  {
     fx[i] = fx[i] / cdiff;
   }
   //
@@ -830,48 +999,60 @@ void RetrievalAlgorithm_anonFcn1(
   // Laser Plus width broadening
   b_L_r.set_size(1, L_r.size(1));
   loop_ub = L_r.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     b_L_r[i] = L_r[i] / B;
   }
   coder::conv(b_L_r, fx, L_r);
   b_L_r.set_size(1, L_b.size(1));
   loop_ub = L_b.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     b_L_r[i] = L_b[i] / apnd;
   }
   coder::conv(b_L_r, fx, col_LS);
   //  卷积
   // Area normalized
-  if (miu.size(1) == 0) {
+  if (miu.size(1) == 0)
+  {
     cdiff = 0.0;
-  } else {
+  }
+  else
+  {
     ndbl =
         (miu[0] - miu[miu.size(1) - 1]) * (L_r[0] + L_r[miu.size(1) - 1]) / 2.0;
     i = miu.size(1);
-    for (k = 0; k <= i - 2; k++) {
+    for (k = 0; k <= i - 2; k++)
+    {
       ndbl += (miu[k + 1] - miu[k]) * (L_r[k + 1] + L_r[k]) / 2.0;
     }
     cdiff = std::abs(ndbl);
   }
   L_r.set_size(1, L_r.size(1));
   loop_ub = L_r.size(1) - 1;
-  for (i = 0; i <= loop_ub; i++) {
+  for (i = 0; i <= loop_ub; i++)
+  {
     L_r[i] = L_r[i] / cdiff;
   }
-  if (miu.size(1) == 0) {
+  if (miu.size(1) == 0)
+  {
     cdiff = 0.0;
-  } else {
+  }
+  else
+  {
     ndbl = (miu[0] - miu[miu.size(1) - 1]) *
            (col_LS[0] + col_LS[miu.size(1) - 1]) / 2.0;
     i = miu.size(1);
-    for (k = 0; k <= i - 2; k++) {
+    for (k = 0; k <= i - 2; k++)
+    {
       ndbl += (miu[k + 1] - miu[k]) * (col_LS[k + 1] + col_LS[k]) / 2.0;
     }
     cdiff = std::abs(ndbl);
   }
   col_LS.set_size(1, col_LS.size(1));
   loop_ub = col_LS.size(1) - 1;
-  for (i = 0; i <= loop_ub; i++) {
+  for (i = 0; i <= loop_ub; i++)
+  {
     col_LS[i] = col_LS[i] / cdiff;
   }
   //  S_0 = L_mc + L_rc + L_bc; %Scattering Spectra with Laser Width
@@ -953,14 +1134,18 @@ void RetrievalAlgorithm_anonFcn1(
   //     %%
   //  load('FizeauData.mat', 'Fizeau_spectrum');
   //     %% Spectrum after passing through the Fizeau interferometer
-  if (L_r.size(1) == col_LS.size(1)) {
+  if (L_r.size(1) == col_LS.size(1))
+  {
     b_L_r.set_size(1, L_r.size(1));
     loop_ub = L_r.size(1);
-    for (i = 0; i < loop_ub; i++) {
+    for (i = 0; i < loop_ub; i++)
+    {
       b_L_r[i] = L_r[i] * ndbl + col_LS[i] * cdiff;
     }
     coder::conv(b_L_r, Fizeau_spectrum, col_LS);
-  } else {
+  }
+  else
+  {
     binary_expand_op(col_LS, L_r, ndbl, cdiff, Fizeau_spectrum);
   }
   // Energy is enhanced after convolution
@@ -977,17 +1162,21 @@ void RetrievalAlgorithm_anonFcn1(
   apnd = std::floor(0.0002 / cdiff * static_cast<double>(col_LS.size(1)));
   i = static_cast<int>(ChannelNumber);
   varargout_1.set_size(1, i);
-  for (int b_i{0}; b_i < i; b_i++) {
+  for (int b_i{0}; b_i < i; b_i++)
+  {
     int i1;
     int i2;
     cdiff = ((static_cast<double>(b_i) + 1.0) - 1.0) * (vb2 + apnd) + 1.0;
     ndbl = cdiff + vb2;
-    if (cdiff > ndbl) {
+    if (cdiff > ndbl)
+    {
       nm1d2 = 0;
       i1 = 0;
       i2 = -1;
       idx = -1;
-    } else {
+    }
+    else
+    {
       nm1d2 = static_cast<int>(cdiff) - 1;
       i1 = static_cast<int>(ndbl);
       i2 = static_cast<int>(cdiff) - 2;
@@ -995,26 +1184,35 @@ void RetrievalAlgorithm_anonFcn1(
     }
     cdiff = 0.0;
     loop_ub = idx - i2;
-    if (loop_ub <= 1) {
+    if (loop_ub <= 1)
+    {
       if ((i1 - nm1d2 == 1) &&
-          (std::isinf(RF[nm1d2]) || std::isnan(RF[nm1d2]))) {
+          (std::isinf(RF[nm1d2]) || std::isnan(RF[nm1d2])))
+      {
         cdiff = rtNaN;
       }
-    } else {
+    }
+    else
+    {
       int c_tmp;
-      if (i1 - nm1d2 == 1) {
+      if (i1 - nm1d2 == 1)
+      {
         c.set_size(loop_ub);
-        for (i1 = 0; i1 < loop_ub; i1++) {
+        for (i1 = 0; i1 < loop_ub; i1++)
+        {
           c[i1] = RF[nm1d2];
         }
         ndbl = 0.5 * RF[nm1d2];
         c[0] = ndbl;
         c[(idx - i2) - 1] = ndbl;
-      } else {
+      }
+      else
+      {
         c.set_size(loop_ub);
         c[0] = 0.5 * (RF[nm1d2 + 1] - RF[nm1d2]);
         i1 = loop_ub - 1;
-        for (k = 2; k <= i1; k++) {
+        for (k = 2; k <= i1; k++)
+        {
           c_tmp = nm1d2 + k;
           c[k - 1] = 0.5 * (RF[c_tmp] - RF[c_tmp - 2]);
         }
@@ -1022,8 +1220,10 @@ void RetrievalAlgorithm_anonFcn1(
         c[loop_ub - 1] = 0.5 * (RF[c_tmp - 1] - RF[c_tmp - 2]);
       }
       nm1d2 = 0;
-      for (idx = 1; idx <= loop_ub; idx++) {
-        for (c_tmp = idx; c_tmp <= idx; c_tmp++) {
+      for (idx = 1; idx <= loop_ub; idx++)
+      {
+        for (c_tmp = idx; c_tmp <= idx; c_tmp++)
+        {
           cdiff += col_LS[i2 + c_tmp] * c[nm1d2];
         }
         nm1d2++;
@@ -1036,13 +1236,17 @@ void RetrievalAlgorithm_anonFcn1(
   //  channel_energy, FizeauFunction );
   //     %% Function Output
   //     %% Caculate the Error
-  if (varargout_1.size(1) == MeasurementEnergy.size(1)) {
+  if (varargout_1.size(1) == MeasurementEnergy.size(1))
+  {
     loop_ub = varargout_1.size(1) - 1;
     varargout_1.set_size(1, varargout_1.size(1));
-    for (i = 0; i <= loop_ub; i++) {
+    for (i = 0; i <= loop_ub; i++)
+    {
       varargout_1[i] = varargout_1[i] - MeasurementEnergy[i];
     }
-  } else {
+  }
+  else
+  {
     minus(varargout_1, MeasurementEnergy);
   }
   //  在 x 处计算的雅可比值矩阵

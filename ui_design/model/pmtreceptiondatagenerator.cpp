@@ -168,8 +168,11 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     MyMath::convertQVectorToArray(PMT_energy_vector, PMT_energy);
     MyMath::convertQVectorToArray(yData, Fizeau_spectrum);
 
-    double Initial_lower[3] = {7.0e9, 0.2e9, 0.1e9};
-    double Initial_upper[3] = {8.3e9, 1e9, 0.3e9};
+    // double Initial_lower[3] = {7.0e9, 0.2e9, 0.1e9};
+    // double Initial_upper[3] = {8.3e9, 1e9, 0.3e9};
+    // double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
+    double Initial_lower[3] = {7.0e9, 0.2e9, 0.1e9}; // 初始值越小，拟合越精确，耗时越短
+    double Initial_upper[3] = {9e9, 2e9, 0.5e9};
     double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
 
     // params = [532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.3333, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4];
