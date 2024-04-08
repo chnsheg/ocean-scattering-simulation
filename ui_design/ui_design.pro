@@ -47,6 +47,9 @@ SOURCES += \
     matlab/Retrieval/minOrMax.cpp \
     matlab/Retrieval/poissrnd.cpp \
     matlab/Retrieval/projectBox.cpp \
+    matlab/Retrieval/rtGetInf.cpp \
+    matlab/Retrieval/rtGetNaN.cpp \
+    matlab/Retrieval/rt_nonfinite.cpp \
     matlab/Retrieval/xgemv.cpp \
     matlab/Retrieval/xnrm2.cpp \
     matlab/Retrieval/xzlarf.cpp \
@@ -129,6 +132,7 @@ HEADERS += \
     matlab/Retrieval/anonymous_function.h \
     matlab/Retrieval/anonymous_function1.h \
     matlab/Retrieval/checkStoppingCriteria.h \
+    matlab/Retrieval/coder_array.h \
     matlab/Retrieval/computeFiniteDifferences.h \
     matlab/Retrieval/conv.h \
     matlab/Retrieval/driver.h \
@@ -141,6 +145,11 @@ HEADERS += \
     matlab/Retrieval/minOrMax.h \
     matlab/Retrieval/poissrnd.h \
     matlab/Retrieval/projectBox.h \
+    matlab/Retrieval/rtGetInf.h \
+    matlab/Retrieval/rtGetNaN.h \
+    matlab/Retrieval/rt_nonfinite.h \
+    matlab/Retrieval/rtwtypes.h \
+    matlab/Retrieval/tmwtypes.h \
     matlab/Retrieval/xgemv.h \
     matlab/Retrieval/xnrm2.h \
     matlab/Retrieval/xzlarf.h \

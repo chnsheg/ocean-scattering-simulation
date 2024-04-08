@@ -70,6 +70,18 @@ QVector<QVector<double> *> *FizeauIFGenerator::generateFizeauIFData()
     result->append(spectrum_vector);
 
     // Singleton<Logger>::getInstance()->logMessage("频率最大值: " + QString::number(max) + "，索引: " + QString::number(index), Logger::Log);
+    // // 输出spectrum_vector的最大值和索引
+    // double max = 0;
+    // int index = 0;
+    // for (int i = 0; i < spectrum_vector->size(); ++i)
+    // {
+    //     if ((*spectrum_vector)[i] > max)
+    //     {
+    //         max = (*spectrum_vector)[i];
+    //         index = i;
+    //     }
+    // }
+    // Singleton<Logger>::getInstance()->logMessage("最大值: " + QString::number(max) + "，索引: " + QString::number(index), Logger::Log);
 
     delete RF;
 

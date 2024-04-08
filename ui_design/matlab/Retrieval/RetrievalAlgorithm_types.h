@@ -2,24 +2,22 @@
 // File: RetrievalAlgorithm_types.h
 //
 // MATLAB Coder version            : 5.4
-// C/C++ source code generated on  : 01-Apr-2024 20:40:38
+// C/C++ source code generated on  : 08-Apr-2024 10:38:18
 //
 
 #ifndef RETRIEVALALGORITHM_TYPES_H
 #define RETRIEVALALGORITHM_TYPES_H
 
 // Include Files
-#include "matlab/rtwtypes.h"
+#include "rtwtypes.h"
 
 // Type Definitions
-struct struct1_T
-{
-  double lower[4];
-  double upper[4];
+struct struct1_T {
+  double lower[3];
+  double upper[3];
 };
 
-struct struct0_T
-{
+struct struct0_T {
   double iterations;
   double funcCount;
   double stepsize;

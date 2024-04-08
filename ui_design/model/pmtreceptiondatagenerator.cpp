@@ -131,7 +131,7 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     // QVector<double> *PMT_energy_vector = new QVector<double>();
     // 0.000500951818447207	0.00126892042344298	0.00418905457824441	0.00363221019365598	0.00110851062510006	0.000566371696804416	0.000442973766125158	0.000638886278194898	0.000629230476113756	0.000443742611150079	0.000577954102157679	0.00114477405738897	0.00373425200890559	0.00409628632197294	0.00121853330725838	0.000488091198032589
     // QVector<double> *PMT_energy_vector = new QVector<double>(
-    //     {0.000500951818447207, 0.00126892042344298, 0.00418905457824441, 0.00363221019365598, 0.00110851062510006, 0.000566371696804416, 0.000442973766125158, 0.000638886278194898, 0.000629230476113756, 0.000443742611150079, 0.000577954102157679, 0.00114477405738897, 0.00373425200890559, 0.00409628632197294, 0.00121853330725838, 0.000488091198032589});
+    //     {0.000481349812890324, 0.00115600087686415, 0.00366448196335308, 0.00403615874800880, 0.00130673405407780, 0.000646618950177882, 0.000485579648168674, 0.000661343988317603, 0.000652450122068401, 0.000477275657879331, 0.000645090618930230, 0.00133582055472497, 0.00410742981808581, 0.00357553374168214, 0.00111753722374564, 0.000471019177273276});
 
     QVector<double> *PMT_energy_vector = constantStorage->getConstant(constantMap->getConstantName(5, 14)).value<QVector<double> *>();
 
@@ -154,15 +154,26 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     QVector<double> *yData = new QVector<double>();
     constantStorage->convertQSharedPointerToQVector(dataContainer, xData, yData);
 
+    // 获取相对频率数据
+    QVector<double> *RF = FrequenceDataGenerator::generateRelativeFrequenceData();
+
+    // 先对Fizeau_spectrum进行面积归一化
+    double area = MyMath::polyarea(*RF, *yData);
+    for (int i = 0; i < yData->size(); ++i)
+    {
+        (*yData)[i] = (*yData)[i] / area;
+    }
+    delete RF;
+
     MyMath::convertQVectorToArray(PMT_energy_vector, PMT_energy);
     MyMath::convertQVectorToArray(yData, Fizeau_spectrum);
 
-    double Initial_lower[4] = {7.0e9, 0.5e9, 0.1e9, 0.03e9};
-    double Initial_upper[4] = {7.7e9, 0.7e9, 0.2e9, 0.05e9};
-    double Initial_value[4] = {7.6732e9, 0.617e9, 0.13e9, 0.03e9};
+    double Initial_lower[3] = {7.0e9, 0.2e9, 0.1e9};
+    double Initial_upper[3] = {8.3e9, 1e9, 0.3e9};
+    double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
 
     // params = [532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.3333, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4];
-    // double params[19] = {532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.3333, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4};
+    // double params[19] = {532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.33, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4};
 
     double wave_length = constantStorage->getConstant(constantMap->getConstantName(0, 1)).toDouble();
     double freq_range = constantStorage->getConstant(constantMap->getConstantName(0, 3)).toDouble();
@@ -185,7 +196,7 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
 
     double params[19] = {wave_length, freq_range, intensity, laser_width, laser_energy, alpha, beta_p, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f};
 
-    double fitted_value[4];
+    double fitted_value[3];
     double resnorm;
     double exitflag;
     struct0_T output;
@@ -297,11 +308,15 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     qDebug() << "-------------------------------------------------------------------------";
 
     // 输出fitted_value
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 3; ++i)
     {
         // Singleton<Logger>::getInstance()->logMessage("fitted_value[" + QString::number(i) + "]: " + QString::number(fitted_value[i] / 1e9, Logger::Info);
         Singleton<Logger>::getInstance()->logMessage("fitted_value[" + QString::number(i) + "]: " + QString::number(fitted_value[i] / 1e9), Logger::Info);
     }
+
+    // 输出resnorm, residual, exitflag, output, lambda, jacobia
+    qDebug() << "resnorm: " << resnorm;
+    qDebug() << "exitflag: " << exitflag;
 
     delete xData;
     delete yData;

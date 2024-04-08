@@ -85,12 +85,12 @@ matlab/Retrieval/factoryConstruct.cpp
 matlab/Retrieval/hasFiniteBounds.cpp 
 matlab/Retrieval/linearLeastSquares.cpp 
 matlab/Retrieval/minOrMax.cpp 
-matlab/Retrieval/poissrnd.cpp 
 matlab/Retrieval/projectBox.cpp 
+matlab/Retrieval/rtGetInf.cpp 
+matlab/Retrieval/rtGetNaN.cpp 
+matlab/Retrieval/rt_nonfinite.cpp 
 # matlab/Retrieval/rand.cpp 
 # matlab/Retrieval/randn.cpp 
-matlab/Retrieval/eml_rand_mt19937ar_1.cpp
-matlab/Retrieval/eml_rand_mt19937ar_stateful_1.cpp
 matlab/Retrieval/xgemv.cpp 
 matlab/Retrieval/xnrm2.cpp 
 matlab/Retrieval/xzlarf.cpp 
@@ -107,9 +107,6 @@ matlab/eml_rand_mt19937ar.cpp
 matlab/eml_rand_mt19937ar_stateful.cpp 
 matlab/rand.cpp
 matlab/randn.cpp 
-matlab/rtGetInf.cpp 
-matlab/rtGetNaN.cpp 
-matlab/rt_nonfinite.cpp 
 matlab/sum.cpp 
 model/constantmap.cpp 
 model/constantstorage.cpp 
@@ -160,6 +157,7 @@ matlab/PMTReceive.h
 matlab/Retrieval/GenerationSpectrum.h 
 matlab/Retrieval/PMTFMethods.h 
 matlab/Retrieval/Retrieval_TS.h
+matlab/Retrieval/tmwtypes.h
 matlab/Retrieval/RetrievalAlgorithm.h 
 matlab/Retrieval/RetrievalAlgorithm_data.h 
 matlab/Retrieval/RetrievalAlgorithm_initialize.h 
@@ -178,10 +176,8 @@ matlab/Retrieval/factoryConstruct.h
 matlab/Retrieval/hasFiniteBounds.h 
 matlab/Retrieval/linearLeastSquares.h 
 matlab/Retrieval/minOrMax.h 
-matlab/Retrieval/poissrnd.h 
 matlab/Retrieval/projectBox.h 
-matlab/Retrieval/eml_rand_mt19937ar_1.h 
-matlab/Retrieval/eml_rand_mt19937ar_stateful_1.h 
+matlab/Retrieval/rtwtypes.h 
 # matlab/Retrieval/rand.h 
 # matlab/Retrieval/randn.h 
 matlab/Retrieval/xgemv.h 

@@ -2,7 +2,7 @@
 // File: RetrievalAlgorithm_internal_types.h
 //
 // MATLAB Coder version            : 5.4
-// C/C++ source code generated on  : 01-Apr-2024 20:40:38
+// C/C++ source code generated on  : 08-Apr-2024 10:38:18
 //
 
 #ifndef RETRIEVALALGORITHM_INTERNAL_TYPES_H
@@ -11,12 +11,11 @@
 // Include Files
 #include "RetrievalAlgorithm_types.h"
 #include "anonymous_function.h"
-#include "matlab/rtwtypes.h"
-#include "matlab/coder_array.h"
+#include "rtwtypes.h"
+#include "coder_array.h"
 
 // Type Definitions
-struct c_struct_T
-{
+struct c_struct_T {
   coder::b_anonymous_function nonlin;
   double f_1;
   coder::array<double, 1U> cEq_1;
@@ -29,8 +28,8 @@ struct c_struct_T
   boolean_T SpecifyObjectiveGradient;
   boolean_T SpecifyConstraintGradient;
   boolean_T isEmptyNonlcon;
-  boolean_T hasLB[4];
-  boolean_T hasUB[4];
+  boolean_T hasLB[3];
+  boolean_T hasUB[3];
   boolean_T hasBounds;
   int FiniteDifferenceType;
 };
