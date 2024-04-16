@@ -32,6 +32,7 @@ public:
 
     QVector<double> *generateData(DataType dataType);
     void generateDynamicData(int index);
+    void generateDynamicAction(int index);
 
 signals:
     void dataGenerated(QVector<QVector<double> *> *xDataVector,
@@ -45,6 +46,8 @@ signals:
                               QStringList legendList = QStringList());
 
     void dataGenerateFinished();
+
+    void actionGenerateFinished();
 
     void importConstantCompleted(const int page_index, const QVector<QVector<QVector<double> *> *> *xDataVector,
                                  const QVector<QVector<QVector<double> *> *> *yDataVector);

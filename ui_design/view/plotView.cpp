@@ -43,6 +43,7 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     // 添加动态按钮
     Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget2_3, "激光展宽图");
     Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget3_3, "扩展分析");
+    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget5_3, "模型反演");
 
     // 挂载show1ButtonGroupManager单例
     Show1ButtonGroup *show1ButtonGroup = new Show1ButtonGroup(_ui->homeButton_1,
@@ -452,6 +453,9 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
         break;
     case dynamic2Button:
         dynamicButtonClicked(1);
+        break;
+    case dynamic3Button:
+        dynamicButtonClicked(2);
         break;
     }
 }

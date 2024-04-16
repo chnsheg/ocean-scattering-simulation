@@ -136,7 +136,7 @@ void DynamicPage::displayCurve(int pageIndex,
                 {
                     plot->graph(i)->setName(legendList.at(i));
                     // 删除取出的legendList中的元素
-                    legendList.removeAt(i);
+                    // legendList.removeAt(i);
                 }
                 emit storeRuntimeDataSignal(plot->graph(i)->data(),
                                             this->pageObjectId,

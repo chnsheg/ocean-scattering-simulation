@@ -132,8 +132,8 @@ void PageDataGenerator::generatePairOfData(int page_index)
         break;
     case 5:
         laserLineWidthEffectData = PMTReceptionDataGenerator::generatePMTReceptionData();
-        PMTReceptionDataGenerator::retrievalFormPMT();
         // 从constantstorage中拿到SpectrumAfterFizeau的数据
+        // PMTReceptionDataGenerator::retrievalFormPMT();
 
         xDataVector->append(laserLineWidthEffectData->at(0));
         xDataVector->append(laserLineWidthEffectData->at(2));
@@ -203,6 +203,8 @@ void PageDataGenerator::generateDynamicData(int index)
                 laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateNsMByDepthData();
                 // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
                 yDataVector->append(laserLineWidthEffectData->at(0));
+                // 先清空legendList
+                legendList.clear();
                 for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
                 {
                     xDataVector->append(laserLineWidthEffectData->at(j + 1));
@@ -217,6 +219,8 @@ void PageDataGenerator::generateDynamicData(int index)
                 laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByAlphaData();
                 // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
                 yDataVector->append(laserLineWidthEffectData->at(0));
+                // 先清空legendList
+                legendList.clear();
                 for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
                 {
                     xDataVector->append(laserLineWidthEffectData->at(j + 1));
@@ -226,6 +230,18 @@ void PageDataGenerator::generateDynamicData(int index)
             }
         }
         emit dataGenerateFinished();
+        break;
+    }
+}
+
+// 产生动态的行为，例如开始拟合，模型反演等，注意无显示曲线
+void PageDataGenerator::generateDynamicAction(int index)
+{
+    switch (index)
+    {
+    case 0:
+        PMTReceptionDataGenerator::retrievalFormPMT();
+        emit actionGenerateFinished();
         break;
     }
 }
@@ -254,7 +270,7 @@ void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataConta
             break;
 
         case 4:
-            Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 14 + curve_index), QVariant::fromValue(dataContainer));
+            // Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 14 + curve_index), QVariant::fromValue(dataContainer));
             break;
         case 5:
             // Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 14 + curve_index), QVariant::fromValue(dataContainer));

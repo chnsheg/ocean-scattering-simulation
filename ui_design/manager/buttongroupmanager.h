@@ -58,6 +58,7 @@ enum ButtonGroupId
     back8Button,
     dynamic1Button,
     dynamic2Button,
+    dynamic3Button,
 };
 Q_DECLARE_METATYPE(ButtonGroupId)
 

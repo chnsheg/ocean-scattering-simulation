@@ -135,6 +135,12 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
 
     QVector<double> *PMT_energy_vector = constantStorage->getConstant(constantMap->getConstantName(5, 14)).value<QVector<double> *>();
 
+    if (PMT_energy_vector == nullptr || PMT_energy_vector->isEmpty())
+    {
+        Singleton<Logger>::getInstance()->logMessage("PMT_Energy为空！请先生成PMT接收数据！", Logger::Warning);
+        return;
+    }
+
     for (int i = 0; i < PMT_energy_vector->size(); ++i)
     {
         qDebug() << "PMT_energy_vector[" << i << "]: " << PMT_energy_vector->at(i) << Qt::endl;
