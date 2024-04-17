@@ -143,7 +143,8 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
 
     for (int i = 0; i < PMT_energy_vector->size(); ++i)
     {
-        qDebug() << "PMT_energy_vector[" << i << "]: " << PMT_energy_vector->at(i) << Qt::endl;
+        // qDebug() << "PMT_energy_vector[" << i << "]: " << PMT_energy_vector->at(i) << Qt::endl;
+        Singleton<Logger>::getInstance()->logMessage("PMT_energy_vector[" + QString::number(i) + "]: " + QString::number(PMT_energy_vector->at(i)), Logger::Info);
     }
 
     QSharedPointer<QCPGraphDataContainer> dataContainer;
@@ -177,9 +178,14 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     // double Initial_lower[3] = {7.0e9, 0.2e9, 0.1e9};
     // double Initial_upper[3] = {8.3e9, 1e9, 0.3e9};
     // double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
-    double Initial_lower[3] = {7.0e9, 0.2e9, 0.1e9}; // 初始值越小，拟合越精确，耗时越短
-    double Initial_upper[3] = {9e9, 2e9, 0.5e9};
+    double Initial_lower[3] = {7.2e9, 0.2e9, 0.1e9}; // 初始值越小，拟合越精确，耗时越短
+    double Initial_upper[3] = {7.8e9, 1e9, 0.3e9};
     double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
+
+    // 显示初始条件和约束
+    Singleton<Logger>::getInstance()->logMessage("Initial_lower: " + QString::number(Initial_lower[0]) + ", " + QString::number(Initial_lower[1]) + ", " + QString::number(Initial_lower[2]), Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Initial_upper: " + QString::number(Initial_upper[0]) + ", " + QString::number(Initial_upper[1]) + ", " + QString::number(Initial_upper[2]), Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Initial_value: " + QString::number(Initial_value[0]) + ", " + QString::number(Initial_value[1]) + ", " + QString::number(Initial_value[2]), Logger::Info);
 
     // params = [532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.3333, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4];
     // double params[19] = {532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.33, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4};
@@ -290,19 +296,13 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
                     .arg(res_R_width / 1e9, 8, 'f', 4)
                     .arg(Ray_Width / 1e9, 8, 'f', 4)
                     .arg(Error_Rwidth / 1e9, 8, 'f', 4);
-    // fprintf(stdout, " Photon Number     %8.4e  %8.4e  %8.4e \n", res_N_photo, PhotonNum, Error_Photon);
 
-    // fprintf('------------------------------------------------------------------------- \n');
-    // fprintf('Parameters       |   Measured  | Theoretical | error (%4.2f m: %4.2f)| \n', System_Depth, N_SNR);
-    // fprintf('Environmental tem| %8.4f°C | %8.4f°C | %8.4f°C | \n', REF.Tem, EnvironmentalFactors.tem, Error.tem);
-    // fprintf('Environmental Sal| %8.4f ‰ | %8.4f ‰ | %8.4f‰  | \n', REF.Sal, EnvironmentalFactors.sal, Error.sal);
-    // fprintf('-------------------------------------------------------------------------\n');
-
-    // fprintf(stdout, "------------------------------------------------------------------------- \n");
-    // fprintf(stdout, "Parameters       |   Measured  | Theoretical | error (%4.2f m: %4.2f)| \n", 0.0, 0.0);
-    // fprintf(stdout, "Environmental tem| %8.4f ℃ | %8.4f ℃  | %8.4f ℃ | \n", REF_Tem, Water_Temperature, Error_tem);
-    // fprintf(stdout, "Environmental Sal| %8.4f ‰ | %8.4f ‰ | %8.4f ‰  | \n", REF_Sal, Water_Salinity, Error_sal);
-    // fprintf(stdout, "-------------------------------------------------------------------------\n");
+    Singleton<Logger>::getInstance()->logMessage("Result", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("-------------------------------------------------------------------------", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz)", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(" Brillouin width   " + QString::number(res_B_width / 1e9) + "    " + QString::number(Bri_width / 1e9) + "    " + QString::number(Error_width / 1e9), Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(" Brillouin shift   " + QString::number(res_B_shift / 1e9) + "  " + QString::number(Bri_shift / 1e9) + "  " + QString::number(Error_shift / 1e9), Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(" RAyleigh width    " + QString::number(res_R_width / 1e9) + "  " + QString::number(Ray_Width / 1e9) + "  " + QString::number(Error_Rwidth / 1e9), Logger::Info);
 
     qDebug() << "-------------------------------------------------------------------------";
     qDebug() << "Parameters       |   Measured  | Theoretical | error (%4.2f m: %4.2f)|";
@@ -316,6 +316,12 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
                     .arg(Error_sal, 8, 'f', 4);
     qDebug() << "-------------------------------------------------------------------------";
 
+    Singleton<Logger>::getInstance()->logMessage("-------------------------------------------------------------------------", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Parameters | Measured | Theoretical | error (%4.2f m: %4.2f)|", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Environmental tem| " + QString::number(REF_Tem) + " °C | " + QString::number(Water_Temperature) + " °C | " + QString::number(Error_tem) + " °C |", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("Environmental Sal| " + QString::number(REF_Sal) + " ‰ | " + QString::number(Water_Salinity) + " ‰  | " + QString::number(Error_sal) + " ‰ |", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("-------------------------------------------------------------------------", Logger::Info);
+
     // 输出fitted_value
     for (int i = 0; i < 3; ++i)
     {
@@ -326,6 +332,9 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     // 输出resnorm, residual, exitflag, output, lambda, jacobia
     qDebug() << "resnorm: " << resnorm;
     qDebug() << "exitflag: " << exitflag;
+
+    Singleton<Logger>::getInstance()->logMessage("resnorm: " + QString::number(resnorm), Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage("exitflag: " + QString::number(exitflag), Logger::Info);
 
     delete xData;
     delete yData;

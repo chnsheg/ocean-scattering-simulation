@@ -6,8 +6,9 @@
 #include "model/constantstorage.h"
 #include "utils/logger.h"
 #include "utils/mymath.h"
+#include <QThread>
 
-class PMTReceptionDataGenerator
+class PMTReceptionDataGenerator : public QThread
 {
 public:
     PMTReceptionDataGenerator();
