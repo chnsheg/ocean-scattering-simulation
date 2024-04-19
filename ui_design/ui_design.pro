@@ -90,6 +90,7 @@ SOURCES += \
     model/spectrumdatagenerator.cpp \
     model/underwaterspectrumdatagenerator.cpp \
     module/filebrowser.cpp \
+    module/hoverinfowidget.cpp \
     module/mycombobox.cpp \
     module/mytracer.cpp \
     module/qcustomplot.cpp \
@@ -196,6 +197,7 @@ HEADERS += \
     # model/tmwtypes.h \
     model/underwaterspectrumdatagenerator.h \
     module/filebrowser.h \
+    module/hoverinfowidget.h \
     module/mycombobox.h \
     module/mytracer.h \
     module/qcustomplot.h \

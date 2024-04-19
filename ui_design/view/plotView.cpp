@@ -56,6 +56,17 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
                                                               _ui->homeButton_8);
     Singleton<Show1ButtonGroupManager>::getInstance(show1ButtonGroup);
 
+    // 挂载hoverInfoWidget单例
+    HoverInfoWidget *hoverInfoWidget = new HoverInfoWidget();
+    hoverInfoWidget->setAnchorPoint(QPoint(50, 50));
+    hoverInfoWidget->setDisplayImage(QPixmap(":/backgroundImage.png"));
+    QMap<QString, QVariant> info;
+    info.insert("Name", "Laser Spectroscopy");
+    info.insert("Description", "This is a laser spectroscopy system.");
+    info.insert("Author", "Yonghao");
+    hoverInfoWidget->setInfo(info);
+    hoverInfoWidget->showWithEffect();
+
     // 挂载CustomPlotManager单例
     //  Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
     Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);

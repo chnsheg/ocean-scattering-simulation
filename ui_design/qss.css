@@ -58,7 +58,7 @@ QTextEdit
 } */
 
 /**正常情况下样式**/
-QPushButton{
+#stackedWidget QPushButton{
     position: absolute;
     top: 50%;
     left: 50%;
@@ -100,7 +100,7 @@ QPushButton:disabled{
 
 
 
-QLabel
+#stackedWidget QLabel
 {
     font-size: 25px;
     font-weight: 450;

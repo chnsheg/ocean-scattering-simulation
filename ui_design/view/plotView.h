@@ -8,6 +8,7 @@
 #include "manager/show1buttongroupmanager.h"
 #include "ui_mainwindow.h"
 #include "manager/menumanager.h"
+#include "module/hoverinfowidget.h"
 
 /***************************视图层***************************/
 
