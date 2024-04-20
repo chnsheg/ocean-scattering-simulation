@@ -126,10 +126,13 @@ void PlotController::handleTracerButtonClicked()
 void PlotController::handleShowButtonHover(int index, const QPoint &pos)
 {
     HoverInfoWidget *hoverInfoWidget;
+    int anchor = 0; // 用来锚定当前界面的hoverInfoWidget
 
     if (hoverInfoWidgetsOpened.contains(index))
     {
-        hoverInfoWidget = hoverInfoWidgetsVector.at(index);
+        // 查找index对应的hoverInfoWidgetsOpened中的索引
+        anchor = hoverInfoWidgetsOpened.indexOf(index);
+        hoverInfoWidget = hoverInfoWidgetsVector.at(anchor);
     }
     else
     {
@@ -138,12 +141,59 @@ void PlotController::handleShowButtonHover(int index, const QPoint &pos)
         hoverInfoWidgetsOpened.append(index);
     }
 
-    hoverInfoWidget->move(pos.x() - 10, pos.y());
+    QPixmap pixmapPtr;
+    int result = model->getImageData(index, &pixmapPtr);
+    if (result == -1)
+    {
+        hoverInfoWidgetsVector.removeOne(hoverInfoWidget);
+        hoverInfoWidgetsOpened.removeOne(index);
+        qDebug() << "获取图片失败！";
+        return;
+    }
+    else if (result == 0)
+    {
+        // 显示一张空白图片
+        hoverInfoWidget->setDisplayImage(QPixmap());
+        qDebug() << "获取图片为空！";
+    }
+    else if (result == 1)
+    {
+        hoverInfoWidget->setDisplayImage(pixmapPtr);
+        // 打印图片信息
+        qDebug() << "pixmapPtr: " << pixmapPtr;
+        qDebug() << "获取图片成功！";
+    }
+
+    // void HoverInfoWidget::setInfo(const QMap<QString, QVariant> &info)
+    QMap<QString, QVariant> info;
+    int infoDataResult = model->getInfoData(index, &info);
+    if (infoDataResult == -1)
+    {
+        hoverInfoWidgetsVector.removeOne(hoverInfoWidget);
+        hoverInfoWidgetsOpened.removeOne(index);
+        qDebug() << "获取信息失败！";
+        return;
+    }
+    else if (infoDataResult == 0)
+    {
+        // 显示一张空白图片
+        hoverInfoWidget->setInfo(QMap<QString, QVariant>());
+        qDebug() << "获取信息为空！";
+    }
+    else if (infoDataResult == 1)
+    {
+        hoverInfoWidget->setInfo(info);
+        qDebug() << "获取信息成功！";
+    }
+
+    hoverInfoWidget->move(pos.x(), pos.y() + 100);
+    qDebug() << "pos: " << pos;
     hoverInfoWidget->showWithEffect();
 
     // hoverInfoWidget被关闭时，清除hoverInfoWidget的指针和opened列表中的索引
     connect(hoverInfoWidget, &HoverInfoWidget::closeHoverInfoWidgetSignal, this, [=]
             {
+                qDebug() << "closeHoverInfoWidgetSignal";
         hoverInfoWidgetsVector.removeOne(hoverInfoWidget);
         hoverInfoWidgetsOpened.removeOne(index); });
 }
@@ -156,10 +206,13 @@ void PlotController::handleDynamicButtonClicked(int index)
     thread = new QThread();
     DynamicPage *dynamicView;
     int dynamicPageType = 0; // 0: 动态页面，1: 动态操作页面（模型反演）
+    int anchor = 0;          // 用来锚定当前界面的dynamicView
 
     if (dynamicViewOpened.contains(index))
     {
-        dynamicView = dynamicViewVector.at(index);
+        // 查找index对应的dynamicViewOpened中的索引
+        anchor = dynamicViewOpened.indexOf(index);
+        dynamicView = dynamicViewVector.at(anchor);
     }
     else
     {
@@ -357,8 +410,9 @@ void PlotController::handleSwitchPageButtonClicked(int page_index, QRect area)
     // 通知model截图
     if (area != QRect())
     {
-        int captureResult = model->captureImageData(page_index, area);
-        qDebug() << "page_index: " << page_index << " captureResult: " << captureResult;
+        int index = view->getCurrentPageIndex() - 1;
+        int captureResult = model->captureImageData(index, area);
+        qDebug() << "page_index: " << index << " captureResult: " << captureResult;
     }
     // 通知view切换页面，page_index从0开始
     view->updateViewPageSlot(page_index);

@@ -280,6 +280,71 @@ int PageDataGenerator::captureImageData(int index, QRect captureRect)
     return 1; // 截图成功
 }
 
+int PageDataGenerator::getImageData(int index, QPixmap *pixmap)
+{
+    QPixmap *pixmapPtr = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 8 + index)).value<QPixmap *>();
+
+    if (pixmapPtr == nullptr)
+    {
+        return 0; // 获取图片失败
+    }
+
+    *pixmap = *pixmapPtr;
+
+    return 1; // 获取图片成功
+}
+
+int PageDataGenerator::getInfoData(int index, QMap<QString, QVariant> *info)
+{
+    // 遍历constantstorage，拿到对应页面所有的信息
+    QMap<QString, QVariant> *infoPtr = new QMap<QString, QVariant>();
+    ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
+    ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
+
+    switch (index)
+    {
+    case 0:
+        for (int i = 0; i < 6; i++)
+        {
+            infoPtr->insert(constantMap->getConstantName(0, i), constantStorage->getConstant(constantMap->getConstantName(0, i)));
+        }
+        break;
+    case 1:
+        for (int i = 0; i < 6; i++)
+        {
+            infoPtr->insert(constantMap->getConstantName(1, i), constantStorage->getConstant(constantMap->getConstantName(1, i)));
+        }
+        break;
+    case 2:
+        for (int i = 0; i < 9; i++)
+        {
+            infoPtr->insert(constantMap->getConstantName(7, i), constantStorage->getConstant(constantMap->getConstantName(7, i)));
+        }
+        break;
+    case 3:
+        for (int i = 0; i < 5; i++)
+        {
+            infoPtr->insert(constantMap->getConstantName(2, i), constantStorage->getConstant(constantMap->getConstantName(2, i)));
+        }
+        break;
+    case 4:
+        for (int i = 0; i < 3; i++)
+        {
+            infoPtr->insert(constantMap->getConstantName(3, i), constantStorage->getConstant(constantMap->getConstantName(3, i)));
+        }
+        break;
+    }
+
+    if (infoPtr == nullptr)
+    {
+        return 0; // 获取信息失败
+    }
+
+    *info = *infoPtr;
+
+    return 1; // 获取信息成功
+}
+
 void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index, int page_type)
 {
     if (page_type == 0)

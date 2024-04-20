@@ -1,7 +1,7 @@
 #include "HoverInfoWidget.h"
 
 HoverInfoWidget::HoverInfoWidget(QWidget *parent)
-    : QWidget(parent), draggable(false), pinned(false), resizeable(false), borderMargin(8)
+    : QWidget(parent), draggable(false), pinned(false), resizeable(false), borderMargin(8) // 8
 {
     setupUI();
 }
@@ -83,10 +83,9 @@ void HoverInfoWidget::setupUI()
 
 void HoverInfoWidget::adjustComponents()
 {
+    // 获取图片的宽度和高度
     int imageWidth = width() - 2 * borderMargin;
-    int imageHeight = static_cast<int>(imageWidth * 0.8);
-    imageLabel->setFixedSize(imageWidth, imageHeight);
-
+    int imageHeight = imageLabel->pixmap() ? imageWidth * imageLabel->pixmap()->height() / imageLabel->pixmap()->width() : 0;
     int listItemHeight = infoListWidget->sizeHintForRow(0) * infoListWidget->count();
     infoListWidget->setFixedSize(imageWidth, listItemHeight);
 
@@ -106,7 +105,20 @@ void HoverInfoWidget::setInfo(const QMap<QString, QVariant> &info)
 
 void HoverInfoWidget::setDisplayImage(const QPixmap &pixmap)
 {
-    imageLabel->setPixmap(pixmap);
+    if (pixmap.isNull())
+    {
+        imageLabel->clear();
+        adjustComponents(); // Adjust components after setting the image
+        return;
+    }
+    int imageWidth = width() - 2 * borderMargin;
+    // 缩放图片
+    // int imageHeight = pixmap.isNull() ? 0 : imageWidth * pixmap.height() / pixmap.width();
+    // 无失真地缩放图片
+    QPixmap scaledPixmap = pixmap.scaledToWidth(imageWidth, Qt::SmoothTransformation);
+    int imageHeight = scaledPixmap.height();
+    imageLabel->resize(imageWidth, imageHeight);
+    imageLabel->setPixmap(scaledPixmap);
     adjustComponents(); // Adjust components after setting the image
 }
 
@@ -119,6 +131,16 @@ void HoverInfoWidget::showWithEffect()
 {
     // Implement any show effect here if desired
     show();
+}
+
+int HoverInfoWidget::getHoverInfoWidgetWidth()
+{
+    return this->width();
+}
+
+int HoverInfoWidget::getHoverInfoWidgetHeight()
+{
+    return this->height();
 }
 
 void HoverInfoWidget::paintEvent(QPaintEvent *event)

@@ -34,6 +34,8 @@ public:
     void generateDynamicData(int index);
     void generateDynamicAction(int index);
     int captureImageData(int index, QRect captureRect); // 用于捕获绘图界面的图像
+    int getImageData(int index, QPixmap *pixmap);
+    int getInfoData(int index, QMap<QString, QVariant> *info);
 
 signals:
     void dataGenerated(QVector<QVector<double> *> *xDataVector,

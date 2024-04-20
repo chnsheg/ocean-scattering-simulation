@@ -27,6 +27,10 @@ public:
     // 获取卡片窗口的锚点位置
     QPoint getAnchorPoint() const;
     void showWithEffect();
+
+    int getHoverInfoWidgetWidth();
+    int getHoverInfoWidgetHeight();
+
     void resizeEvent(QResizeEvent *event) override;
 
 protected:

@@ -24,7 +24,6 @@ int main(int argc, char *argv[])
         qDebug() << "open file failed";
     }
     w.show();
-    qDebug() << "Window Id: " << w.winId();
     return a.exec();
 }
 

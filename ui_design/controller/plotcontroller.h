@@ -10,6 +10,7 @@
 #include "view/plotView.h"
 #include "view/dynamicview.h"
 #include "module/hoverinfowidget.h"
+#include <QPixmap>
 
 class PlotController : public QObject
 {
