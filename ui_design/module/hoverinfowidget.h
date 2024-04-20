@@ -12,6 +12,7 @@
 #include <QListWidget>
 #include <QResizeEvent>
 #include <QPainterPath>
+#include <QLineEdit>
 
 class HoverInfoWidget : public QWidget
 {
@@ -23,6 +24,7 @@ public:
 
     void setInfo(const QMap<QString, QVariant> &info);
     void setDisplayImage(const QPixmap &pixmap);
+    void updateDisplayImage();
     void setAnchorPoint(const QPoint &point);
     // 获取卡片窗口的锚点位置
     QPoint getAnchorPoint() const;
@@ -48,12 +50,19 @@ private:
     QListWidget *infoListWidget;
     QPushButton *closeButton;
     QPushButton *pinButton;
+    QPushButton *resizeButton;
+    QPushButton *shrinkButton;
+    QLineEdit *resizeLineEdit;
+    // 用于存储原图像，以便在resize时使用
+    QPixmap *originalPixmap;
     QPoint anchorPoint;
     QPoint dragPosition;
     bool draggable;
     bool pinned;
     bool resizeable;
     int borderMargin;
+    int baseWidth;
+    int baseHeight;
 
     void setupUI();
     QPainterPath shapePath() const;
@@ -66,6 +75,9 @@ signals:
 public slots:
     void onCloseButtonClicked();
     void onPinButtonClicked();
+    void onResizeButtonClicked();
+    void onShrinkButtonClicked();
+    void onResizeLineEditReturnPressed();
 };
 
 #endif // HOVERINFOWIDGET_H

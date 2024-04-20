@@ -270,7 +270,14 @@ int PageDataGenerator::captureImageData(int index, QRect captureRect)
 
     QPixmap *pixmapPtr = new QPixmap(pixmap);
 
-    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 8 + index), QVariant::fromValue(pixmapPtr));
+    // 先释放之前的图片
+    if (Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(8, index)).value<QPixmap *>() != nullptr)
+    {
+        QPixmap *pixmapPtr = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(8, index)).value<QPixmap *>();
+        delete pixmapPtr;
+    }
+
+    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(8, index), QVariant::fromValue(pixmapPtr));
 
     // 保存图片到文件
     QString filePath = QDir::currentPath() + "/capture.png";
@@ -282,12 +289,17 @@ int PageDataGenerator::captureImageData(int index, QRect captureRect)
 
 int PageDataGenerator::getImageData(int index, QPixmap *pixmap)
 {
-    QPixmap *pixmapPtr = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 8 + index)).value<QPixmap *>();
+    QPixmap *pixmapPtr = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(8, index)).value<QPixmap *>();
 
     if (pixmapPtr == nullptr)
     {
         return 0; // 获取图片失败
     }
+
+    // if (pixmap != nullptr)
+    // {
+    //     delete pixmap;
+    // }
 
     *pixmap = *pixmapPtr;
 

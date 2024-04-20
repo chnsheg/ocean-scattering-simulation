@@ -488,8 +488,9 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
 void PlotView::handleShow1ButtonGroupHoverEvent(int button_index, const QPoint &pos)
 {
     int page_index = button_index; // 将按键索引转换为页面索引
+    qDebug() << "pos: " << pos;
     // 将pos转换为全局坐标
-    QPoint globalPos = ui->show1->parentWidget()->mapToGlobal(pos);
+    QPoint globalPos = ui->stackedWidget->mapToGlobal(pos);
     emit onShowButtonHover(page_index, globalPos);
 }
 

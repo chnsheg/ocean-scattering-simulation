@@ -3,7 +3,7 @@
 #include <QDebug>
 
 HoverInfoWidget::HoverInfoWidget(QWidget *parent)
-    : QWidget(parent), draggable(false), pinned(false), resizeable(false), borderMargin(8) // 8
+    : QWidget(parent), draggable(false), pinned(false), resizeable(false), borderMargin(8), originalPixmap(nullptr), baseWidth(400), baseHeight(500)
 {
     setupUI();
 }
@@ -27,36 +27,75 @@ void HoverInfoWidget::setupUI()
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip); // Set window flags to make it a tooltip
     // 设置窗口大小,但是可以通过resize()函数调整窗口大小
-    setFixedSize(300, 450);
+    resize(baseWidth, baseHeight);
 
     setAttribute(Qt::WA_TranslucentBackground); // Set attribute to make the widget transparent
     setMouseTracking(true);
 
     imageLabel = new QLabel(this);
     imageLabel->setScaledContents(true);
-    imageLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    imageLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     imageLabel->setAlignment(Qt::AlignCenter);
 
     infoListWidget = new QListWidget(this);
     infoListWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     infoListWidget->setFrameStyle(QFrame::NoFrame);
+    // 设置item的分割
+    infoListWidget->setStyleSheet("QListWidget::item { border-bottom: 1px solid #dcdcdc; }");
+    infoListWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+    // 设置item的字体"Lato", Helvetica, Arial, sans-serif;
+    infoListWidget->setFont(QFont("Lato", 10));
+    // 设置item选中时的背景颜色以及透明度，和字体颜色
+    infoListWidget->setStyleSheet("QListWidget::item:selected { background-color: #f7f7f7; color: #333; }");
 
     closeButton = new QPushButton("❌", this);
     closeButton->setFlat(true);
-    closeButton->setFixedSize(30, 40);
+    closeButton->setFixedSize(50, 60);
     closeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     connect(closeButton, &QPushButton::clicked, this, &HoverInfoWidget::onCloseButtonClicked);
 
     pinButton = new QPushButton("📌", this);
     pinButton->setFlat(true);
-    pinButton->setFixedSize(30, 40);
+    pinButton->setFixedSize(50, 60);
     pinButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     connect(pinButton, &QPushButton::clicked, this, &HoverInfoWidget::onPinButtonClicked);
 
+    // 设置窗口大小的按键（按比例增大窗口大小）
+    resizeButton = new QPushButton("➕", this);
+    resizeButton->setFlat(true);
+    resizeButton->setFixedSize(50, 60);
+    resizeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    connect(resizeButton, &QPushButton::clicked, this, &HoverInfoWidget::onResizeButtonClicked);
+
+    // 窗口中间防止一个小方块状的输入框，用来显示当前窗口的大小比例
+    resizeLineEdit = new QLineEdit(this);
+    resizeLineEdit->setFixedSize(100, 60);
+    resizeLineEdit->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    resizeLineEdit->setAlignment(Qt::AlignCenter);
+    resizeLineEdit->setText("100%");
+    // 处理输入框的回车事件
+    connect(resizeLineEdit, &QLineEdit::returnPressed, this, &HoverInfoWidget::onResizeLineEditReturnPressed);
+    // 设置输入框的字体
+    resizeLineEdit->setFont(QFont("Lato", 10));
+    // 设置字体颜色
+    resizeLineEdit->setStyleSheet("color: #333;");
+    // 设置输入框的背景颜色
+    resizeLineEdit->setStyleSheet("background-color: #f4f4f4;");
+
+    // 设置窗口大小的按键（按比例减小窗口大小）
+    shrinkButton = new QPushButton("➖", this);
+    shrinkButton->setFlat(true);
+    shrinkButton->setFixedSize(50, 60);
+    shrinkButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    connect(shrinkButton, &QPushButton::clicked, this, &HoverInfoWidget::onShrinkButtonClicked);
+
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
     // 使两个按键都在右侧
-    buttonsLayout->addStretch();
+    buttonsLayout->addWidget(shrinkButton, 0, Qt::AlignLeft);
+    buttonsLayout->addWidget(resizeLineEdit, 0, Qt::AlignLeft);
+    buttonsLayout->addWidget(resizeButton, 0, Qt::AlignLeft);
 
+    buttonsLayout->addStretch();
     buttonsLayout->addWidget(pinButton, 0, Qt::AlignRight);
     buttonsLayout->addWidget(closeButton, 0, Qt::AlignRight);
     // 设置按键之间的间距
@@ -89,7 +128,7 @@ void HoverInfoWidget::adjustComponents()
     int imageWidth = width() - 2 * borderMargin;
     int imageHeight = imageLabel->pixmap() ? imageWidth * imageLabel->pixmap()->height() / imageLabel->pixmap()->width() : 0;
     int listItemHeight = infoListWidget->sizeHintForRow(0) * infoListWidget->count();
-    infoListWidget->setFixedSize(imageWidth, listItemHeight);
+    infoListWidget->resize(imageWidth, listItemHeight);
 
     resize(imageWidth + 2 * borderMargin, closeButton->height() + imageHeight + listItemHeight + 2 * borderMargin);
 }
@@ -113,6 +152,13 @@ void HoverInfoWidget::setDisplayImage(const QPixmap &pixmap)
         adjustComponents(); // Adjust components after setting the image
         return;
     }
+
+    if (originalPixmap != nullptr)
+    {
+        delete originalPixmap;
+    }
+    this->originalPixmap = new QPixmap(pixmap);
+
     int imageWidth = width() - 2 * borderMargin;
     // 缩放图片
     // int imageHeight = pixmap.isNull() ? 0 : imageWidth * pixmap.height() / pixmap.width();
@@ -122,6 +168,20 @@ void HoverInfoWidget::setDisplayImage(const QPixmap &pixmap)
     imageLabel->resize(imageWidth, imageHeight);
     imageLabel->setPixmap(scaledPixmap);
     adjustComponents(); // Adjust components after setting the image
+}
+
+void HoverInfoWidget::updateDisplayImage()
+{
+    if (originalPixmap != nullptr)
+    {
+        qDebug() << "updateDisplayImage:" << width();
+        int imageWidth = width() - 2 * borderMargin;
+        QPixmap scaledPixmap = originalPixmap->scaledToWidth(imageWidth, Qt::SmoothTransformation);
+        int imageHeight = scaledPixmap.height();
+        imageLabel->resize(imageWidth, imageHeight);
+        imageLabel->setPixmap(scaledPixmap);
+        adjustComponents(); // Adjust components after setting the image
+    }
 }
 
 void HoverInfoWidget::setAnchorPoint(const QPoint &point)
@@ -147,7 +207,7 @@ void HoverInfoWidget::hideWithEffect()
     {
         // qDebug() << "hideWithEffect closing...";
         // 如果在5s内鼠标不在窗口内，则关闭窗口
-        QTimer::singleShot(500, [this]
+        QTimer::singleShot(200, [this]
                            {
         if (pinned || rect().contains(mapFromGlobal(QCursor::pos())))
         {
@@ -247,6 +307,56 @@ void HoverInfoWidget::onPinButtonClicked()
 {
     pinned = !pinned;
     pinButton->setText(pinned ? "📍" : "📌");
+}
+
+void HoverInfoWidget::onResizeButtonClicked()
+{
+    // 获取当前窗口的大小
+    int currentWidth = this->width();
+    int currentHeight = this->height();
+    // 设置窗口的大小
+    resize(currentWidth * 1.1, currentHeight * 1.1);
+    // 设置窗口大小的比例
+    resizeLineEdit->setText(QString::number((int)(currentWidth * 1.1 / baseWidth * 100)) + "%");
+    updateDisplayImage();
+    adjustComponents();
+}
+
+void HoverInfoWidget::onShrinkButtonClicked()
+{
+    // 获取当前窗口的大小
+    int currentWidth = this->width();
+    int currentHeight = this->height();
+
+    // 计算缩小后的宽度和高度，使用浮点数相乘
+    int newWidth = floor(currentWidth * 0.9);
+    int newHeight = floor(currentHeight * 0.9);
+
+    // 设置窗口的大小
+    resize(newWidth, newHeight);
+    // // 设置窗口大小的比例
+    int newWidthPercent = currentWidth * 0.9 / baseWidth * 100;
+    resizeLineEdit->setText(QString::number(newWidthPercent) + "%");
+    updateDisplayImage();
+    adjustComponents();
+}
+
+void HoverInfoWidget::onResizeLineEditReturnPressed()
+{
+    // 获取输入框中的文本
+    QString text = resizeLineEdit->text();
+    // 获取当前窗口的大小
+    int currentWidth = this->baseWidth;
+    int currentHeight = this->baseHeight;
+    // 获取输入框中的数字
+    int scale = text.left(text.length() - 1).toInt();
+    qDebug() << "scale:" << scale;
+    // 设置窗口的大小
+    // resize(currentWidth * scale / 100, currentHeight * scale / 100);
+    // 向下取整
+    resize(floor(currentWidth * scale / 100), floor(currentHeight * scale / 100));
+    updateDisplayImage();
+    adjustComponents();
 }
 
 void HoverInfoWidget::mousePressEvent(QMouseEvent *event)
