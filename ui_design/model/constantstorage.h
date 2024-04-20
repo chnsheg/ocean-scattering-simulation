@@ -14,6 +14,7 @@
 
 Q_DECLARE_METATYPE(QSharedPointer<QCPGraphDataContainer>)
 Q_DECLARE_METATYPE(QVector<double> *)
+Q_DECLARE_METATYPE(QPixmap *)
 
 class ConstantStorage : public QObject
 {

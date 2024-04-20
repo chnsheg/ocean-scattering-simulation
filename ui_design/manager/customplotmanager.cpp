@@ -44,6 +44,11 @@ CustomPlotManager::~CustomPlotManager()
     }
 }
 
+QRect CustomPlotManager::getCustomPlotRect()
+{
+    return customPlot->viewport();
+}
+
 // /**
 //  * @brief CustomPlotManager::getInstance
 //  * @param customPlot

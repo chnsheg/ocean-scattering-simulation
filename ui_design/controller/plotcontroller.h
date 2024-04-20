@@ -9,6 +9,7 @@
 #include "model/pagedatagenerator.h"
 #include "view/plotView.h"
 #include "view/dynamicview.h"
+#include "module/hoverinfowidget.h"
 
 class PlotController : public QObject
 {
@@ -32,8 +33,9 @@ public slots:
     void handleDynamicButtonClicked(int index);
     void handleSaveConstantButtonClicked(int index, int save_type);
     void handleImportConstantButtonClicked(int index, int import_type);
-    void handleSwitchPageButtonClicked(int page_index);
+    void handleSwitchPageButtonClicked(int page_index, QRect area = QRect());
     void handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
+    void handleShowButtonHover(int index, const QPoint &pos);
 
 private:
     explicit PlotController(PlotView *_view, PageDataGenerator *_model, QObject *parent = nullptr);
@@ -44,7 +46,10 @@ private:
     QThread *thread;
     // DynamicPage *dynamicView;
     QVector<DynamicPage *> dynamicViewVector;
-    QVector<int> dynamicViewOpened;
+    QVector<int> dynamicViewOpened; // 用来记录打开的dynamicView的index，这样即使关闭了dynamicView，也可以在对应的位置打开新的dynamicView
+
+    QVector<HoverInfoWidget *> hoverInfoWidgetsVector;
+    QVector<int> hoverInfoWidgetsOpened; // 用来记录打开的hoverInfoWidget的index，这样即使关闭了hoverInfoWidget，也可以在对应的位置打开新的hoverInfoWidget
 
     SINGLETON(PlotController)
 };

@@ -127,6 +127,7 @@ module/mycombobox.cpp
 module/mytracer.cpp 
 module/qcustomplot.cpp 
 module/hoverinfowidget.cpp
+module/hoverbutton.cpp
 utils/logger.cpp 
 utils/mymath.cpp 
 utils/readfiledata.cpp 
@@ -228,6 +229,7 @@ model/spectrumdatagenerator.h
 model/underwaterspectrumdatagenerator.h 
 module/filebrowser.h 
 module/hoverinfowidget.h
+module/hoverbutton.cpp
 module/mycombobox.h 
 module/mytracer.h 
 module/qcustomplot.h 

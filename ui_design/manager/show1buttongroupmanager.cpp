@@ -1,50 +1,119 @@
 #include "manager/show1buttongroupmanager.h"
+#include <QDebug>
 
 Show1ButtonGroupManager::Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonGroup,
                                                  QObject *parent)
     : ManagerBase(parent), show1ButtonGroup(_show1ButtonGroup)
 {
     show1ButtonGroup = _show1ButtonGroup;
+
     addEvent("show1ButtonClicked",
              "show1ButtonClicked",
              show1ButtonGroup->showButton_1,
-             &QPushButton::clicked,
+             &HoverButton::clicked,
              Show1ButtonGroupId::ShowButton_1);
     addEvent("show2ButtonClicked",
              "show2ButtonClicked",
              show1ButtonGroup->showButton_2,
-             &QPushButton::clicked,
+             &HoverButton::clicked,
              Show1ButtonGroupId::ShowButton_2);
     addEvent("show3ButtonClicked",
              "show3ButtonClicked",
              show1ButtonGroup->showButton_3,
-             &QPushButton::clicked,
+             &HoverButton::clicked,
              Show1ButtonGroupId::ShowButton_3);
     addEvent("show4ButtonClicked",
              "show4ButtonClicked",
              show1ButtonGroup->showButton_4,
-             &QPushButton::clicked,
+             &HoverButton::clicked,
              Show1ButtonGroupId::ShowButton_4);
     addEvent("show5ButtonClicked",
              "show5ButtonClicked",
              show1ButtonGroup->showButton_5,
-             &QPushButton::clicked,
+             &HoverButton::clicked,
              Show1ButtonGroupId::ShowButton_5);
     addEvent("show6ButtonClicked",
              "show6ButtonClicked",
              show1ButtonGroup->showButton_6,
-             &QPushButton::clicked,
+             &HoverButton::clicked,
              Show1ButtonGroupId::ShowButton_6);
     addEvent("show7ButtonClicked",
              "show7ButtonClicked",
              show1ButtonGroup->showButton_7,
-             &QPushButton::clicked,
+             &HoverButton::clicked,
              Show1ButtonGroupId::ShowButton_7);
     addEvent("show8ButtonClicked",
              "show8ButtonClicked",
              show1ButtonGroup->showButton_8,
-             &QPushButton::clicked,
+             &HoverButton::clicked,
              Show1ButtonGroupId::ShowButton_8);
+
+    addEvent("show1ButtonHovered",
+             "show1ButtonHovered",
+             show1ButtonGroup->showButton_1,
+             &HoverButton::hoverSignal,
+             Show1ButtonGroupId::HoverButton_1);
+
+    addEvent("show2ButtonHovered",
+             "show2ButtonHovered",
+             show1ButtonGroup->showButton_2,
+             &HoverButton::hoverSignal,
+             Show1ButtonGroupId::HoverButton_2);
+
+    addEvent("show3ButtonHovered",
+             "show3ButtonHovered",
+             show1ButtonGroup->showButton_3,
+             &HoverButton::hoverSignal,
+             Show1ButtonGroupId::HoverButton_3);
+
+    addEvent("show4ButtonHovered",
+             "show4ButtonHovered",
+             show1ButtonGroup->showButton_4,
+             &HoverButton::hoverSignal,
+             Show1ButtonGroupId::HoverButton_4);
+
+    addEvent("show5ButtonHovered",
+             "show5ButtonHovered",
+             show1ButtonGroup->showButton_5,
+             &HoverButton::hoverSignal,
+             Show1ButtonGroupId::HoverButton_5);
+
+    addEvent("show6ButtonHovered",
+             "show6ButtonHovered",
+             show1ButtonGroup->showButton_6,
+             &HoverButton::hoverSignal,
+             Show1ButtonGroupId::HoverButton_6);
+
+    addEvent("show7ButtonHovered",
+             "show7ButtonHovered",
+             show1ButtonGroup->showButton_7,
+             &HoverButton::hoverSignal,
+             Show1ButtonGroupId::HoverButton_7);
+
+    addEvent("show8ButtonHovered",
+             "show8ButtonHovered",
+             show1ButtonGroup->showButton_8,
+             &HoverButton::hoverSignal,
+             Show1ButtonGroupId::HoverButton_8);
+
+    // 连接hover事件
+    // connect(
+    //     show1ButtonGroup->showButton_1,
+    //     &HoverButton::hoverSignal,
+    //     [this]()
+    //     {
+    //         qDebug() << "show1Button_1 has focus";
+    //         if (hoverInfoWidgetsVector->at(0) != nullptr)
+    //         {
+    //             hoverInfoWidgetsVector->at(0)->showWithEffect();
+    //         }
+    //         else if (hoverInfoWidgetsVector->at(0) == nullptr)
+    //         {
+    //             hoverInfoWidgetsVector->replace(0, new HoverInfoWidget());
+    //             hoverInfoWidgetsVector->at(0)->move(show1ButtonGroup->showButton_1->pos().x() - 10, show1ButtonGroup->showButton_1->pos().y());
+    //             hoverInfoWidgetsVector->at(0)->showWithEffect();
+    //         }
+    //     });
 }
 
 Show1ButtonGroupManager::Show1ButtonGroupManager() {}
@@ -76,6 +145,43 @@ Show1ButtonGroup *Show1ButtonGroupManager::getShow1ButtonGroup()
 
 void Show1ButtonGroupManager::onEventAction(const QString &event, int status, const QVariant &param)
 {
-    Show1ButtonGroupId buttonId = param.value<Show1ButtonGroupId>();
-    emit eventSignal(buttonId);
+    // 先判断param是否为Show1ButtonGroupId类型
+    if (param.canConvert<Show1ButtonGroupId>())
+    {
+        Show1ButtonGroupId buttonId = param.value<Show1ButtonGroupId>();
+        if (buttonId < Show1ButtonGroupId::HoverButton_1)
+        {
+            emit eventSignal(buttonId);
+        }
+        else if (buttonId >= Show1ButtonGroupId::HoverButton_1 && buttonId <= Show1ButtonGroupId::HoverButton_8)
+        {
+            switch (buttonId)
+            {
+            case Show1ButtonGroupId::HoverButton_1:
+                emit hoverSignal(0, show1ButtonGroup->showButton_1->pos());
+                break;
+            case Show1ButtonGroupId::HoverButton_2:
+                emit hoverSignal(1, show1ButtonGroup->showButton_2->pos());
+                break;
+            case Show1ButtonGroupId::HoverButton_3:
+                emit hoverSignal(2, show1ButtonGroup->showButton_3->pos());
+                break;
+            case Show1ButtonGroupId::HoverButton_4:
+                emit hoverSignal(3, show1ButtonGroup->showButton_4->pos());
+                break;
+            case Show1ButtonGroupId::HoverButton_5:
+                emit hoverSignal(4, show1ButtonGroup->showButton_5->pos());
+                break;
+            case Show1ButtonGroupId::HoverButton_6:
+                emit hoverSignal(5, show1ButtonGroup->showButton_6->pos());
+                break;
+            case Show1ButtonGroupId::HoverButton_7:
+                emit hoverSignal(6, show1ButtonGroup->showButton_7->pos());
+                break;
+            case Show1ButtonGroupId::HoverButton_8:
+                emit hoverSignal(7, show1ButtonGroup->showButton_8->pos());
+                break;
+            }
+        }
+    }
 }

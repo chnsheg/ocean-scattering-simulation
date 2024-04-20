@@ -20,6 +20,7 @@ public:
                                       QColor(0, 0, 255),
                                       QColor(255, 255, 255),
                                       QColor(0, 0, 0)};
+    QRect getCustomPlotRect();
 
     void setCustomPlot(QCustomPlot *newCustomPlot);
     void setPenToRunFluently(int curve_index);

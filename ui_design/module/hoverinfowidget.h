@@ -19,9 +19,13 @@ class HoverInfoWidget : public QWidget
 
 public:
     explicit HoverInfoWidget(QWidget *parent = nullptr);
+    ~HoverInfoWidget();
+
     void setInfo(const QMap<QString, QVariant> &info);
     void setDisplayImage(const QPixmap &pixmap);
     void setAnchorPoint(const QPoint &point);
+    // 获取卡片窗口的锚点位置
+    QPoint getAnchorPoint() const;
     void showWithEffect();
     void resizeEvent(QResizeEvent *event) override;
 
@@ -47,9 +51,11 @@ private:
 
     void setupUI();
     QPainterPath shapePath() const;
+
     void adjustComponents();
 
 signals:
+    void closeHoverInfoWidgetSignal();
 
 public slots:
     void onCloseButtonClicked();

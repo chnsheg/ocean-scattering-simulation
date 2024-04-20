@@ -51,7 +51,7 @@ QVector<QString> runtimeCurveDataVector = QVector<QString>({"Laser",            
                                                             "SpectrumAfterFizeau",            // 13                          // 14
                                                             "SpectrumAfterPMT"});             // 14
 
-QVector<QString> runtimeResultDataVector = QVector<QString>({"BrillouinLine",
+QVector<QString> runtimeResultDataVector = QVector<QString>({"BrillouinLine", // 用来保存运行时产生的数据
                                                              "BrillouinShift",
                                                              "NBrillouin",
                                                              "NMie",
@@ -61,6 +61,12 @@ QVector<QString> runtimeResultDataVector = QVector<QString>({"BrillouinLine",
 
 });
 
+QVector<QString> runtimeImageDataVector = QVector<QString>({"LaserImage",
+                                                            "SpectrumImage",
+                                                            "UnderWaterTotalImage",
+                                                            "FizeauImage",
+                                                            "PMTImage"});
+
 ConstantGroup physicalConstantGroup(&physicalConstantVector);
 ConstantGroup laserConstantGroup(&laserConstantVector);
 ConstantGroup fizeauConstantGroup(&fizeauConstantVector);
@@ -69,6 +75,7 @@ ConstantGroup spectrumConstantGroup(&spectrumConstantVector);
 ConstantGroup underWaterSpectrumConstantGroup(&underWaterSpectrumConstantVector);
 ConstantGroup runtimeDataGroup(&runtimeCurveDataVector);
 ConstantGroup runtimeResultGroup(&runtimeResultDataVector);
+ConstantGroup runtimeImageGroup(&runtimeImageDataVector);
 
 ConstantMap::ConstantMap()
 {
@@ -81,6 +88,7 @@ ConstantMap::ConstantMap()
     this->m_constantMap->insert(5, &runtimeDataGroup);
     this->m_constantMap->insert(6, &runtimeResultGroup);
     this->m_constantMap->insert(7, &underWaterSpectrumConstantGroup);
+    this->m_constantMap->insert(8, &runtimeImageGroup);
 }
 
 ConstantMap::~ConstantMap() {}

@@ -33,6 +33,7 @@ public:
     QVector<double> *generateData(DataType dataType);
     void generateDynamicData(int index);
     void generateDynamicAction(int index);
+    int captureImageData(int index, QRect captureRect); // 用于捕获绘图界面的图像
 
 signals:
     void dataGenerated(QVector<QVector<double> *> *xDataVector,

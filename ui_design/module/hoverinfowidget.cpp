@@ -6,6 +6,21 @@ HoverInfoWidget::HoverInfoWidget(QWidget *parent)
     setupUI();
 }
 
+HoverInfoWidget::~HoverInfoWidget()
+{
+    delete imageLabel;
+    delete infoListWidget;
+    delete closeButton;
+    delete pinButton;
+
+    imageLabel = nullptr;
+    infoListWidget = nullptr;
+    closeButton = nullptr;
+    pinButton = nullptr;
+
+    emit closeHoverInfoWidgetSignal();
+}
+
 void HoverInfoWidget::setupUI()
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip); // Set window flags to make it a tooltip
@@ -37,9 +52,6 @@ void HoverInfoWidget::setupUI()
     connect(pinButton, &QPushButton::clicked, this, &HoverInfoWidget::onPinButtonClicked);
 
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
-    // buttonsLayout->addWidget(closeButton, 0, Qt::AlignLeft);
-    // buttonsLayout->addStretch();
-    // buttonsLayout->addWidget(pinButton, 0, Qt::AlignRight);
     // 使两个按键都在右侧
     buttonsLayout->addStretch();
 
@@ -49,9 +61,16 @@ void HoverInfoWidget::setupUI()
     buttonsLayout->setContentsMargins(0, 0, 0, 0);
     buttonsLayout->setSpacing(0);
     buttonsLayout->setMargin(0);
+    // 设置背景颜色
+
+    QFrame *line = new QFrame(this);
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+    line->setStyleSheet("color: #f7f7f7; border-width: 2px; border-style: solid;");
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addLayout(buttonsLayout);
+    mainLayout->addWidget(line);
     mainLayout->addWidget(imageLabel);
     mainLayout->addWidget(infoListWidget);
     mainLayout->setSpacing(0);
@@ -125,6 +144,26 @@ QPainterPath HoverInfoWidget::shapePath() const
     return path;
 }
 
+// QPainterPath HoverInfoWidget::drawCurvePath() const
+// {
+//     QPainterPath path;
+//     // anchorPoint是窗口外部的锚点，即窗口的锚点在窗口外部
+
+//     path.moveTo(anchorPoint); // 移动到锚点
+//     // 绘制从外部锚点anchorPoint到窗口左上角的曲线
+//     QPoint controlPoint1 = QPoint(anchorPoint.x() + 50, anchorPoint.y() - 50);
+//     QPoint controlPoint2 = QPoint(this->x() + 50, this->y() + 50);
+
+// path.cubicTo(controlPoint1, controlPoint2, QPoint(this->x(), this->y()));
+//     return path;
+// }
+
+QPoint HoverInfoWidget::getAnchorPoint() const
+{
+    QPoint globalAnchorPoint = mapToGlobal(anchorPoint);
+    return globalAnchorPoint;
+}
+
 void HoverInfoWidget::enterEvent(QEvent *event)
 {
     if (!pinned)
@@ -137,7 +176,7 @@ void HoverInfoWidget::leaveEvent(QEvent *event)
 {
     if (!pinned)
     {
-        // close();
+        close(); // Close the widget when the mouse leaves，这时，hoverinfoWidget对象会被销毁
     }
 }
 

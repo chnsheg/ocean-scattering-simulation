@@ -78,21 +78,22 @@ QTextEdit
     margin-top: 10px;
 }
 
+
 /**鼠标停留在按钮上的样式**/
-QPushButton:hover{	
+#stackedWidget QPushButton:hover{	
     color: rgba(52, 73, 94, 1);
     background-color: #FFFFFF;
     border-color: #2f3640;
 }
 
 /**鼠标按压下去的样式**/
-QPushButton::pressed,QPushButton:checked{
+#stackedWidget QPushButton::pressed,QPushButton:checked{
     color: #FFFFFF;
     background-color: qlineargradient(spread pad, x1 0, y1 0, x2 0, y2 1, stop 0 #273c75, stop 1 #487eb0);
 }
 
 /**按钮失能情况下样式**/
-QPushButton:disabled{
+#stackedWidget QPushButton:disabled{
     color: #2f3640;
     background-color: #dcdde1;
     border-color: #dcdde1;

@@ -48,11 +48,12 @@ signals:
     void onClearButtonClicked();
     void onTracerButtonClicked();
     void onDynamicButtonClicked(int index);
+    void onShowButtonHover(int index, const QPoint &pos);
     void onSaveConstantButtonClicked(int index, int save_type);                                                                    // 0: save constants to current page, 1: save constants to all pages；
                                                                                                                                    // 2: save runtime data to current page, 3: save runtime data to all pages
     void onImportConstantButtonClicked(int index, int import_type);                                                                // 0: import constants to current page, 1: import constants to all pages；
                                                                                                                                    // 2: import runtime data to current page, 3: import runtime data to all pages
-    void switchPageButtonClicked(int page_index);                                                                                  // interface_index 用于区分返回的界面
+    void switchPageButtonClicked(int page_index, QRect area = QRect());                                                            // interface_index 用于区分返回的界面
     void storeRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index); // 用于存储运行时数据
 
 public slots:
@@ -64,10 +65,12 @@ public slots:
     void updateViewClearSlot();
     void updateViewPageSlot(int page_index);
 
-private:
     void handleMenuManagerEvent(MenuActionId menuActionId);
     void handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId);
     void handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId);
+    void handleShow1ButtonGroupHoverEvent(int button_index, const QPoint &pos);
+
+private:
     void saveConstantButtonClicked(int index, int save_type);
     void importConstantButtonClicked(int index, int save_type);
     void startButtonClicked();

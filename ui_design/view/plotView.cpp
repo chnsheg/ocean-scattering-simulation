@@ -57,22 +57,22 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     Singleton<Show1ButtonGroupManager>::getInstance(show1ButtonGroup);
 
     // 挂载hoverInfoWidget单例
-    HoverInfoWidget *hoverInfoWidget = new HoverInfoWidget();
-    hoverInfoWidget->setAnchorPoint(QPoint(50, 50));
-    hoverInfoWidget->setDisplayImage(QPixmap(":/backgroundImage.png"));
-    QMap<QString, QVariant> info;
-    info.insert("Name", "Laser Spectroscopy");
-    info.insert("Description", "This is a laser spectroscopy system.");
-    info.insert("Author", "Yonghao");
-    hoverInfoWidget->setInfo(info);
-    hoverInfoWidget->showWithEffect();
+    // HoverInfoWidget *hoverInfoWidget = new HoverInfoWidget();
+    // hoverInfoWidget->setAnchorPoint(QPoint(50, 50));
+    // hoverInfoWidget->setDisplayImage(QPixmap(":/backgroundImage.png"));
+    // QMap<QString, QVariant> info;
+    // info.insert("Name", "Laser Spectroscopy");
+    // info.insert("Description", "This is a laser spectroscopy system.");
+    // info.insert("Author", "Yonghao");
+    // hoverInfoWidget->setInfo(info);
+    // hoverInfoWidget->showWithEffect();
 
     // 挂载CustomPlotManager单例
     //  Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
     Singleton<CustomPlotManager>::getInstance(_ui->customPlot1);
 
     // 初始化CustomPlot的list
-    for (auto &&widgetName : {_ui->customPlot1, _ui->customPlot2, _ui->customPlot3, _ui->customPlot4, _ui->customPlot5, _ui->customPlot6, _ui->customPlot7, _ui->customPlot8})
+    for (QCustomPlot *widgetName : {_ui->customPlot1, _ui->customPlot2, _ui->customPlot3, _ui->customPlot4, _ui->customPlot5, _ui->customPlot6, _ui->customPlot7, _ui->customPlot8})
     {
         customPlotList.append(widgetName);
     }
@@ -118,6 +118,13 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
             eventSignal,
             this,
             handleShow1ButtonGroupManagerEvent);
+
+    void (Show1ButtonGroupManager::*hoverSignal)(int, const QPoint &) = &Show1ButtonGroupManager::hoverSignal;
+    void (PlotView::*handleShow1ButtonGroupHoverEvent)(int, const QPoint &) = &PlotView::handleShow1ButtonGroupHoverEvent;
+    connect(Singleton<Show1ButtonGroupManager>::getInstance(),
+            hoverSignal,
+            this,
+            handleShow1ButtonGroupHoverEvent);
 }
 
 PlotView::PlotView() {} // 必须要在此处实现一个空的构造，否则会报错
@@ -170,7 +177,7 @@ QCustomPlot *PlotView::getCurrentAnchoredCustomPlot() // 根据锚点锚定当�
     // int index = ui->stackedWidget->currentIndex(); // ui文件中对此命名产生的约束
     // return ui->stackedWidget->findChild<QCustomPlot *>(QString("customPlot%1").arg(index));
     int anchor = getCustomPlotManagerAnchor();
-    return customPlotList[anchor];
+    return customPlotList[anchor - 1];
 }
 
 int PlotView::changeCustomPlotManagerAnchor(int index)
@@ -471,6 +478,12 @@ void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
     }
 }
 
+void PlotView::handleShow1ButtonGroupHoverEvent(int button_index, const QPoint &pos)
+{
+    int page_index = button_index; // 将按键索引转换为页面索引
+    emit onShowButtonHover(page_index, pos);
+}
+
 void PlotView::saveConstantButtonClicked(int index, int save_type)
 {
     if (save_type == 0)
@@ -513,8 +526,32 @@ void PlotView::switchPlotPageButtonClicked(int index)
     // 从当前绘图界面退出
     // 清除customPlot数据,由于与数据存储使用共享指针，因此不在此释放内存
     // Singleton<CustomPlotManager>::getInstance()->clearPlot();
-    Singleton<CustomPlotManager>::getInstance()->hidePlot();
-    emit switchPageButtonClicked(showPageIndex[index]);
+    // Singleton<CustomPlotManager>::getInstance()->hidePlot();
+
+    QRect globalRect = Singleton<CustomPlotManager>::getInstance()->getCustomPlotRect();
+
+    // QRect Frame = ui->customPlot1->parentWidget()->geometry();
+    // QPoint globalTopRight = mapToGlobal(Frame.topLeft());
+
+    // qDebug() << "globalTopRight: " << globalTopRight;
+
+    // int x_relative = globalTopRight.x();
+    // int y_relative = globalTopRight.y();
+
+    // 获取整个ui窗口的右上角坐标
+    // int x = ui->customPlot1->parentWidget()->mapToGlobal(ui->customPlot1->pos()).x();
+    // int y = ui->customPlot1->parentWidget()->mapToGlobal(ui->customPlot1->pos()).y();
+    QWidget *widget = getCurrentAnchoredCustomPlot()->parentWidget();
+    QCustomPlot *customPlot = getCurrentAnchoredCustomPlot();
+
+    int x = widget->mapToGlobal(customPlot->pos()).x();
+    int y = widget->mapToGlobal(customPlot->pos()).y();
+
+    QPoint globalTopLeft = QPoint(x, y);
+    qDebug() << "globalTopLeft: " << globalTopLeft;
+    QRect paintRect = QRect(globalTopLeft, globalRect.size());
+
+    emit switchPageButtonClicked(showPageIndex[index], paintRect);
 }
 
 void PlotView::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId)
@@ -551,6 +588,6 @@ void PlotView::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroup
 void PlotView::switchShowPageButtonClicked(int index)
 {
     // qDebug() << plotPageIndex[index - 1] << " ";
-    // 从当前展示界面退出
+    // 从当前展示界面退出，进入绘图页面
     emit switchPageButtonClicked(plotPageIndex[index]);
 }

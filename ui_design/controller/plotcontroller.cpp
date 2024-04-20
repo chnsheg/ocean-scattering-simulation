@@ -14,9 +14,8 @@ PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObje
             &PlotView::onTracerButtonClicked,
             this,
             &PlotController::handleTracerButtonClicked);
-    void (PlotView::*switchPageButtonClicked)(int) = &PlotView::switchPageButtonClicked;
-    void (PlotController::*handleSwitchPageButtonClicked)(int) = &PlotController::handleSwitchPageButtonClicked;
-    connect(view, switchPageButtonClicked, this, handleSwitchPageButtonClicked);
+
+    connect(view, &PlotView::switchPageButtonClicked, this, &PlotController::handleSwitchPageButtonClicked);
 
     connect(view, &PlotView::storeRuntimeDataSignal, this, &PlotController::handleStoreRuntimeDataSignal);
 
@@ -27,6 +26,8 @@ PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObje
     connect(model, &PageDataGenerator::importConstantCompleted, this, &PlotController::handleImportConstantCompleted);
 
     connect(view, &PlotView::onDynamicButtonClicked, this, &PlotController::handleDynamicButtonClicked);
+
+    connect(view, &PlotView::onShowButtonHover, this, &PlotController::handleShowButtonHover);
 }
 
 // TODO: Add destructor
@@ -122,6 +123,31 @@ void PlotController::handleTracerButtonClicked()
     view->updateViewTracerSlot();
 }
 
+void PlotController::handleShowButtonHover(int index, const QPoint &pos)
+{
+    HoverInfoWidget *hoverInfoWidget;
+
+    if (hoverInfoWidgetsOpened.contains(index))
+    {
+        hoverInfoWidget = hoverInfoWidgetsVector.at(index);
+    }
+    else
+    {
+        hoverInfoWidget = new HoverInfoWidget();
+        hoverInfoWidgetsVector.append(hoverInfoWidget);
+        hoverInfoWidgetsOpened.append(index);
+    }
+
+    hoverInfoWidget->move(pos.x() - 10, pos.y());
+    hoverInfoWidget->showWithEffect();
+
+    // hoverInfoWidget被关闭时，清除hoverInfoWidget的指针和opened列表中的索引
+    connect(hoverInfoWidget, &HoverInfoWidget::closeHoverInfoWidgetSignal, this, [=]
+            {
+        hoverInfoWidgetsVector.removeOne(hoverInfoWidget);
+        hoverInfoWidgetsOpened.removeOne(index); });
+}
+
 void PlotController::handleDynamicButtonClicked(int index)
 {
     // 通知model存储数据
@@ -129,7 +155,7 @@ void PlotController::handleDynamicButtonClicked(int index)
     // DynamicPage *dynamicView;
     thread = new QThread();
     DynamicPage *dynamicView;
-    int dynamicPageType = 0;
+    int dynamicPageType = 0; // 0: 动态页面，1: 动态操作页面（模型反演）
 
     if (dynamicViewOpened.contains(index))
     {
@@ -137,7 +163,6 @@ void PlotController::handleDynamicButtonClicked(int index)
     }
     else
     {
-
         switch (index)
         {
         case 0:
@@ -327,8 +352,14 @@ void PlotController::handleImportConstantCompleted(const int page_index, const Q
     }
 }
 
-void PlotController::handleSwitchPageButtonClicked(int page_index)
+void PlotController::handleSwitchPageButtonClicked(int page_index, QRect area)
 {
-    // 通知model存储数据
+    // 通知model截图
+    if (area != QRect())
+    {
+        int captureResult = model->captureImageData(page_index, area);
+        qDebug() << "page_index: " << page_index << " captureResult: " << captureResult;
+    }
+    // 通知view切换页面，page_index从0开始
     view->updateViewPageSlot(page_index);
 }

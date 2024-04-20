@@ -246,6 +246,40 @@ void PageDataGenerator::generateDynamicAction(int index)
     }
 }
 
+int PageDataGenerator::captureImageData(int index, QRect captureRect)
+{
+    // 截图并保存到constantstorage中，存储池索引是8
+    QScreen *screen = QGuiApplication::primaryScreen();
+
+    if (!screen)
+    {
+        return -1; // 无法获取屏幕
+    }
+
+    // 定义截图区域，例如从点(100, 100)开始，宽度和高度均为400像素
+    // QRect captureRect(100, 100, 400, 400);
+
+    // 截图指定区域
+    qDebug() << "captureRect: " << captureRect;
+    QPixmap pixmap = screen->grabWindow(0, captureRect.x(), captureRect.y(), captureRect.width(), captureRect.height());
+
+    if (pixmap.isNull())
+    {
+        return 0; // 截图失败
+    }
+
+    QPixmap *pixmapPtr = new QPixmap(pixmap);
+
+    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(5, 8 + index), QVariant::fromValue(pixmapPtr));
+
+    // 保存图片到文件
+    QString filePath = QDir::currentPath() + "/capture.png";
+
+    pixmap.save(filePath);
+
+    return 1; // 截图成功
+}
+
 void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index, int page_type)
 {
     if (page_type == 0)
