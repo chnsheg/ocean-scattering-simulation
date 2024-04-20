@@ -26,8 +26,18 @@ HoverInfoWidget::~HoverInfoWidget()
 void HoverInfoWidget::setupUI()
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip); // Set window flags to make it a tooltip
+    // 设置窗口可以增大和缩小
+    // Expandint
+    setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+
+    // 设置窗口的最小大小
+    setMinimumSize(320, 400);
+
+    // 设置窗口的最大大小
+    setMaximumSize(640, 800);
+
     // 设置窗口大小,但是可以通过resize()函数调整窗口大小
-    resize(baseWidth, baseHeight);
+    setFixedSize(baseWidth, baseHeight);
 
     setAttribute(Qt::WA_TranslucentBackground); // Set attribute to make the widget transparent
     setMouseTracking(true);
@@ -128,9 +138,9 @@ void HoverInfoWidget::adjustComponents()
     int imageWidth = width() - 2 * borderMargin;
     int imageHeight = imageLabel->pixmap() ? imageWidth * imageLabel->pixmap()->height() / imageLabel->pixmap()->width() : 0;
     int listItemHeight = infoListWidget->sizeHintForRow(0) * infoListWidget->count();
-    infoListWidget->resize(imageWidth, listItemHeight);
+    infoListWidget->setFixedSize(imageWidth, listItemHeight);
 
-    resize(imageWidth + 2 * borderMargin, closeButton->height() + imageHeight + listItemHeight + 2 * borderMargin);
+    setFixedSize(imageWidth + 2 * borderMargin, closeButton->height() + imageHeight + listItemHeight + 2 * borderMargin);
 }
 
 void HoverInfoWidget::setInfo(const QMap<QString, QVariant> &info)
@@ -165,7 +175,8 @@ void HoverInfoWidget::setDisplayImage(const QPixmap &pixmap)
     // 无失真地缩放图片
     QPixmap scaledPixmap = pixmap.scaledToWidth(imageWidth, Qt::SmoothTransformation);
     int imageHeight = scaledPixmap.height();
-    imageLabel->resize(imageWidth, imageHeight);
+    // imageLabel->resize(imageWidth, imageHeight);
+    imageLabel->setFixedSize(imageWidth, imageHeight);
     imageLabel->setPixmap(scaledPixmap);
     adjustComponents(); // Adjust components after setting the image
 }
@@ -178,7 +189,8 @@ void HoverInfoWidget::updateDisplayImage()
         int imageWidth = width() - 2 * borderMargin;
         QPixmap scaledPixmap = originalPixmap->scaledToWidth(imageWidth, Qt::SmoothTransformation);
         int imageHeight = scaledPixmap.height();
-        imageLabel->resize(imageWidth, imageHeight);
+        // imageLabel->resize(imageWidth, imageHeight);
+        imageLabel->setFixedSize(imageWidth, imageHeight);
         imageLabel->setPixmap(scaledPixmap);
         adjustComponents(); // Adjust components after setting the image
     }
@@ -315,7 +327,7 @@ void HoverInfoWidget::onResizeButtonClicked()
     int currentWidth = this->width();
     int currentHeight = this->height();
     // 设置窗口的大小
-    resize(currentWidth * 1.1, currentHeight * 1.1);
+    setFixedSize(currentWidth * 1.1, currentHeight * 1.1);
     // 设置窗口大小的比例
     resizeLineEdit->setText(QString::number((int)(currentWidth * 1.1 / baseWidth * 100)) + "%");
     updateDisplayImage();
@@ -332,11 +344,14 @@ void HoverInfoWidget::onShrinkButtonClicked()
     int newWidth = floor(currentWidth * 0.9);
     int newHeight = floor(currentHeight * 0.9);
 
+    // 先把窗口内图片的大小缩小
+    // imageLabel->resize(0, 0);
+
     // 设置窗口的大小
-    resize(newWidth, newHeight);
+    // resize(newWidth, newHeight);
+    setFixedSize(newWidth, newHeight);
     // // 设置窗口大小的比例
-    int newWidthPercent = currentWidth * 0.9 / baseWidth * 100;
-    resizeLineEdit->setText(QString::number(newWidthPercent) + "%");
+    resizeLineEdit->setText(QString::number((int)(currentWidth * 0.9 / baseWidth * 100)) + "%");
     updateDisplayImage();
     adjustComponents();
 }
@@ -354,7 +369,7 @@ void HoverInfoWidget::onResizeLineEditReturnPressed()
     // 设置窗口的大小
     // resize(currentWidth * scale / 100, currentHeight * scale / 100);
     // 向下取整
-    resize(floor(currentWidth * scale / 100), floor(currentHeight * scale / 100));
+    setFixedSize(floor(currentWidth * scale / 100), floor(currentHeight * scale / 100));
     updateDisplayImage();
     adjustComponents();
 }
