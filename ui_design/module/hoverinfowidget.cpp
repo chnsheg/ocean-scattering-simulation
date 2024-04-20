@@ -1,4 +1,6 @@
 #include "HoverInfoWidget.h"
+#include <QTimer>
+#include <QDebug>
 
 HoverInfoWidget::HoverInfoWidget(QWidget *parent)
     : QWidget(parent), draggable(false), pinned(false), resizeable(false), borderMargin(8) // 8
@@ -131,6 +133,40 @@ void HoverInfoWidget::showWithEffect()
 {
     // Implement any show effect here if desired
     show();
+}
+
+void HoverInfoWidget::hideWithEffect()
+{
+    // qDebug() << "hideWithEffect";
+    // 判断鼠标是否在窗口内
+    if (pinned || rect().contains(mapFromGlobal(QCursor::pos())))
+    {
+        return;
+    }
+    else
+    {
+        // qDebug() << "hideWithEffect closing...";
+        // 如果在5s内鼠标不在窗口内，则关闭窗口
+        QTimer::singleShot(500, [this]
+                           {
+        if (pinned || rect().contains(mapFromGlobal(QCursor::pos())))
+        {
+            return;
+        }
+        else
+        {
+            close();
+        } });
+    }
+}
+
+void HoverInfoWidget::closeNow()
+{
+    if (pinned)
+    {
+        return;
+    }
+    close();
 }
 
 int HoverInfoWidget::getHoverInfoWidgetWidth()

@@ -67,7 +67,15 @@ enum Show1ButtonGroupId
     HoverButton_5,
     HoverButton_6,
     HoverButton_7,
-    HoverButton_8
+    HoverButton_8,
+    leaveButton_1,
+    leaveButton_2,
+    leaveButton_3,
+    leaveButton_4,
+    leaveButton_5,
+    leaveButton_6,
+    leaveButton_7,
+    leaveButton_8
 };
 
 Q_DECLARE_METATYPE(Show1ButtonGroupId)
@@ -94,6 +102,7 @@ public:
 signals:
     void eventSignal(Show1ButtonGroupId param);
     void hoverSignal(int button_index, const QPoint &pos);
+    void leaveSignal(int button_index);
 };
 
 #endif // SHOW1BUTTONGROUPMANAGER_H

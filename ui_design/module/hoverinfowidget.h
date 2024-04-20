@@ -27,6 +27,8 @@ public:
     // 获取卡片窗口的锚点位置
     QPoint getAnchorPoint() const;
     void showWithEffect();
+    void hideWithEffect();
+    void closeNow();
 
     int getHoverInfoWidgetWidth();
     int getHoverInfoWidgetHeight();

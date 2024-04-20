@@ -125,6 +125,13 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
             hoverSignal,
             this,
             handleShow1ButtonGroupHoverEvent);
+
+    void (Show1ButtonGroupManager::*leaveSignal)(int) = &Show1ButtonGroupManager::leaveSignal;
+    void (PlotView::*handleShow1ButtonGroupLeaveEvent)(int) = &PlotView::handleShow1ButtonGroupLeaveEvent;
+    connect(Singleton<Show1ButtonGroupManager>::getInstance(),
+            leaveSignal,
+            this,
+            handleShow1ButtonGroupLeaveEvent);
 }
 
 PlotView::PlotView() {} // 必须要在此处实现一个空的构造，否则会报错
@@ -484,6 +491,12 @@ void PlotView::handleShow1ButtonGroupHoverEvent(int button_index, const QPoint &
     // 将pos转换为全局坐标
     QPoint globalPos = ui->show1->parentWidget()->mapToGlobal(pos);
     emit onShowButtonHover(page_index, globalPos);
+}
+
+void PlotView::handleShow1ButtonGroupLeaveEvent(int button_index)
+{
+    int page_index = button_index; // 将按键索引转换为页面索引
+    emit onShowButtonLeave(page_index);
 }
 
 void PlotView::saveConstantButtonClicked(int index, int save_type)

@@ -28,6 +28,8 @@ PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObje
     connect(view, &PlotView::onDynamicButtonClicked, this, &PlotController::handleDynamicButtonClicked);
 
     connect(view, &PlotView::onShowButtonHover, this, &PlotController::handleShowButtonHover);
+
+    connect(view, &PlotView::onShowButtonLeave, this, &PlotController::handleShowButtonLeave);
 }
 
 // TODO: Add destructor
@@ -196,6 +198,20 @@ void PlotController::handleShowButtonHover(int index, const QPoint &pos)
                 qDebug() << "closeHoverInfoWidgetSignal";
         hoverInfoWidgetsVector.removeOne(hoverInfoWidget);
         hoverInfoWidgetsOpened.removeOne(index); });
+}
+
+void PlotController::handleShowButtonLeave(int index)
+{
+    int _index = index - Show1ButtonGroupId::leaveButton_1;
+    // qDebug() << "ShowButtonLeave_index: " << _index;
+    // qDebug() << "hoverInfoWidgetsOpened: " << hoverInfoWidgetsOpened;
+    if (hoverInfoWidgetsOpened.contains(_index))
+    {
+        // qDebug() << "Is in hoverInfoWidgetsOpened!";
+        int anchor = hoverInfoWidgetsOpened.indexOf(_index);
+        HoverInfoWidget *hoverInfoWidget = hoverInfoWidgetsVector.at(anchor);
+        hoverInfoWidget->hideWithEffect();
+    }
 }
 
 void PlotController::handleDynamicButtonClicked(int index)
@@ -414,6 +430,16 @@ void PlotController::handleSwitchPageButtonClicked(int page_index, QRect area)
         int captureResult = model->captureImageData(index, area);
         qDebug() << "page_index: " << index << " captureResult: " << captureResult;
     }
+
+    // 先关闭所有的hoverInfoWidget
+    if (!view->showPageIndex.contains(page_index))
+    {
+        for (int i = 0; i < hoverInfoWidgetsVector.size(); ++i)
+        {
+            hoverInfoWidgetsVector.at(i)->closeNow();
+        }
+    }
+
     // 通知view切换页面，page_index从0开始
     view->updateViewPageSlot(page_index);
 }

@@ -21,9 +21,10 @@ private:
     Ui::MainWindow *ui;
     PlotView(Ui::MainWindow *_ui, QWidget *parent = nullptr);
 
-private:
+public:
     const QList<int> plotPageIndex = {1, 2, 3, 4, 5, 6, 7, 8};
     const QList<int> showPageIndex = {0}; // 用于区分展示界面和绘图界面
+private:
     QList<QCustomPlot *> customPlotList;
 
 public:
@@ -49,6 +50,7 @@ signals:
     void onTracerButtonClicked();
     void onDynamicButtonClicked(int index);
     void onShowButtonHover(int index, const QPoint &pos);
+    void onShowButtonLeave(int index);
     void onSaveConstantButtonClicked(int index, int save_type);                                                                    // 0: save constants to current page, 1: save constants to all pages；
                                                                                                                                    // 2: save runtime data to current page, 3: save runtime data to all pages
     void onImportConstantButtonClicked(int index, int import_type);                                                                // 0: import constants to current page, 1: import constants to all pages；
@@ -69,6 +71,7 @@ public slots:
     void handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId);
     void handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId);
     void handleShow1ButtonGroupHoverEvent(int button_index, const QPoint &pos);
+    void handleShow1ButtonGroupLeaveEvent(int button_index);
 
 private:
     void saveConstantButtonClicked(int index, int save_type);

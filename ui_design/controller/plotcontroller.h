@@ -37,6 +37,7 @@ public slots:
     void handleSwitchPageButtonClicked(int page_index, QRect area = QRect());
     void handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
     void handleShowButtonHover(int index, const QPoint &pos);
+    void handleShowButtonLeave(int index);
 
 private:
     explicit PlotController(PlotView *_view, PageDataGenerator *_model, QObject *parent = nullptr);

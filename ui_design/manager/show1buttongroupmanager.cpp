@@ -96,24 +96,53 @@ Show1ButtonGroupManager::Show1ButtonGroupManager(Show1ButtonGroup *_show1ButtonG
              &HoverButton::hoverSignal,
              Show1ButtonGroupId::HoverButton_8);
 
-    // 连接hover事件
-    // connect(
-    //     show1ButtonGroup->showButton_1,
-    //     &HoverButton::hoverSignal,
-    //     [this]()
-    //     {
-    //         qDebug() << "show1Button_1 has focus";
-    //         if (hoverInfoWidgetsVector->at(0) != nullptr)
-    //         {
-    //             hoverInfoWidgetsVector->at(0)->showWithEffect();
-    //         }
-    //         else if (hoverInfoWidgetsVector->at(0) == nullptr)
-    //         {
-    //             hoverInfoWidgetsVector->replace(0, new HoverInfoWidget());
-    //             hoverInfoWidgetsVector->at(0)->move(show1ButtonGroup->showButton_1->pos().x() - 10, show1ButtonGroup->showButton_1->pos().y());
-    //             hoverInfoWidgetsVector->at(0)->showWithEffect();
-    //         }
-    //     });
+    addEvent("show1ButtonReleased",
+             "show1ButtonReleased",
+             show1ButtonGroup->showButton_1,
+             &HoverButton::leaveSignal,
+             Show1ButtonGroupId::leaveButton_1);
+
+    addEvent("show2ButtonReleased",
+             "show2ButtonReleased",
+             show1ButtonGroup->showButton_2,
+             &HoverButton::leaveSignal,
+             Show1ButtonGroupId::leaveButton_2);
+
+    addEvent("show3ButtonReleased",
+             "show3ButtonReleased",
+             show1ButtonGroup->showButton_3,
+             &HoverButton::leaveSignal,
+             Show1ButtonGroupId::leaveButton_3);
+
+    addEvent("show4ButtonReleased",
+             "show4ButtonReleased",
+             show1ButtonGroup->showButton_4,
+             &HoverButton::leaveSignal,
+             Show1ButtonGroupId::leaveButton_4);
+
+    addEvent("show5ButtonReleased",
+             "show5ButtonReleased",
+             show1ButtonGroup->showButton_5,
+             &HoverButton::leaveSignal,
+             Show1ButtonGroupId::leaveButton_5);
+
+    addEvent("show6ButtonReleased",
+             "show6ButtonReleased",
+             show1ButtonGroup->showButton_6,
+             &HoverButton::leaveSignal,
+             Show1ButtonGroupId::leaveButton_6);
+
+    addEvent("show7ButtonReleased",
+             "show7ButtonReleased",
+             show1ButtonGroup->showButton_7,
+             &HoverButton::leaveSignal,
+             Show1ButtonGroupId::leaveButton_7);
+
+    addEvent("show8ButtonReleased",
+             "show8ButtonReleased",
+             show1ButtonGroup->showButton_8,
+             &HoverButton::leaveSignal,
+             Show1ButtonGroupId::leaveButton_8);
 }
 
 Show1ButtonGroupManager::Show1ButtonGroupManager() {}
@@ -182,6 +211,10 @@ void Show1ButtonGroupManager::onEventAction(const QString &event, int status, co
                 emit hoverSignal(7, show1ButtonGroup->showButton_8->pos());
                 break;
             }
+        }
+        else if (buttonId >= Show1ButtonGroupId::leaveButton_1 && buttonId <= Show1ButtonGroupId::leaveButton_8)
+        {
+            emit leaveSignal(buttonId);
         }
     }
 }
