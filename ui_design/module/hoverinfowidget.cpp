@@ -1,7 +1,6 @@
 #include "HoverInfoWidget.h"
 #include <QTimer>
 #include <QDebug>
-#include <qgraphicseffect.h>
 
 HoverInfoWidget::HoverInfoWidget(QWidget *parent)
     : QWidget(parent), draggable(false), pinned(false), resizeable(false), borderMargin(8), originalPixmap(nullptr), baseWidth(400), baseHeight(500)
@@ -139,7 +138,7 @@ void HoverInfoWidget::adjustComponents()
     // 获取图片的宽度和高度
     int imageWidth = width() - 2 * borderMargin;
     int imageHeight = imageLabel->pixmap() ? imageWidth * imageLabel->pixmap()->height() / imageLabel->pixmap()->width() : 0;
-    int listItemHeight = infoListWidget->sizeHintForRow(0) * infoListWidget->count();
+    int listItemHeight = infoListWidget->sizeHintForRow(0) * (infoListWidget->count() + 1);
     infoListWidget->setFixedSize(imageWidth, listItemHeight);
 
     setFixedSize(imageWidth + 2 * borderMargin, closeButton->height() + imageHeight + listItemHeight + 2 * borderMargin);
@@ -257,7 +256,6 @@ void HoverInfoWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
-
     // 给卡片悬浮窗添加投影效果，向下和向右偏移
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(0, 0, 0, 50));
