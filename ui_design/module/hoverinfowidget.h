@@ -14,6 +14,9 @@
 #include <QPainterPath>
 #include <QLineEdit>
 
+#define HOVER_INFO_WIDGET_MIN_WIDTH_Ratio 0.8
+#define HOVER_INFO_WIDGET_MAX_WIDTH_Ratio 2.0
+
 class HoverInfoWidget : public QWidget
 {
     Q_OBJECT

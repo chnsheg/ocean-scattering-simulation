@@ -1,6 +1,7 @@
 #include "HoverInfoWidget.h"
 #include <QTimer>
 #include <QDebug>
+#include <qgraphicseffect.h>
 
 HoverInfoWidget::HoverInfoWidget(QWidget *parent)
     : QWidget(parent), draggable(false), pinned(false), resizeable(false), borderMargin(8), originalPixmap(nullptr), baseWidth(400), baseHeight(500)
@@ -26,6 +27,7 @@ HoverInfoWidget::~HoverInfoWidget()
 void HoverInfoWidget::setupUI()
 {
     setWindowFlags(Qt::FramelessWindowHint | Qt::ToolTip); // Set window flags to make it a tooltip
+
     // 设置窗口可以增大和缩小
     // Expandint
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -255,6 +257,12 @@ void HoverInfoWidget::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
+
+    // 给卡片悬浮窗添加投影效果，向下和向右偏移
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor(0, 0, 0, 50));
+    painter.drawRoundedRect(rect().translated(4, 4), 10, 10);
+
     QPainterPath path = shapePath();
     painter.fillPath(path, Qt::white);
     painter.drawPath(path);
@@ -327,9 +335,25 @@ void HoverInfoWidget::onResizeButtonClicked()
     int currentWidth = this->width();
     int currentHeight = this->height();
     // 设置窗口的大小
-    setFixedSize(currentWidth * 1.1, currentHeight * 1.1);
-    // 设置窗口大小的比例
-    resizeLineEdit->setText(QString::number((int)(currentWidth * 1.1 / baseWidth * 100)) + "%");
+
+    // 计算增大后的宽度和高度，使用浮点数相乘
+    int newWidth = floor(currentWidth * 1.1);
+    int newHeight = floor(currentHeight * 1.1);
+
+    if (newWidth > baseWidth * HOVER_INFO_WIDGET_MAX_WIDTH_Ratio)
+    {
+        newWidth = baseWidth * HOVER_INFO_WIDGET_MAX_WIDTH_Ratio;
+    }
+    else if (newWidth < baseWidth * HOVER_INFO_WIDGET_MIN_WIDTH_Ratio)
+    {
+        newWidth = baseWidth * HOVER_INFO_WIDGET_MIN_WIDTH_Ratio;
+    }
+
+    setFixedSize(newWidth, newHeight);
+
+    // // 设置窗口大小的比例
+    resizeLineEdit->setText(QString::number((int)((double)newWidth / baseWidth * 100)) + "%");
+
     updateDisplayImage();
     adjustComponents();
 }
@@ -344,6 +368,15 @@ void HoverInfoWidget::onShrinkButtonClicked()
     int newWidth = floor(currentWidth * 0.9);
     int newHeight = floor(currentHeight * 0.9);
 
+    if (newWidth < baseWidth * HOVER_INFO_WIDGET_MIN_WIDTH_Ratio)
+    {
+        newWidth = baseWidth * HOVER_INFO_WIDGET_MIN_WIDTH_Ratio;
+    }
+    else if (newWidth > baseWidth * HOVER_INFO_WIDGET_MAX_WIDTH_Ratio)
+    {
+        newHeight = baseHeight * HOVER_INFO_WIDGET_MAX_WIDTH_Ratio;
+    }
+
     // 先把窗口内图片的大小缩小
     // imageLabel->resize(0, 0);
 
@@ -351,7 +384,7 @@ void HoverInfoWidget::onShrinkButtonClicked()
     // resize(newWidth, newHeight);
     setFixedSize(newWidth, newHeight);
     // // 设置窗口大小的比例
-    resizeLineEdit->setText(QString::number((int)(currentWidth * 0.9 / baseWidth * 100)) + "%");
+    resizeLineEdit->setText(QString::number((int)((double)newWidth / baseWidth * 100)) + "%");
     updateDisplayImage();
     adjustComponents();
 }
@@ -365,6 +398,16 @@ void HoverInfoWidget::onResizeLineEditReturnPressed()
     int currentHeight = this->baseHeight;
     // 获取输入框中的数字
     int scale = text.left(text.length() - 1).toInt();
+
+    if (scale < HOVER_INFO_WIDGET_MIN_WIDTH_Ratio * 100)
+    {
+        scale = HOVER_INFO_WIDGET_MIN_WIDTH_Ratio * 100;
+    }
+    else if (scale > HOVER_INFO_WIDGET_MAX_WIDTH_Ratio * 100)
+    {
+        scale = HOVER_INFO_WIDGET_MAX_WIDTH_Ratio * 100;
+    }
+
     qDebug() << "scale:" << scale;
     // 设置窗口的大小
     // resize(currentWidth * scale / 100, currentHeight * scale / 100);

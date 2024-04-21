@@ -129,6 +129,10 @@ LineEditGroup::LineEditGroup(QList<QLineEdit *> lineEdits, QList<QLabel *> label
             //     m_labels.insert(labels[i], Singleton<ConstantMap>::getInstance()->getConstantName(index, i));
             //     break;
         }
+
+        // 一直循环获取常量名称，直到拿到的字符串为QString()，即没有常量名称了，此时退出循环，否则一直插入；
+        // 若循环过程中，lineEdits.at(i)为空，并且此时拿到的常量名字符串不为QString()，则新建一个lineEdit，并插入到lineEdits中；同时按照其他lineEdit的layout显示到界面上；
+
         lineEdits[i]->setText(Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(m_lineEdits[lineEdits[i]]).toString());
         // labels[i]->setText(m_labels[labels[i]]);
         QString labelText = m_labels[labels[i]];
