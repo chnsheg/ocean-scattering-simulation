@@ -1,5 +1,6 @@
 #include "manager/customplotmanager.h"
 #include "manager/tracermanager.h"
+#include <QFont> // Add this line to include the QFont class
 
 /**为什么此处不继承MangerBase类？
  * 实际上是可以继承ManagerBase类的，但是此处不继承的原因是：
@@ -252,22 +253,6 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
     bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
 
-    // QVector<double> ticks;
-    // QVector<QString> labels;
-    // ticks << 1 << 2 << 3 << 4 << 5 << 6 << 7; // 轴的范围
-    // labels << "A"
-    //        << "B"
-    //        << "C"
-    //        << "D"
-    //        << "E"
-    //        << "F"
-    //        << "G"; // 轴的刻度文字显示
-    // QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
-    // textTicker->addTicks(ticks, labels);
-    // xAxis->setTicker(textTicker);    // 设置为文字轴
-    // xAxis->setTickLabelRotation(60); // 轴刻度文字旋转60度
-    // xAxis->setSubTicks(false);       // 不显示子刻度
-    // xAxis->setTickLength(0, 4);      // 轴内外刻度的长度分别是0,4,也就是轴内的刻度线不显示
     QCPRange x1Range = customPlot->xAxis->range();
     xAxis->setRange(x1Range.lower, x1Range.upper); // 设置x轴范围
     xAxis->setLabel("x");
@@ -281,14 +266,45 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     bars->setData(*xData, *yData);
 
     // 设置宽度为4/5
+    // bars->setWidthType(QCPBars::WidthType::wtPlotCoords);
+    // bars->setWidth(1.2);
     bars->setWidthType(QCPBars::WidthType::wtPlotCoords);
-    bars->setWidth(1.2);
+    // bars->setWidth(0.75); // 根据间距的75%设置宽度，实现柱形图宽度与间隙宽度比例为3:1,实测是1：1，因此1.5是100%的宽度，1.125是75%的宽度
+    bars->setWidth(1.125);
     // 设置透明度
     bars->setBrush(QColor(20, 68, 106, 128));
 
     // 使bar切换到第二个坐标轴
     bars->setValueAxis(customPlot->yAxis2);
     bars->rescaleAxes();
+
+    // 在bars上显示对应的y值
+    QCPBarsDataContainer *barsData = bars->data().data();
+    for (int i = 0; i < barsData->size(); ++i)
+    {
+        const QCPBarsData *data = barsData->at(i);
+        double x = data->key;
+        double y = data->value;
+        QString label = QString::number(y);
+        customPlot->addLayer("valueLabels", nullptr, QCustomPlot::limAbove);
+        QCPItemText *valueLabel = new QCPItemText(customPlot);
+        valueLabel->setPositionAlignment(Qt::AlignHCenter | Qt::AlignTop); // 对齐方式
+        // 显示到bar的上方
+
+        valueLabel->position->setType(QCPItemPosition::ptPlotCoords);
+        valueLabel->position->setCoords(x, y);
+        valueLabel->setText(label);
+        // valueLabel->setFont(QFont(font().family(), 10));
+        valueLabel->setPen(QPen(Qt::NoPen));
+        // 背景设置为透明
+        valueLabel->setBrush(QBrush(QColor(128, 128, 0, 0)));
+
+        // 设置字体颜色
+        valueLabel->setColor(QColor(255, 255, 255));
+        // valueLabel->position->setCoords(x, y - 0.5); // Adjust the y-coordinate to position the label above the bar
+
+        valueLabel->setLayer("valueLabels");
+    }
 
     // 显示bars
     bars->setVisible(true);
