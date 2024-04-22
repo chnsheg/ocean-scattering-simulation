@@ -88,6 +88,7 @@ SOURCES += \
     # model/rtGetInf.cpp \
     # model/rtGetNaN.cpp \
     # model/rt_nonfinite.cpp \
+    model/retrievalthread.cpp \
     model/screencapturetask.cpp \
     model/spectrumdatagenerator.cpp \
     model/underwaterspectrumdatagenerator.cpp \
@@ -197,6 +198,7 @@ HEADERS += \
     # model/rtGetNaN.h \
     # model/rt_nonfinite.h \
     # model/rtwtypes.h \
+    model/retrievalthread.h \
     model/screencapturetask.h \
     model/spectrumdatagenerator.h \
     # model/tmwtypes.h \

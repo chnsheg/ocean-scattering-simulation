@@ -123,6 +123,7 @@ model/pmtreceptiondatagenerator.cpp
 # model/rtGetInf.cpp \
 # model/rtGetNaN.cpp \
 # model/rt_nonfinite.cpp \
+model/retrievalthread.cpp
 model/spectrumdatagenerator.cpp 
 model/underwaterspectrumdatagenerator.cpp 
 module/filebrowser.cpp 
@@ -229,6 +230,7 @@ model/pmtreceptiondatagenerator.h
 # model/rtGetNaN.h 
 # model/rt_nonfinite.h 
 # model/rtwtypes.h 
+model/retrievalthread.h
 model/spectrumdatagenerator.h 
 # model/tmwtypes.h 
 model/underwaterspectrumdatagenerator.h 

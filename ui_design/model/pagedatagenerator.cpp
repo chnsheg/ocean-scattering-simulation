@@ -10,6 +10,7 @@
 #include "model/underwaterspectrumdatagenerator.h"
 #include "model/fizeauifgenerator.h"
 #include "model/pmtreceptiondatagenerator.h"
+#include "model/retrievalthread.h"
 
 PageDataGenerator::PageDataGenerator(QObject *parent)
     : QObject(parent)
@@ -242,6 +243,8 @@ void PageDataGenerator::generateDynamicAction(int index)
     case 0:
         PMTReceptionDataGenerator::retrievalFormPMT();
         emit actionGenerateFinished();
+        // TaskRunner *object = TaskRunner::runTask<RetrievalThread>(PMTReceptionDataGenerator::retrievalFormPMT);
+        // connect(object, &TaskRunner::taskCompleted, this, &PageDataGenerator::handleTaskCompletedSlot);
         break;
     }
 }
@@ -339,6 +342,17 @@ void PageDataGenerator::handleTaskCompletedSlot(QString taskName, QVariantList *
         else if (args->at(0).toInt() == -1)
         {
             Singleton<Logger>::getInstance()->logMessage("无法获取屏幕！", Logger::Warning);
+        }
+    }
+    else if (taskName.contains("RetrievalThread"))
+    {
+        if (args->at(0).toInt() == 1)
+        {
+            Singleton<Logger>::getInstance()->logMessage("PMT反演成功！", Logger::Info);
+        }
+        else if (args->at(0).toInt() == 0)
+        {
+            Singleton<Logger>::getInstance()->logMessage("PMT反演失败！", Logger::Warning);
         }
     }
 }

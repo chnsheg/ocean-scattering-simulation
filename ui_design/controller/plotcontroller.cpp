@@ -278,18 +278,20 @@ void PlotController::handleDynamicButtonClicked(int index)
     }
     else if (dynamicPageType == 1)
     {
-        model->moveToThread(thread);
-        connect(thread, &QThread::started, this, [=]
-                { model->generateDynamicAction(0); });
+        // model->moveToThread(thread);
+        // connect(thread, &QThread::started, this, [=]
+        //         { model->generateDynamicAction(0); });
 
-        connect(model, &PageDataGenerator::actionGenerateFinished, this, [=]
-                {
-        // this->dynamicViewVector.at(index)->show();
-        this->thread->quit();
-        this->thread->wait();
-        this->thread->deleteLater(); });
+        // connect(model, &PageDataGenerator::actionGenerateFinished, this, [=]
+        //         {
+        // // this->dynamicViewVector.at(index)->show();
+        // this->thread->quit();
+        // this->thread->wait();
+        // this->thread->deleteLater(); });
 
-        thread->start();
+        // thread->start();
+        delete thread;
+        model->generateDynamicAction(0);
     }
 }
 
