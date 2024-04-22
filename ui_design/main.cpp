@@ -5,6 +5,8 @@
 #include <QStringList>
 #include <QTextStream>
 #include "mainwindow.h"
+#include "model/screencapturetask.h"
+#include "base/taskrunner.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +25,12 @@ int main(int argc, char *argv[])
     {
         qDebug() << "open file failed";
     }
+
+    // 打印当前线程ID
+    // qDebug() << "Main thread ID:" << QThread::currentThreadId();
+
+    // TaskRunner::runTask<ScreenCaptureTask>(); // Start a new task
+
     w.show();
     return a.exec();
 }

@@ -52,6 +52,7 @@ qt5_add_resources(RCC_SOURCES ${RESOURCES})
 
 set(SOURCES
 base/singleton.cpp 
+base/taskrunner.cpp
 controller/plotcontroller.cpp 
 main.cpp 
 mainwindow.cpp 
@@ -109,7 +110,9 @@ matlab/rand.cpp
 matlab/randn.cpp 
 matlab/sum.cpp 
 model/constantmap.cpp 
+model/constantstorage.cpp
 model/constantstorage.cpp 
+model/screencapturetask.cpp
 # model/convolution.cpp \
 model/fizeaudatagenerator.cpp 
 model/fizeauifgenerator.cpp 
@@ -138,6 +141,7 @@ view/plotView.cpp
 # include_directory(${SOURCES})
 set(HEADERS
 base/singleton.h 
+base/taskrunner.h
 controller/plotcontroller.h 
 fftw3.h 
 mainwindow.h 
@@ -213,6 +217,7 @@ matlab/tmwtypes.h
 # model/colon.h 
 model/constantmap.h 
 model/constantstorage.h 
+model/screencapturetask.h
 # model/convolution.h 
 model/fizeaudatagenerator.h 
 model/fizeauifgenerator.h 

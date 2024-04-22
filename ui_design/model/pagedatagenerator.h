@@ -8,6 +8,8 @@
 #include "base/singleton.h"
 #include "manager/inputdatalistmanager.h"
 #include "module/qcustomplot.h"
+#include "model/screencapturetask.h"
+#include "base/taskrunner.h"
 
 class PageDataGenerator : public QObject
 {
@@ -67,6 +69,8 @@ public slots:
     void importAllConstant();
     void importRuntimeDataByGroupIndex(int index);
     void importAllRuntimeData();
+
+    void handleTaskCompletedSlot(QString taskName, QVariantList *args);
 
 private:
     explicit PageDataGenerator(QObject *parent = nullptr);

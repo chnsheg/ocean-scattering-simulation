@@ -248,43 +248,9 @@ void PageDataGenerator::generateDynamicAction(int index)
 
 int PageDataGenerator::captureImageData(int index, QRect captureRect)
 {
-    // 截图并保存到constantstorage中，存储池索引是8
-    QScreen *screen = QGuiApplication::primaryScreen();
-
-    if (!screen)
-    {
-        return -1; // 无法获取屏幕
-    }
-
-    // 定义截图区域，例如从点(100, 100)开始，宽度和高度均为400像素
-    // QRect captureRect(100, 100, 400, 400);
-
-    // 截图指定区域
-    qDebug() << "captureRect: " << captureRect;
-    QPixmap pixmap = screen->grabWindow(0, captureRect.x(), captureRect.y(), captureRect.width(), captureRect.height());
-
-    if (pixmap.isNull())
-    {
-        return 0; // 截图失败
-    }
-
-    QPixmap *pixmapPtr = new QPixmap(pixmap);
-
-    // 先释放之前的图片
-    if (Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(8, index)).value<QPixmap *>() != nullptr)
-    {
-        QPixmap *pixmapPtr = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(8, index)).value<QPixmap *>();
-        delete pixmapPtr;
-    }
-
-    Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(8, index), QVariant::fromValue(pixmapPtr));
-
-    // 保存图片到文件
-    QString filePath = QDir::currentPath() + "/capture.png";
-
-    pixmap.save(filePath);
-
-    return 1; // 截图成功
+    TaskRunner *object = TaskRunner::runTask<ScreenCaptureTask>(index, captureRect);
+    connect(object, &TaskRunner::taskCompleted, this, &PageDataGenerator::handleTaskCompletedSlot);
+    return 1;
 }
 
 int PageDataGenerator::getImageData(int index, QPixmap *pixmap)
@@ -355,6 +321,26 @@ int PageDataGenerator::getInfoData(int index, QMap<QString, QVariant> *info)
     *info = *infoPtr;
 
     return 1; // 获取信息成功
+}
+
+void PageDataGenerator::handleTaskCompletedSlot(QString taskName, QVariantList *args)
+{
+    if (taskName.contains("ScreenCaptureTask"))
+    {
+        int index = taskName.right(1).toInt(); // 用来区分不同的截图任务
+        if (args->at(0).toInt() == 1)
+        {
+            return;
+        }
+        else if (args->at(0).toInt() == 0)
+        {
+            Singleton<Logger>::getInstance()->logMessage("截图失败！", Logger::Warning);
+        }
+        else if (args->at(0).toInt() == -1)
+        {
+            Singleton<Logger>::getInstance()->logMessage("无法获取屏幕！", Logger::Warning);
+        }
+    }
 }
 
 void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index, int page_type)

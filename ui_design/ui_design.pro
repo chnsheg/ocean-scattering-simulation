@@ -10,6 +10,7 @@ CONFIG += c++15.9
 
 SOURCES += \
     base/singleton.cpp \
+    base/taskrunner.cpp \
     controller/plotcontroller.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -87,6 +88,7 @@ SOURCES += \
     # model/rtGetInf.cpp \
     # model/rtGetNaN.cpp \
     # model/rt_nonfinite.cpp \
+    model/screencapturetask.cpp \
     model/spectrumdatagenerator.cpp \
     model/underwaterspectrumdatagenerator.cpp \
     module/filebrowser.cpp \
@@ -103,6 +105,7 @@ SOURCES += \
 
 HEADERS += \
     base/singleton.h \
+    base/taskrunner.h \
     controller/plotcontroller.h \
     fftw3.h \
     mainwindow.h \
@@ -194,6 +197,7 @@ HEADERS += \
     # model/rtGetNaN.h \
     # model/rt_nonfinite.h \
     # model/rtwtypes.h \
+    model/screencapturetask.h \
     model/spectrumdatagenerator.h \
     # model/tmwtypes.h \
     model/underwaterspectrumdatagenerator.h \

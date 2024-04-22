@@ -14,11 +14,19 @@ HoverInfoWidget::~HoverInfoWidget()
     delete infoListWidget;
     delete closeButton;
     delete pinButton;
+    delete resizeButton;
+    delete shrinkButton;
+    delete resizeLineEdit;
+    delete originalPixmap;
 
     imageLabel = nullptr;
     infoListWidget = nullptr;
     closeButton = nullptr;
     pinButton = nullptr;
+    resizeButton = nullptr;
+    shrinkButton = nullptr;
+    resizeLineEdit = nullptr;
+    originalPixmap = nullptr;
 
     emit closeHoverInfoWidgetSignal();
 }
