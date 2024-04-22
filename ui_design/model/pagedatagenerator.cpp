@@ -241,10 +241,10 @@ void PageDataGenerator::generateDynamicAction(int index)
     switch (index)
     {
     case 0:
-        PMTReceptionDataGenerator::retrievalFormPMT();
-        emit actionGenerateFinished();
-        // TaskRunner *object = TaskRunner::runTask<RetrievalThread>(PMTReceptionDataGenerator::retrievalFormPMT);
-        // connect(object, &TaskRunner::taskCompleted, this, &PageDataGenerator::handleTaskCompletedSlot);
+        // PMTReceptionDataGenerator::retrievalFormPMT();
+        // emit actionGenerateFinished();
+        TaskRunner *object = TaskRunner::runTask<RetrievalThread>(PMTReceptionDataGenerator::retrievalFormPMT);
+        connect(object, &TaskRunner::taskCompleted, this, &PageDataGenerator::handleTaskCompletedSlot);
         break;
     }
 }
