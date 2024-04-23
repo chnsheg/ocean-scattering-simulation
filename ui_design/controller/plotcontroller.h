@@ -46,6 +46,7 @@ private:
     PlotView *view;
     PageDataGenerator *model;
     QThread *thread;
+    QMetaObject::Connection connection;
     // DynamicPage *dynamicView;
     QVector<DynamicPage *> dynamicViewVector;
     QVector<int> dynamicViewOpened; // 用来记录打开的dynamicView的index，这样即使关闭了dynamicView，也可以在对应的位置打开新的dynamicView

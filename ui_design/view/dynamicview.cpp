@@ -148,6 +148,13 @@ void DynamicPage::displayCurve(int pageIndex,
             plot->rescaleAxes();
             plot->replot();
 
+            // 检查是否已存在标题元素，并移除
+            if (plot->plotLayout()->elementCount() > 0 && dynamic_cast<QCPTextElement *>(plot->plotLayout()->element(0, 0)))
+            {
+                plot->plotLayout()->removeAt(0);
+                plot->plotLayout()->simplify(); // 清理空行
+            }
+
             plot->plotLayout()->insertRow(0);
             plot->plotLayout()
                 ->addElement(0, 0, new QCPTextElement(plot, title, QFont("sans", 12, QFont::Bold)));
@@ -172,6 +179,13 @@ void DynamicPage::displayCurve(int pageIndex,
             delete (*yData)[0];
             plot->rescaleAxes();
             plot->replot();
+
+            // 检查是否已存在标题元素，并移除
+            if (plot->plotLayout()->elementCount() > 0 && dynamic_cast<QCPTextElement *>(plot->plotLayout()->element(0, 0)))
+            {
+                plot->plotLayout()->removeAt(0);
+                plot->plotLayout()->simplify(); // 清理空行
+            }
 
             plot->plotLayout()->insertRow(0);
             plot->plotLayout()

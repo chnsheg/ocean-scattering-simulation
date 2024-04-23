@@ -246,6 +246,7 @@ void PlotController::handleDynamicButtonClicked(int index)
             dynamicPageType = 1;
         }
         dynamicViewVector.append(dynamicView);
+        anchor = dynamicViewVector.size() - 1;
     }
     if (dynamicPageType == 0)
     {
@@ -265,16 +266,17 @@ void PlotController::handleDynamicButtonClicked(int index)
         dynamicViewVector.removeOne(dynamicView);
         dynamicViewOpened.removeOne(index); });
 
-        connect(model, &PageDataGenerator::dataGenerateFinished, this, [=]
-                {
-        this->dynamicViewVector.at(index)->show();
+        connection = connect(model, &PageDataGenerator::dataGenerateFinished, this, [=]
+                             {
+        this->dynamicViewVector.at(anchor)->show();
         // this->thread->quit();
         // this->thread->wait();
         // this->thread->deleteLater();
         disconnect(this->model,
                    &PageDataGenerator::dynamicDataGenerated,
-                   this->dynamicViewVector.at(index),
-                   &DynamicPage::updateDynamicView); });
+                   this->dynamicViewVector.at(anchor),
+                   &DynamicPage::updateDynamicView); 
+                   disconnect(connection); });
 
         // thread->start();
     }
