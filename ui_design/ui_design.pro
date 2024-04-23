@@ -79,6 +79,7 @@ SOURCES += \
     model/constantmap.cpp \
     model/constantstorage.cpp \
     # model/convolution.cpp \
+    model/dynamicpagedatageneratorthread.cpp \
     model/fizeaudatagenerator.cpp \
     model/fizeauifgenerator.cpp \
     model/frequencedatagenerator.cpp \
@@ -188,6 +189,7 @@ HEADERS += \
     model/constantmap.h \
     model/constantstorage.h \
     # model/convolution.h \
+    model/dynamicpagedatageneratorthread.h \
     model/fizeaudatagenerator.h \
     model/fizeauifgenerator.h \
     model/frequencedatagenerator.h \

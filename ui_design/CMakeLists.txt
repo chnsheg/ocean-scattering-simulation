@@ -112,6 +112,7 @@ matlab/sum.cpp
 model/constantmap.cpp 
 model/constantstorage.cpp
 model/constantstorage.cpp 
+model/dynamicpagedatageneratorthread.cpp
 model/screencapturetask.cpp
 # model/convolution.cpp \
 model/fizeaudatagenerator.cpp 
@@ -218,6 +219,7 @@ matlab/tmwtypes.h
 # model/colon.h 
 model/constantmap.h 
 model/constantstorage.h 
+model/dynamicpagedatageneratorthread.h
 model/screencapturetask.h
 # model/convolution.h 
 model/fizeaudatagenerator.h 

@@ -12,7 +12,7 @@ RetrievalThread::RetrievalThread(std::function<void()> callback)
 void RetrievalThread::run()
 {
     QString taskName = "RetrievalThread" + QString::number(objectCount);
-    QVariantList *args = new QVariantList{0};
+    QVariantList *args = new QVariantList();
     qDebug() << "RetrievalThread is running in thread:" << QThread::currentThreadId();
     callback();
     args->append(1);
