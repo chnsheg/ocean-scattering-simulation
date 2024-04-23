@@ -205,9 +205,10 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     // 检查是否已存在名为"Bars"的QCPBars实例
     for (int i = 0; i < customPlot->plottableCount(); ++i)
     {
-        if (customPlot->plottable(i)->name() == "Bars")
+        if (qobject_cast<QCPBars *>(customPlot->plottable(i)))
         {
             bars = qobject_cast<QCPBars *>(customPlot->plottable(i));
+            // 这里假设customPlot只能有一个柱形图，如果有多个柱形图，可以在这里继续循环或者退出循环
             break;
         }
     }
@@ -270,7 +271,14 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     // bars->setWidth(1.2);
     bars->setWidthType(QCPBars::WidthType::wtPlotCoords);
     // bars->setWidth(0.75); // 根据间距的75%设置宽度，实现柱形图宽度与间隙宽度比例为3:1,实测是1：1，因此1.5是100%的宽度，1.125是75%的宽度
-    bars->setWidth(1.125);
+    // bars->setWidth(0.6); // 1.5*16（通道）= 24；即x轴的范围是24;若是32通道，则宽度设置为24/32=0.75时即为16通道的1.5；因此若要4：1.则应设置为0.75*4/5=0.6
+
+    // 默认传递过来的xData的最后一个元素是柱形图宽度
+    if (xData->size() == yData->size() + 1)
+    {
+        bars->setWidth((*xData)[xData->size() - 1]);
+    }
+
     // 设置透明度
     bars->setBrush(QColor(20, 68, 106, 128));
 

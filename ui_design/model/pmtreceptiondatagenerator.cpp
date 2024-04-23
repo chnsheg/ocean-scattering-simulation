@@ -25,6 +25,12 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     coder::array<double, 2U> channel_sign;
 
     QVector<double> *RF = FrequenceDataGenerator::generateRelativeFrequenceData();
+
+    // 根据RF算出x横轴的最大距离
+    int max_x = (int)(RF->at(RF->size() - 1) - RF->at(0));
+    // 计算柱形图的宽度
+    double bar_width = max_x / NumberChannels * channel_width / (channel_space + channel_width);
+
     QSharedPointer<QCPGraphDataContainer> dataContainer;
     //  constantStorage->getConstant(constantMap->getConstantName(5, 11))
     dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, 13)).value<QSharedPointer<QCPGraphDataContainer>>();
@@ -50,6 +56,9 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
 
     energy_vector = MyMath::convertArrayToQVector(channel_energy);
     sign_vector = MyMath::convertArrayToQVector(channel_sign);
+
+    // 给sign_vector末尾添加柱形图的宽度
+    sign_vector->append(bar_width);
 
     // 存储energy_vector指向的内存地址
     constantStorage->setConstant(constantMap->getConstantName(5, 14), QVariant::fromValue(new QVector<double>(*energy_vector)));
