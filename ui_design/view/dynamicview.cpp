@@ -63,6 +63,174 @@ void DynamicPage::setupUi()
 
     prevPageButton->setEnabled(pageCount > 1);
     nextPageButton->setEnabled(pageCount > 1);
+
+    //     /**正常情况下样式**/
+    // #stackedWidget QPushButton{
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 50%;
+
+    // 	font: 28px "微软雅黑";
+    //     font-weight: 500;
+    //     color: #FFFFFF;
+    //     width: 150px;
+    //     height: 60px;
+    //     background-color: rgba(52, 73, 94, 1);
+    //     border-color: #2f3640;
+    //     border-radius: 10px;
+    //     border-style: solid;
+    //     border-width: 2px;
+    //     /* padding: 2px; */
+    //     margin-left: auto;
+    //     margin-top: 10px;
+    // }
+
+    // /**鼠标停留在按钮上的样式**/
+    // #stackedWidget QPushButton:hover{
+    //     color: rgba(52, 73, 94, 1);
+    //     background-color: #FFFFFF;
+    //     border-color: #2f3640;
+    // }
+
+    // /**鼠标按压下去的样式**/
+    // #stackedWidget QPushButton::pressed,QPushButton:checked{
+    //     color: #FFFFFF;
+    //     background-color: qlineargradient(spread pad, x1 0, y1 0, x2 0, y2 1, stop 0 #273c75, stop 1 #487eb0);
+    // }
+
+    // /**按钮失能情况下样式**/
+    // #stackedWidget QPushButton:disabled{
+    //     color: #2f3640;
+    //     background-color: #dcdde1;
+    //     border-color: #dcdde1;
+    // }
+    prevPageButton->setStyleSheet("QPushButton{"
+                                  "position: absolute;"
+                                  "top: 50%;"
+                                  "left: 50%;"
+                                  "font: 28px \"微软雅黑\";"
+                                  "font-weight: 500;"
+                                  "color: #FFFFFF;"
+                                  "width: 150px;"
+                                  "height: 60px;"
+                                  "background-color: rgba(52, 73, 94, 1);"
+                                  "border-color: #2f3640;"
+                                  "border-radius: 10px;"
+                                  "border-style: solid;"
+                                  "border-width: 2px;"
+                                  "margin-left: auto;"
+                                  "margin-top: 10px;"
+                                  "}"
+                                  "QPushButton:hover{"
+                                  "color: rgba(52, 73, 94, 1);"
+                                  "background-color: #FFFFFF;"
+                                  "border-color: #2f3640;"
+                                  "}"
+                                  "QPushButton::pressed,QPushButton:checked{"
+                                  "color: #FFFFFF;"
+                                  "background-color: qlineargradient(spread pad, x1 0, y1 0, x2 0, y2 1, stop 0 #273c75, stop 1 #487eb0);"
+                                  "}"
+                                  "QPushButton:disabled{"
+                                  "color: #2f3640;"
+                                  "background-color: #dcdde1;"
+                                  "border-color: #dcdde1;"
+                                  "}"); // 设置样式
+
+    nextPageButton->setStyleSheet("QPushButton{"
+                                  "position: absolute;"
+                                  "top: 50%;"
+                                  "left: 50%;"
+                                  "font: 28px \"微软雅黑\";"
+                                  "font-weight: 500;"
+                                  "color: #FFFFFF;"
+                                  "width: 150px;"
+                                  "height: 60px;"
+                                  "background-color: rgba(52, 73, 94, 1);"
+                                  "border-color: #2f3640;"
+                                  "border-radius: 10px;"
+                                  "border-style: solid;"
+                                  "border-width: 2px;"
+                                  "margin-left: auto;"
+                                  "margin-top: 10px;"
+                                  "}"
+                                  "QPushButton:hover{"
+                                  "color: rgba(52, 73, 94, 1);"
+                                  "background-color: #FFFFFF;"
+                                  "border-color: #2f3640;"
+                                  "}"
+                                  "QPushButton::pressed,QPushButton:checked{"
+                                  "color: #FFFFFF;"
+                                  "background-color: qlineargradient(spread pad, x1 0, y1 0, x2 0, y2 1, stop 0 #273c75, stop 1 #487eb0);"
+                                  "}"
+                                  "QPushButton:disabled{"
+                                  "color: #2f3640;"
+                                  "background-color: #dcdde1;"
+                                  "border-color: #dcdde1;"
+                                  "}"); // 设置样式
+
+    showCursorButton->setStyleSheet("QPushButton{"
+                                    "position: absolute;"
+                                    "top: 50%;"
+                                    "left: 50%;"
+                                    "font: 28px \"微软雅黑\";"
+                                    "font-weight: 500;"
+                                    "color: #FFFFFF;"
+                                    "width: 150px;"
+                                    "height: 60px;"
+                                    "background-color: rgba(52, 73, 94, 1);"
+                                    "border-color: #2f3640;"
+                                    "border-radius: 10px;"
+                                    "border-style: solid;"
+                                    "border-width: 2px;"
+                                    "margin-left: auto;"
+                                    "margin-top: 10px;"
+                                    "}"
+                                    "QPushButton:hover{"
+                                    "color: rgba(52, 73, 94, 1);"
+                                    "background-color: #FFFFFF;"
+                                    "border-color: #2f3640;"
+                                    "}"
+                                    "QPushButton::pressed,QPushButton:checked{"
+                                    "color: #FFFFFF;"
+                                    "background-color: qlineargradient(spread pad, x1 0, y1 0, x2 0, y2 1, stop 0 #273c75, stop 1 #487eb0);"
+                                    "}"
+                                    "QPushButton:disabled{"
+                                    "color: #2f3640;"
+                                    "background-color: #dcdde1;"
+                                    "border-color: #dcdde1;"
+                                    "}"); // 设置样式
+
+    closeButton->setStyleSheet("QPushButton{"
+                               "position: absolute;"
+                               "top: 50%;"
+                               "left: 50%;"
+                               "font: 28px \"微软雅黑\";"
+                               "font-weight: 500;"
+                               "color: #FFFFFF;"
+                               "width: 150px;"
+                               "height: 60px;"
+                               "background-color: rgba(52, 73, 94, 1);"
+                               "border-color: #2f3640;"
+                               "border-radius: 10px;"
+                               "border-style: solid;"
+                               "border-width: 2px;"
+                               "margin-left: auto;"
+                               "margin-top: 10px;"
+                               "}"
+                               "QPushButton:hover{"
+                               "color: rgba(52, 73, 94, 1);"
+                               "background-color: #FFFFFF;"
+                               "border-color: #2f3640;"
+                               "}"
+                               "QPushButton::pressed,QPushButton:checked{"
+                               "color: #FFFFFF;"
+                               "background-color: qlineargradient(spread pad, x1 0, y1 0, x2 0, y2 1, stop 0 #273c75, stop 1 #487eb0);"
+                               "}"
+                               "QPushButton:disabled{"
+                               "color: #2f3640;"
+                               "background-color: #dcdde1;"
+                               "border-color: #dcdde1;"
+                               "}"); // 设置样式
 }
 
 void DynamicPage::initCustomPlotStyle(QCustomPlot *customPlot)

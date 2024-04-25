@@ -3,6 +3,7 @@
 #include "matlab/PMTReceive.h"
 #include "matlab/Retrieval/RetrievalAlgorithm.h"
 #include "matlab/Retrieval/Retrieval_TS.h"
+#include "../matlab/AddNoiseNondB.h"
 
 PMTReceptionDataGenerator::PMTReceptionDataGenerator() {}
 
@@ -57,19 +58,41 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     energy_vector = MyMath::convertArrayToQVector(channel_energy);
     sign_vector = MyMath::convertArrayToQVector(channel_sign);
 
+    // 从存储中获取SNR
+    double SNR = constantStorage->getConstant(constantMap->getConstantName(6, 5)).toDouble();
+    // coder::array<double, 2U> Iv;
+    coder::array<double, 2U> Iv_Noised;
+    QVector<double> *Spectrum_Noised;
+    // MyMath::convertQVectorToArray(energy_vector, Iv);
+    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR);
+    Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
+    // result->append(sign_vector);
+    // result->append(Spectrum_Noised);
+    // result->append(sign_vector);
+    // result->append(energy_vector);
+
     // 给sign_vector末尾添加柱形图的宽度
     sign_vector->append(bar_width);
 
     // 存储energy_vector指向的内存地址
-    constantStorage->setConstant(constantMap->getConstantName(5, 14), QVariant::fromValue(new QVector<double>(*energy_vector)));
+    constantStorage->setConstant(constantMap->getConstantName(5, 14), QVariant::fromValue(new QVector<double>(*Spectrum_Noised)));
 
     result->append(RF);
     result->append(yData);
     result->append(sign_vector);
-    result->append(energy_vector);
+    result->append(Spectrum_Noised);
+
+    // for (int i = 0; i < sign_vector->size() - 1; ++i)
+    // {
+    //     qDebug() << "加噪前"
+    //              << "sign: " << sign_vector->at(i + 1) << "energy: " << energy_vector->at(i) << Qt::endl;
+    //     qDebug() << "加噪后"
+    //              << "sign: " << sign_vector->at(i + 1) << "energy: " << Spectrum_Noised->at(i) << Qt::endl;
+    // }
 
     // delete RF;
     delete xData;
+    delete energy_vector;
     // delete yData;
 
     return result;
@@ -102,16 +125,29 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::receiveSpectrumAfterPMT(Q
     energy_vector = MyMath::convertArrayToQVector(channel_energy);
     sign_vector = MyMath::convertArrayToQVector(channel_sign);
 
+    // 从存储中获取SNR
+    double SNR = constantStorage->getConstant(constantMap->getConstantName(6, 5)).toDouble();
+    // coder::array<double, 2U> Iv;
+    coder::array<double, 2U> Iv_Noised;
+    QVector<double> *Spectrum_Noised;
+    // MyMath::convertQVectorToArray(energy_vector, Iv);
+    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR);
+    Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
     result->append(sign_vector);
-    result->append(energy_vector);
+    result->append(Spectrum_Noised);
+    // result->append(sign_vector);
+    // result->append(energy_vector);
 
     for (int i = 0; i < result->at(0)->size(); ++i)
     {
+        // 加噪前
+        qDebug() << "sign: " << sign_vector->at(i) << "energy: " << energy_vector->at(i) << Qt::endl;
+        // 加噪后
         qDebug() << "sign: " << result->at(0)->at(i) << "energy: " << result->at(1)->at(i) << Qt::endl;
     }
 
     delete RF;
-
+    delete energy_vector;
     return result;
 }
 
