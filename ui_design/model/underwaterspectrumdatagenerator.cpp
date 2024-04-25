@@ -277,7 +277,7 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateSNRDepthByA
     QVector<double> *AlphaVector = new QVector<double>();
     QVector<QVector<double> *> *SNR_dbVector;
 
-    for (int i = 0; i < 150; ++i)
+    for (int i = 0; i < 40; ++i)
     {
         zVector->append(i);
     }
@@ -355,7 +355,7 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateNsMByDepthD
     QVector<double> *N_RayleighVector;
     QVector<QVector<double> *> *NsVector;
 
-    for (int i = 0; i < 150; ++i)
+    for (int i = 0; i < 40; ++i)
     {
         zVector->append(i);
     }

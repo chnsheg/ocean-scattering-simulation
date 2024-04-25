@@ -149,92 +149,6 @@ void PageDataGenerator::generatePairOfData(int page_index)
 
 void PageDataGenerator::generateDynamicData(int index)
 {
-    // QVector<QVector<double> *> *xDataVector;
-    // QVector<QVector<double> *> *yDataVector;
-    // xDataVector = new QVector<QVector<double> *>;
-    // yDataVector = new QVector<QVector<double> *>;
-    // QVector<QVector<double> *> *laserLineWidthEffectData;
-    // QStringList legendList;
-
-    // switch (index)
-    // {
-    // case 0:
-    //     for (int i = 0; i < 1; i++) // 总共有几个页面
-    //     {
-    //         if (i == 0)
-    //         {
-    //             laserLineWidthEffectData = SpectrumDataGenerator::generateLaserLineWidthEffectData();
-    //             if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
-    //             {
-    //                 Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
-    //                 return;
-    //             }
-    //             xDataVector->append(generateData(DataType::Frequence));
-    //             yDataVector->append(laserLineWidthEffectData->at(0));
-    //             yDataVector->append(laserLineWidthEffectData->at(1));
-    //             yDataVector->append(laserLineWidthEffectData->at(2));
-    //             yDataVector->append(laserLineWidthEffectData->at(3));
-    //             legendList.append("布里渊散射谱");
-    //             legendList.append("瑞利散射谱");
-    //             legendList.append("米散射谱");
-    //             legendList.append("整体散射谱");
-    //             emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("受激光拓宽的散射谱"), legendList); // i 表示第几面的曲线
-    //         }
-    //     }
-    //     emit dataGenerateFinished();
-    //     break;
-    // case 1:
-    //     for (int i = 0; i < 3; i++) // 总共有几个页面
-    //     {
-    //         if (i == 0)
-    //         {
-    //             laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByMData();
-    //             // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
-    //             yDataVector->append(laserLineWidthEffectData->at(0));
-    //             for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
-    //             {
-    //                 xDataVector->append(laserLineWidthEffectData->at(j + 1));
-    //                 legendList.append("M = " + QString::number(laserLineWidthEffectData->last()->at(j)));
-    //             }
-    //             emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("SNR随深度变化"), legendList); // i 表示第几面的曲线
-    //         }
-    //         else if (i == 1)
-    //         {
-    //             xDataVector = new QVector<QVector<double> *>;
-    //             yDataVector = new QVector<QVector<double> *>;
-    //             laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateNsMByDepthData();
-    //             // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
-    //             yDataVector->append(laserLineWidthEffectData->at(0));
-    //             // 先清空legendList
-    //             legendList.clear();
-    //             for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
-    //             {
-    //                 xDataVector->append(laserLineWidthEffectData->at(j + 1));
-    //                 legendList.append("M = " + QString::number(laserLineWidthEffectData->last()->at(j)));
-    //             }
-    //             emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("Ns/M随深度变化"), legendList); // i 表示第几面的曲线
-    //         }
-    //         else if (i == 2)
-    //         {
-    //             xDataVector = new QVector<QVector<double> *>;
-    //             yDataVector = new QVector<QVector<double> *>;
-    //             laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByAlphaData();
-    //             // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
-    //             yDataVector->append(laserLineWidthEffectData->at(0));
-    //             // 先清空legendList
-    //             legendList.clear();
-    //             for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
-    //             {
-    //                 xDataVector->append(laserLineWidthEffectData->at(j + 1));
-    //                 legendList.append("Alpha = " + QString::number(laserLineWidthEffectData->last()->at(j)));
-    //             }
-    //             emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("不同alpha下SNR随深度变化"), legendList); // i 表示第几面的曲线
-    //         }
-    //     }
-    //     emit dataGenerateFinished();
-    //     break;
-    // }
-
     TaskRunner *object = TaskRunner::runTask<DynamicPageDataGeneratorThread>(index);
     connect(object, &TaskRunner::taskCompleted, this, &PageDataGenerator::handleTaskCompletedSlot);
 }
@@ -369,7 +283,7 @@ void PageDataGenerator::handleTaskCompletedSlot(QString taskName, QVariantList *
         else if (args->at(0).toInt() == 1)
         {
             // Singleton<Logger>::getInstance()->logMessage("数据生成成功！", Logger::Info);
-            emit dynamicDataGenerated(args->at(1).value<QVector<QVector<double> *> *>(), args->at(2).value<QVector<QVector<double> *> *>(), args->at(3).toInt(), args->at(4).toString(), args->at(5).toStringList());
+            emit dynamicDataGenerated(args->at(1).value<QVector<QVector<double> *> *>(), args->at(2).value<QVector<QVector<double> *> *>(), args->at(3).toInt(), args->at(4).toString(), args->at(5).toStringList(), args->at(6).toStringList());
         }
         else if (args->at(0).toInt() == 2)
         {

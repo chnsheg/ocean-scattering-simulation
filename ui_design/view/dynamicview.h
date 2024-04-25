@@ -32,7 +32,8 @@ public:
                       QVector<QVector<double> *> *xData,
                       QVector<QVector<double> *> *yData,
                       QString title,
-                      QStringList legendList = QStringList());
+                      QStringList legendList = QStringList(),
+                      QStringList labelList = QStringList());
 
     void initCustomPlotStyle(QCustomPlot *customPlot);
 
@@ -53,7 +54,8 @@ public slots:
                            QVector<QVector<double> *> *yData,
                            int index,
                            QString title,
-                           QStringList legendList = QStringList());
+                           QStringList legendList = QStringList(),
+                           QStringList labelList = QStringList());
 
 signals:
     void storeRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index); // 用于存储运行时数据

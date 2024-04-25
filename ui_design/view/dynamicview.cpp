@@ -116,7 +116,8 @@ void DynamicPage::displayCurve(int pageIndex,
                                QVector<QVector<double> *> *xData,
                                QVector<QVector<double> *> *yData,
                                QString title,
-                               QStringList legendList)
+                               QStringList legendList,
+                               QStringList labelList)
 {
     QCustomPlot *plot;
     if (pageIndex >= 0 && pageIndex < plots->size())
@@ -158,6 +159,18 @@ void DynamicPage::displayCurve(int pageIndex,
             plot->plotLayout()->insertRow(0);
             plot->plotLayout()
                 ->addElement(0, 0, new QCPTextElement(plot, title, QFont("sans", 12, QFont::Bold)));
+            if (labelList.size() == 2)
+            {
+                plot->xAxis->setLabel(labelList.at(0));
+                plot->yAxis->setLabel(labelList.at(1));
+            }
+
+            plot->xAxis->setLabelColor(QColor(226, 60, 255));
+            plot->yAxis->setLabelColor(QColor(226, 60, 255));
+            plot->xAxis->setLabelFont(QFont("Consolas", 12));
+            plot->yAxis->setLabelFont(QFont("Consolas", 12));
+            plot->xAxis->setLabelPadding(10);
+            plot->yAxis->setLabelPadding(10);
         }
         else if (xData->size() > 1 && yData->size() == 1)
         {
@@ -190,6 +203,20 @@ void DynamicPage::displayCurve(int pageIndex,
             plot->plotLayout()->insertRow(0);
             plot->plotLayout()
                 ->addElement(0, 0, new QCPTextElement(plot, title, QFont("sans", 12, QFont::Bold)));
+
+            // 添加x轴名称和y轴名称
+            if (labelList.size() == 2)
+            {
+                plot->xAxis->setLabel(labelList.at(0));
+                plot->yAxis->setLabel(labelList.at(1));
+            }
+            // 设置x轴和y轴的名称的颜色和字体以及方向
+            plot->xAxis->setLabelColor(QColor(226, 60, 255));
+            plot->yAxis->setLabelColor(QColor(226, 60, 255));
+            plot->xAxis->setLabelFont(QFont("Consolas", 12));
+            plot->yAxis->setLabelFont(QFont("Consolas", 12));
+            plot->xAxis->setLabelPadding(10);
+            plot->yAxis->setLabelPadding(10);
         }
 
         delete xData;
@@ -201,9 +228,10 @@ void DynamicPage::updateDynamicView(QVector<QVector<double> *> *xData,
                                     QVector<QVector<double> *> *yData,
                                     int index,
                                     QString title,
-                                    QStringList legendList)
+                                    QStringList legendList,
+                                    QStringList labelList)
 {
-    displayCurve(index, xData, yData, title, legendList);
+    displayCurve(index, xData, yData, title, legendList, labelList);
 }
 
 void DynamicPage::onPrevPageClicked()

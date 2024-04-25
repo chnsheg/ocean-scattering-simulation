@@ -48,7 +48,8 @@ signals:
                               QVector<QVector<double> *> *yDataVector,
                               int index,
                               QString title,
-                              QStringList legendList = QStringList());
+                              QStringList legendList = QStringList(),
+                              QStringList labelList = QStringList());
 
     void dataGenerateFinished();
 

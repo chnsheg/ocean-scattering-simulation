@@ -31,6 +31,7 @@ void DynamicPageDataGeneratorThread::run()
     yDataVector = new QVector<QVector<double> *>;
     QVector<QVector<double> *> *laserLineWidthEffectData;
     QStringList legendList;
+    QStringList labelList;
     PageDataGenerator *pageDataGenerator = Singleton<PageDataGenerator>::getInstance(nullptr);
 
     switch (_index)
@@ -68,11 +69,16 @@ void DynamicPageDataGeneratorThread::run()
                 args->append(i);
                 args->append(QString("受激光拓宽的散射谱"));
                 args->append(legendList);
+                labelList.append("frequency/Hz");
+                labelList.append("Intensity");
+                args->append(labelList);
                 emit taskCompleted(taskName, new QVariantList(*args));
             }
         }
         // 清空args
         args->clear();
+        legendList.clear();
+        labelList.clear();
         args->append(2); // status=2表示所有数据生成成功
         emit taskCompleted(taskName, new QVariantList(*args));
         // delete RF;
@@ -101,6 +107,9 @@ void DynamicPageDataGeneratorThread::run()
                 args->append(i);
                 args->append(QString("SNR随深度变化"));
                 args->append(legendList);
+                labelList.append("depth/m");
+                labelList.append("SNR/dB");
+                args->append(labelList);
                 // emit taskCompleted(taskName, new QVariantList(*args));
                 pageDataGenerator->handleTaskCompletedSlot(taskName, args);
             }
@@ -112,12 +121,13 @@ void DynamicPageDataGeneratorThread::run()
                 yDataVector = new QVector<QVector<double> *>;
                 laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateNsMByDepthData();
                 // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
-                yDataVector->append(laserLineWidthEffectData->at(0));
+                xDataVector->append(laserLineWidthEffectData->at(0));
                 // 先清空legendList
                 legendList.clear();
+                labelList.clear();
                 for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
                 {
-                    xDataVector->append(laserLineWidthEffectData->at(j + 1));
+                    yDataVector->append(laserLineWidthEffectData->at(j + 1));
                     legendList.append("M = " + QString::number(laserLineWidthEffectData->last()->at(j)));
                 }
                 // emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("Ns/M随深度变化"), legendList); // i 表示第几面的曲线
@@ -128,6 +138,10 @@ void DynamicPageDataGeneratorThread::run()
                 args->append(i);
                 args->append(QString("Ns/M随深度变化"));
                 args->append(legendList);
+
+                labelList.append("depth/m");
+                labelList.append("Ns");
+                args->append(labelList);
                 // emit taskCompleted(taskName, new QVariantList(*args));
                 pageDataGenerator->handleTaskCompletedSlot(taskName, args);
             }
@@ -140,12 +154,13 @@ void DynamicPageDataGeneratorThread::run()
                 yDataVector = new QVector<QVector<double> *>;
                 laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByAlphaData();
                 // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
-                yDataVector->append(laserLineWidthEffectData->at(0));
+                xDataVector->append(laserLineWidthEffectData->at(0));
                 // 先清空legendList
                 legendList.clear();
+                labelList.clear();
                 for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
                 {
-                    xDataVector->append(laserLineWidthEffectData->at(j + 1));
+                    yDataVector->append(laserLineWidthEffectData->at(j + 1));
                     legendList.append("Alpha = " + QString::number(laserLineWidthEffectData->last()->at(j)));
                 }
                 // emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("不同alpha下SNR随深度变化"), legendList); // i 表示第几面的曲线
@@ -156,6 +171,9 @@ void DynamicPageDataGeneratorThread::run()
                 args->append(i);
                 args->append(QString("不同alpha下SNR随深度变化"));
                 args->append(legendList);
+                labelList.append("depth/m");
+                labelList.append("SNR/dB");
+                args->append(labelList);
                 // emit taskCompleted(taskName, new QVariantList(*args));
                 pageDataGenerator->handleTaskCompletedSlot(taskName, args);
             }
