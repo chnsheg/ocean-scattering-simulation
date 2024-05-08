@@ -15,7 +15,8 @@ manager的所有事件集中抛出又在上层集中处理，实现了业务逻�
 
 ManagerBase::ManagerBase(QObject *parent)
     : QObject{parent}
-{}
+{
+}
 
 QAction *ManagerBase::getEvent(const QString &event)
 {
@@ -25,7 +26,8 @@ QAction *ManagerBase::getEvent(const QString &event)
 bool ManagerBase::sendEvent(const QString &event)
 {
     QAction *action = getEvent(event);
-    if (action) {
+    if (action)
+    {
         Q_EMIT action->triggered();
         return true;
     }
@@ -35,7 +37,8 @@ bool ManagerBase::sendEvent(const QString &event)
 bool ManagerBase::sendEvent(const QString &event, const QVariant &param)
 {
     QAction *action = getEvent(event);
-    if (action) {
+    if (action)
+    {
         setEventParam(event, param);
         Q_EMIT action->triggered();
         return true;

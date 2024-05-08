@@ -57,15 +57,28 @@ QVector<QString> runtimeResultDataVector = QVector<QString>({"BrillouinLine", //
                                                              "NMie",
                                                              "NRayleigh",
                                                              "SNR",
-                                                             "PhotonNum"
-
-});
+                                                             "PhotonNum",
+                                                             "retrievalBrillouinShift",
+                                                             "retrievalBrillouinLine",
+                                                             "retrievalRayleighLine"
+                                                             "retrievalTemperature",
+                                                             "retrievalSalinity"});
 
 QVector<QString> runtimeImageDataVector = QVector<QString>({"LaserImage",
                                                             "SpectrumImage",
                                                             "UnderWaterTotalImage",
                                                             "FizeauImage",
                                                             "PMTImage"});
+
+QVector<QString> retrievalConstantVector = QVector<QString>({"initialBrillouinShift ",
+                                                             "initialBrillouinLine ",
+                                                             "initialRayleighLine",
+                                                             "upperBrillouinShift ",
+                                                             "upperBrillouinLine ",
+                                                             "upperRayleighLine",
+                                                             "lowerBrillouinShift ",
+                                                             "lowerBrillouinLine ",
+                                                             "lowerRayleighLine"});
 
 ConstantGroup physicalConstantGroup(&physicalConstantVector);
 ConstantGroup laserConstantGroup(&laserConstantVector);
@@ -76,6 +89,7 @@ ConstantGroup underWaterSpectrumConstantGroup(&underWaterSpectrumConstantVector)
 ConstantGroup runtimeDataGroup(&runtimeCurveDataVector);
 ConstantGroup runtimeResultGroup(&runtimeResultDataVector);
 ConstantGroup runtimeImageGroup(&runtimeImageDataVector);
+ConstantGroup retrievalConstantGroup(&retrievalConstantVector);
 
 ConstantMap::ConstantMap()
 {
@@ -89,6 +103,7 @@ ConstantMap::ConstantMap()
     this->m_constantMap->insert(6, &runtimeResultGroup);
     this->m_constantMap->insert(7, &underWaterSpectrumConstantGroup);
     this->m_constantMap->insert(8, &runtimeImageGroup);
+    this->m_constantMap->insert(9, &retrievalConstantGroup);
 }
 
 ConstantMap::~ConstantMap() {}

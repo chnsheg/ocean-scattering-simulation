@@ -53,7 +53,9 @@ signals:
 
     void dataGenerateFinished();
 
-    void actionGenerateFinished();
+    // void actionGenerateFinished();
+
+    void retrievalCompleted(QVariantList *args);
 
     void importConstantCompleted(const int page_index, const QVector<QVector<QVector<double> *> *> *xDataVector,
                                  const QVector<QVector<QVector<double> *> *> *yDataVector);

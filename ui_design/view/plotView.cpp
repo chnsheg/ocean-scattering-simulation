@@ -55,6 +55,9 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
                                                               _ui->homeButton_7,
                                                               _ui->homeButton_8);
     Singleton<Show1ButtonGroupManager>::getInstance(show1ButtonGroup);
+    _ui->homeButton_6->hide();
+    _ui->homeButton_7->hide();
+    _ui->homeButton_8->hide();
 
     // 挂载hoverInfoWidget单例
     // HoverInfoWidget *hoverInfoWidget = new HoverInfoWidget();
@@ -438,6 +441,16 @@ void PlotView::handleMenuManagerEvent(MenuActionId menuActionId)
 
 void PlotView::handleButtonGroupManagerEvent(ButtonGroupId buttonGroupId)
 {
+    // 在处理事件之前，重新锚定customPlotmanager和textEditManager
+    for (auto &&customPlot : getCurrentPageCustomPlot())
+    {
+        Singleton<CustomPlotManager>::getInstance()->setCustomPlot(customPlot); // Tracer可能会出问题，只会锚定到最后一个customPlot上
+    }
+    Singleton<TextEditManager>::getInstance()->setTextEdit(
+        ui->stackedWidget->findChild<QTextEdit *>(
+            QString("textEdit%1").arg(getCurrentPageIndex())));
+    Singleton<TextEditManager>::getInstance()->initTextEditStyle();
+
     switch (buttonGroupId)
     {
     case showButton:

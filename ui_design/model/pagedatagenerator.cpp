@@ -264,14 +264,15 @@ void PageDataGenerator::handleTaskCompletedSlot(QString taskName, QVariantList *
     }
     else if (taskName.contains("RetrievalThread"))
     {
-        if (args->at(0).toInt() == 1)
-        {
-            Singleton<Logger>::getInstance()->logMessage("PMT反演成功！", Logger::Info);
-        }
-        else if (args->at(0).toInt() == 0)
-        {
-            Singleton<Logger>::getInstance()->logMessage("PMT反演失败！", Logger::Warning);
-        }
+        // if (args->at(0).toInt() == 1)
+        // {
+        //     Singleton<Logger>::getInstance()->logMessage("PMT反演成功！", Logger::Info);
+        // }
+        // else if (args->at(0).toInt() == 0)
+        // {
+        //     Singleton<Logger>::getInstance()->logMessage("PMT反演失败！", Logger::Warning);
+        // }
+        emit retrievalCompleted(args);
     }
     else if (taskName.contains("DynamicPageDataGeneratorThread"))
     {

@@ -7,11 +7,13 @@
 #include "mainwindow.h"
 #include "model/screencapturetask.h"
 #include "base/taskrunner.h"
+#include "retrievalwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;
+    // RetrievalWindow rw;
 
     QFile file(":/qss.css");
     if (file.open(QIODevice::ReadOnly))
@@ -32,6 +34,7 @@ int main(int argc, char *argv[])
     // TaskRunner::runTask<ScreenCaptureTask>(); // Start a new task
 
     w.show();
+    // rw.show();
     return a.exec();
 }
 

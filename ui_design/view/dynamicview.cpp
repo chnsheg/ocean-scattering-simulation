@@ -29,6 +29,9 @@ DynamicPage::~DynamicPage()
 
     emit closeDynamicPageSignal(pageObjectId);
 
+    // 关闭窗口
+    this->close();
+
     qDebug() << "DynamicPage object deleted";
 }
 

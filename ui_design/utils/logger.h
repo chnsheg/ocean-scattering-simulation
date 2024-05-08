@@ -29,6 +29,7 @@ private:
 public:
     // 槽函数，接收外部传入的QString信息和信息等级
     void logMessage(const QString &message, LogLevel level = Log);
+    void logMessage(QTextEdit *textEdit, const QString &message, LogLevel level = Log, int fontSize = 12);
 
 private:
     // 根据信息等级获取对应的字符格式

@@ -22,6 +22,20 @@ void Logger::logMessage(const QString &message, LogLevel level)
     }
 }
 
+void Logger::logMessage(QTextEdit *textEdit, const QString &message, LogLevel level, int fontSize)
+{
+    // 获取对应等级的字符格式
+    QTextCharFormat format = getFormatForLogLevel(level);
+
+    if (textEdit)
+    {
+        format.setFontPointSize(fontSize);
+        textEdit->setCurrentCharFormat(format);
+        textEdit->append(format.toolTip() + message);
+        textEdit->append("\n");
+    }
+}
+
 QTextCharFormat Logger::getFormatForLogLevel(LogLevel level)
 {
     QTextCharFormat format;

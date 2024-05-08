@@ -36,6 +36,7 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 # Populate a CMake variable with the .ui files
 set(FORMS
     ${CMAKE_CURRENT_SOURCE_DIR}/mainwindow.ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/retrievalWindow.ui
 )
 
 set(RESOURCES
@@ -56,6 +57,7 @@ base/taskrunner.cpp
 controller/plotcontroller.cpp 
 main.cpp 
 mainwindow.cpp 
+retrievalWindow.cpp
 manager/buttongroupmanager.cpp 
 manager/customplotmanager.cpp 
 manager/inputdatalistmanager.cpp 
@@ -147,6 +149,7 @@ base/taskrunner.h
 controller/plotcontroller.h 
 fftw3.h 
 mainwindow.h 
+retrievalWindow.h
 manager/buttongroupmanager.h 
 manager/customplotmanager.h 
 manager/inputdatalistmanager.h 

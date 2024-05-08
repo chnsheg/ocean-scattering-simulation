@@ -33,7 +33,21 @@ PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObje
 }
 
 // TODO: Add destructor
-PlotController::~PlotController() {}
+PlotController::~PlotController()
+{
+
+    delete thread;
+    delete rw;
+    // delete dynamicView;
+    for (int i = 0; i < dynamicViewVector.size(); ++i)
+    {
+        delete dynamicViewVector.at(i);
+    }
+    for (int i = 0; i < hoverInfoWidgetsVector.size(); ++i)
+    {
+        delete hoverInfoWidgetsVector.at(i);
+    }
+}
 
 void PlotController::handleStartButtonClicked(int page_index)
 {
@@ -294,8 +308,10 @@ void PlotController::handleDynamicButtonClicked(int index)
         // this->thread->deleteLater(); });
 
         // thread->start();
+        rw = new RetrievalWindow();
+        rw->show();
         delete thread;
-        model->generateDynamicAction(0);
+        // model->generateDynamicAction(0);
     }
 }
 

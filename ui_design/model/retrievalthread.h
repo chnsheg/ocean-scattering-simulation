@@ -4,6 +4,7 @@
 #include <QObject>
 #include "base/taskrunner.h"
 #include <QDebug>
+#include "retrievalwindow.h"
 
 class RetrievalThread : public TaskRunner
 {
@@ -17,6 +18,7 @@ public:
     }
 
     void run() override;
+    void deleteRetrievalThread() { delete this; }
 
 private:
     std::function<void()> callback; // 存储回调函数的函数对象

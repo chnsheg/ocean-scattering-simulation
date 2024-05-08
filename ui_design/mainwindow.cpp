@@ -10,6 +10,8 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    // 设置窗口大小
+    this->resize(1800, 1300);
     // 挂载视图层
     Singleton<PlotView>::getInstance(ui);
     // 挂载模型层

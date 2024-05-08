@@ -11,6 +11,7 @@
 #include "view/dynamicview.h"
 #include "module/hoverinfowidget.h"
 #include <QPixmap>
+#include "retrievalwindow.h"
 
 class PlotController : public QObject
 {
@@ -53,6 +54,9 @@ private:
 
     QVector<HoverInfoWidget *> hoverInfoWidgetsVector;
     QVector<int> hoverInfoWidgetsOpened; // 用来记录打开的hoverInfoWidget的index，这样即使关闭了hoverInfoWidget，也可以在对应的位置打开新的hoverInfoWidget
+
+    RetrievalWindow *rw;
+    int retrievalWindowOpened = 0;
 
     SINGLETON(PlotController)
 };

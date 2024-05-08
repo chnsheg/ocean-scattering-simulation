@@ -27,6 +27,7 @@ HoverInfoWidget::~HoverInfoWidget()
     shrinkButton = nullptr;
     resizeLineEdit = nullptr;
     originalPixmap = nullptr;
+    this->close();
 
     emit closeHoverInfoWidgetSignal();
 }

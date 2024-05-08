@@ -288,6 +288,14 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
 
     // 在bars上显示对应的y值
     QCPBarsDataContainer *barsData = bars->data().data();
+    // 如果原来界面上有valueLabels，先删除
+    for (int i = 0; i < customPlot->layerCount(); ++i)
+    {
+        if (customPlot->layer(i)->name() == "valueLabels")
+        {
+            customPlot->removeLayer(customPlot->layer(i));
+        }
+    }
     for (int i = 0; i < barsData->size(); ++i)
     {
         const QCPBarsData *data = barsData->at(i);

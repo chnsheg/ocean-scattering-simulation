@@ -99,6 +99,7 @@ SOURCES += \
     module/mycombobox.cpp \
     module/mytracer.cpp \
     module/qcustomplot.cpp \
+    retrievalwindow.cpp \
     utils/logger.cpp \
     utils/mymath.cpp \
     utils/readfiledata.cpp \
@@ -211,6 +212,7 @@ HEADERS += \
     module/mycombobox.h \
     module/mytracer.h \
     module/qcustomplot.h \
+    retrievalwindow.h \
     utils/logger.h \
     utils/mymath.h \
     utils/readfiledata.h \
@@ -218,7 +220,8 @@ HEADERS += \
     view/plotView.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    retrievalwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

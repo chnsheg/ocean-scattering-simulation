@@ -223,9 +223,21 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     // double Initial_lower[3] = {7.0e9, 0.2e9, 0.1e9};
     // double Initial_upper[3] = {8.3e9, 1e9, 0.3e9};
     // double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
-    double Initial_lower[3] = {7.2e9, 0.2e9, 0.1e9}; // 初始值越小，拟合越精确，耗时越短
-    double Initial_upper[3] = {7.8e9, 1e9, 0.3e9};
-    double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
+
+    // double Initial_lower[3] = {7.2e9, 0.2e9, 0.1e9}; // 初始值越小，拟合越精确，耗时越短
+    // double Initial_upper[3] = {7.8e9, 0.8e9, 0.3e9};
+    // double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
+    double Initial_lower[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 6)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 7)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 8)).toDouble()};
+
+    double Initial_upper[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 3)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 4)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 5)).toDouble()};
+
+    double Initial_value[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 0)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 1)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 2)).toDouble()};
 
     // 显示初始条件和约束
     // Singleton<Logger>::getInstance()->logMessage("Initial_lower: " + QString::number(Initial_lower[0]) + ", " + QString::number(Initial_lower[1]) + ", " + QString::number(Initial_lower[2]), Logger::Info);
@@ -299,67 +311,74 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     double REF_Sal;
     Retrieval_TS(res_B_shift, res_B_width, &REF_Tem, &REF_Sal);
 
+    // 存储到内存中
+    constantStorage->setConstant(constantMap->getConstantName(6, 7), QVariant::fromValue(res_B_shift));
+    constantStorage->setConstant(constantMap->getConstantName(6, 8), QVariant::fromValue(res_B_width));
+    constantStorage->setConstant(constantMap->getConstantName(6, 9), QVariant::fromValue(res_R_width));
+    constantStorage->setConstant(constantMap->getConstantName(6, 10), QVariant::fromValue(REF_Tem));
+    constantStorage->setConstant(constantMap->getConstantName(6, 11), QVariant::fromValue(REF_Sal));
+
     // % 计算误差：
     // Error.shift = res.B_shift - EnvironmentalFactors.Bri_Shift;
     // Error.width = res.B_width - EnvironmentalFactors.Bri_Width;
     // Error.Rwidth = res.R_width - EnvironmentalFactors.Ray_Width;
     // Error.Photon = res.N_photo - EnvironmentalFactors.Num_Photo;
 
-    double Error_shift = res_B_shift - Bri_shift;
-    double Error_width = res_B_width - Bri_width;
-    double Error_Rwidth = res_R_width - Ray_Width;
-    // double Error_Photon = res_N_photo - PhotonNum;
+    // double Error_shift = res_B_shift - Bri_shift;
+    // double Error_width = res_B_width - Bri_width;
+    // double Error_Rwidth = res_R_width - Ray_Width;
+    // // double Error_Photon = res_N_photo - PhotonNum;
 
-    // Error.tem = REF.Tem - EnvironmentalFactors.tem;
-    // Error.sal = REF.Sal - EnvironmentalFactors.sal;
+    // // Error.tem = REF.Tem - EnvironmentalFactors.tem;
+    // // Error.sal = REF.Sal - EnvironmentalFactors.sal;
 
-    double Error_tem = REF_Tem - Water_Temperature;
-    double Error_sal = REF_Sal - Water_Salinity;
+    // double Error_tem = REF_Tem - Water_Temperature;
+    // double Error_sal = REF_Sal - Water_Salinity;
 
-    //     % 显示结果：
-    // fprintf('Result')
-    // fprintf('------------------------------------------------------------------------- \n');
-    // fprintf('Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz) \n');
-    // fprintf(' Brillouin width   %8.4f  %8.4f  %8.4f \n', res.B_width / 1e9, EnvironmentalFactors.Bri_Width / 1e9, Error.width / 1e9);
-    // fprintf(' Brillouin shift   %8.4f  %8.4f  %8.4f \n', res.B_shift / 1e9, EnvironmentalFactors.Bri_Shift / 1e9, Error.shift / 1e9);
-    // fprintf(' RAyleigh width    %8.4f  %8.4f  %8.4f \n', res.R_width / 1e9, EnvironmentalFactors.Ray_Width / 1e9, Error.Rwidth / 1e9);
-    // fprintf(' Photon Number     %8.4e  %8.4e  %8.4e \n', res.N_photo, EnvironmentalFactors.Num_Photo, Error.Photon);
+    // //     % 显示结果：
+    // // fprintf('Result')
+    // // fprintf('------------------------------------------------------------------------- \n');
+    // // fprintf('Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz) \n');
+    // // fprintf(' Brillouin width   %8.4f  %8.4f  %8.4f \n', res.B_width / 1e9, EnvironmentalFactors.Bri_Width / 1e9, Error.width / 1e9);
+    // // fprintf(' Brillouin shift   %8.4f  %8.4f  %8.4f \n', res.B_shift / 1e9, EnvironmentalFactors.Bri_Shift / 1e9, Error.shift / 1e9);
+    // // fprintf(' RAyleigh width    %8.4f  %8.4f  %8.4f \n', res.R_width / 1e9, EnvironmentalFactors.Ray_Width / 1e9, Error.Rwidth / 1e9);
+    // // fprintf(' Photon Number     %8.4e  %8.4e  %8.4e \n', res.N_photo, EnvironmentalFactors.Num_Photo, Error.Photon);
 
-    // 打印结果
-    qDebug() << "Result";
-    qDebug() << "-------------------------------------------------------------------------";
-    qDebug() << "Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz)";
-    qDebug() << QString(" Brillouin width   %1    %2    %3")
-                    .arg(res_B_width / 1e9, 8, 'f', 4)
-                    .arg(Bri_width / 1e9, 8, 'f', 4)
-                    .arg(Error_width / 1e9, 8, 'f', 4);
-    qDebug() << QString(" Brillouin shift   %1  %2  %3")
-                    .arg(res_B_shift / 1e9, 8, 'f', 4)
-                    .arg(Bri_shift / 1e9, 8, 'f', 4)
-                    .arg(Error_shift / 1e9, 8, 'f', 4);
-    qDebug() << QString(" RAyleigh width    %1  %2  %3")
-                    .arg(res_R_width / 1e9, 8, 'f', 4)
-                    .arg(Ray_Width / 1e9, 8, 'f', 4)
-                    .arg(Error_Rwidth / 1e9, 8, 'f', 4);
+    // // 打印结果
+    // qDebug() << "Result";
+    // qDebug() << "-------------------------------------------------------------------------";
+    // qDebug() << "Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz)";
+    // qDebug() << QString(" Brillouin width   %1    %2    %3")
+    //                 .arg(res_B_width / 1e9, 8, 'f', 4)
+    //                 .arg(Bri_width / 1e9, 8, 'f', 4)
+    //                 .arg(Error_width / 1e9, 8, 'f', 4);
+    // qDebug() << QString(" Brillouin shift   %1  %2  %3")
+    //                 .arg(res_B_shift / 1e9, 8, 'f', 4)
+    //                 .arg(Bri_shift / 1e9, 8, 'f', 4)
+    //                 .arg(Error_shift / 1e9, 8, 'f', 4);
+    // qDebug() << QString(" RAyleigh width    %1  %2  %3")
+    //                 .arg(res_R_width / 1e9, 8, 'f', 4)
+    //                 .arg(Ray_Width / 1e9, 8, 'f', 4)
+    //                 .arg(Error_Rwidth / 1e9, 8, 'f', 4);
 
-    // Singleton<Logger>::getInstance()->logMessage("Result", Logger::Info);
-    // Singleton<Logger>::getInstance()->logMessage("-------------------------------------------------------------------------", Logger::Info);
-    // Singleton<Logger>::getInstance()->logMessage("Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz)", Logger::Info);
-    // Singleton<Logger>::getInstance()->logMessage(" Brillouin width   " + QString::number(res_B_width / 1e9) + "    " + QString::number(Bri_width / 1e9) + "    " + QString::number(Error_width / 1e9), Logger::Info);
-    // Singleton<Logger>::getInstance()->logMessage(" Brillouin shift   " + QString::number(res_B_shift / 1e9) + "  " + QString::number(Bri_shift / 1e9) + "  " + QString::number(Error_shift / 1e9), Logger::Info);
-    // Singleton<Logger>::getInstance()->logMessage(" RAyleigh width    " + QString::number(res_R_width / 1e9) + "  " + QString::number(Ray_Width / 1e9) + "  " + QString::number(Error_Rwidth / 1e9), Logger::Info);
+    // // Singleton<Logger>::getInstance()->logMessage("Result", Logger::Info);
+    // // Singleton<Logger>::getInstance()->logMessage("-------------------------------------------------------------------------", Logger::Info);
+    // // Singleton<Logger>::getInstance()->logMessage("Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz)", Logger::Info);
+    // // Singleton<Logger>::getInstance()->logMessage(" Brillouin width   " + QString::number(res_B_width / 1e9) + "    " + QString::number(Bri_width / 1e9) + "    " + QString::number(Error_width / 1e9), Logger::Info);
+    // // Singleton<Logger>::getInstance()->logMessage(" Brillouin shift   " + QString::number(res_B_shift / 1e9) + "  " + QString::number(Bri_shift / 1e9) + "  " + QString::number(Error_shift / 1e9), Logger::Info);
+    // // Singleton<Logger>::getInstance()->logMessage(" RAyleigh width    " + QString::number(res_R_width / 1e9) + "  " + QString::number(Ray_Width / 1e9) + "  " + QString::number(Error_Rwidth / 1e9), Logger::Info);
 
-    qDebug() << "-------------------------------------------------------------------------";
-    qDebug() << "Parameters       |   Measured  | Theoretical | error (%4.2f m: %4.2f)|";
-    qDebug() << QString("Environmental tem| %1 °C | %2 °C | %3 °C |")
-                    .arg(REF_Tem, 8, 'f', 4)
-                    .arg(Water_Temperature, 8, 'f', 4)
-                    .arg(Error_tem, 8, 'f', 4);
-    qDebug() << QString("Environmental Sal| %1 ‰ | %2 ‰  | %3 ‰ |")
-                    .arg(REF_Sal, 8, 'f', 4)
-                    .arg(Water_Salinity, 8, 'f', 4)
-                    .arg(Error_sal, 8, 'f', 4);
-    qDebug() << "-------------------------------------------------------------------------";
+    // qDebug() << "-------------------------------------------------------------------------";
+    // qDebug() << "Parameters       |   Measured  | Theoretical | error (%4.2f m: %4.2f)|";
+    // qDebug() << QString("Environmental tem| %1 °C | %2 °C | %3 °C |")
+    //                 .arg(REF_Tem, 8, 'f', 4)
+    //                 .arg(Water_Temperature, 8, 'f', 4)
+    //                 .arg(Error_tem, 8, 'f', 4);
+    // qDebug() << QString("Environmental Sal| %1 ‰ | %2 ‰  | %3 ‰ |")
+    //                 .arg(REF_Sal, 8, 'f', 4)
+    //                 .arg(Water_Salinity, 8, 'f', 4)
+    //                 .arg(Error_sal, 8, 'f', 4);
+    // qDebug() << "-------------------------------------------------------------------------";
 
     // Singleton<Logger>::getInstance()->logMessage("-------------------------------------------------------------------------", Logger::Info);
     // Singleton<Logger>::getInstance()->logMessage("Parameters | Measured | Theoretical | error (%4.2f m: %4.2f)|", Logger::Info);
