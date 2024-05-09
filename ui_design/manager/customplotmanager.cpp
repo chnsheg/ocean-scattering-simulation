@@ -250,6 +250,7 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
         // bars->setName(legendName); // 仅在创建新实例时设置名称
     }
     bars->setAntialiased(false);                          // 为了更好的边框效果，关闭抗齿锯
+    bars->setObjectName("Bars");                          // 设置objectName
     bars->setName(legendName);                            // 设置图例
     bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
     bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
@@ -296,6 +297,7 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
             // 删除layer(i)层中的QCPItemText
             for (int j = 0; j < customPlot->layer(i)->children().size(); ++j)
             {
+                // 清除这个图层中的元素
                 customPlot->layer(i)->children().at(j)->setVisible(false);
             }
         }
@@ -359,6 +361,25 @@ void CustomPlotManager::hidePlot()
     {
         customPlot->graph(i)->setVisible(false);
     }
+    for (int i = 0; i < customPlot->plottableCount(); ++i)
+    {
+        qDebug() << "plottable:" << customPlot->plottable(i)->name() << Qt::endl;
+        if (customPlot->plottable(i)->objectName() == "Bars")
+        {
+            customPlot->plottable(i)->setVisible(false);
+            for (int i = 0; i < customPlot->layerCount(); ++i) // 隐藏valueLabels
+            {
+                if (customPlot->layer(i)->name() == "valueLabels")
+                {
+                    // 删除layer(i)层中的QCPItemText
+                    for (int j = 0; j < customPlot->layer(i)->children().size(); ++j)
+                    {
+                        customPlot->layer(i)->children().at(j)->setVisible(false);
+                    }
+                }
+            }
+        }
+    }
     // 隐藏图例显示
     customPlot->legend->setVisible(false);
     // 隐藏跟踪点
@@ -372,9 +393,21 @@ bool CustomPlotManager::showPlot()
     // 如果存在bar，则先显示
     for (int i = 0; i < customPlot->plottableCount(); ++i)
     {
-        if (customPlot->plottable(i)->name() == "Bars")
+        qDebug() << "show_plottable:" << customPlot->plottable(i)->objectName() << Qt::endl;
+        if (customPlot->plottable(i)->objectName() == "Bars")
         {
             customPlot->plottable(i)->setVisible(true);
+            for (int i = 0; i < customPlot->layerCount(); ++i)
+            {
+                if (customPlot->layer(i)->name() == "valueLabels")
+                {
+                    // 删除layer(i)层中的QCPItemText
+                    for (int j = 0; j < customPlot->layer(i)->children().size(); ++j)
+                    {
+                        customPlot->layer(i)->children().at(j)->setVisible(true);
+                    }
+                }
+            }
         }
     }
     // 显示曲线显示

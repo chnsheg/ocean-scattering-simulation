@@ -308,7 +308,11 @@ void PlotController::handleDynamicButtonClicked(int index)
         // this->thread->deleteLater(); });
 
         // thread->start();
-        rw = new RetrievalWindow();
+        if (rw == nullptr)
+        {
+            rw = new RetrievalWindow();
+        }
+
         rw->show();
         delete thread;
         // model->generateDynamicAction(0);
