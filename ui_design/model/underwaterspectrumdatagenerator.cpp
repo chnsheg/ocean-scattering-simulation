@@ -136,7 +136,10 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateUnderWaterS
     coder::array<double, 2U> Iv_Noised;
     QVector<double> *Spectrum_Noised;
     MyMath::convertQVectorToArray(Spectrum1, Iv);
-    AddNoiseNondB(Iv, SNR, Iv_Noised, &SNR);
+    double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
+    qDebug() << "poissrnd_lambda: " << poissrnd_lambda;
+
+    AddNoiseNondB(Iv, SNR, Iv_Noised, &SNR, poissrnd_lambda);
     Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
 
     // ReadFileData::saveDataToCSVFile(xDataVectorContainer->at(0), L_rc, "L_rc.csv");

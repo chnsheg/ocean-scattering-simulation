@@ -34,7 +34,7 @@ QVector<QString> underWaterSpectrumConstantVector = QVector<QString>(
 QVector<QString> fizeauConstantVector = QVector<QString>(
     {"Fizeau_lambda", "Fizeau_plate", "Fizeau_angle", "Fizeau_index", "Fizeau_albedo"});
 QVector<QString> pmtConstantVector = QVector<QString>(
-    {"channel_number", "channel_width", "channel_space"});
+    {"channel_number", "channel_width", "channel_space", "poissrnd_lambda"});
 QVector<QString> runtimeCurveDataVector = QVector<QString>({"Laser",                          // 0
                                                             "BrillouinSpectrum",              // 1
                                                             "MieSpectrum",                    // 2

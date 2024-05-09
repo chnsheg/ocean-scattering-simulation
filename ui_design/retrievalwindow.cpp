@@ -39,6 +39,8 @@ void RetrievalWindow::boundButtonEvent()
 // “显示”按钮点击事件
 void RetrievalWindow::onShowButtonClicked()
 {
+    saveLineEditGroupsText();
+
     PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
     // 绑定反演结束信号
     connect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);

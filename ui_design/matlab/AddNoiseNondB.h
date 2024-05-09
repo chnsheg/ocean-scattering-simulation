@@ -16,7 +16,7 @@
 
 // Function Declarations
 extern void AddNoiseNondB(const coder::array<double, 2U> &Iv, double SNR,
-                          coder::array<double, 2U> &Iv_Noised, double *SNR_cal);
+                          coder::array<double, 2U> &Iv_Noised, double *SNR_cal, double poissrnd_lambda);
 
 #endif
 //

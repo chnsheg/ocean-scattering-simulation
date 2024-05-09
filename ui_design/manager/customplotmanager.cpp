@@ -293,7 +293,11 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     {
         if (customPlot->layer(i)->name() == "valueLabels")
         {
-            customPlot->removeLayer(customPlot->layer(i));
+            // 删除layer(i)层中的QCPItemText
+            for (int j = 0; j < customPlot->layer(i)->children().size(); ++j)
+            {
+                customPlot->layer(i)->children().at(j)->setVisible(false);
+            }
         }
     }
     for (int i = 0; i < barsData->size(); ++i)

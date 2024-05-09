@@ -64,7 +64,8 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     coder::array<double, 2U> Iv_Noised;
     QVector<double> *Spectrum_Noised;
     // MyMath::convertQVectorToArray(energy_vector, Iv);
-    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR);
+    double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
+    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
     Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
     // result->append(sign_vector);
     // result->append(Spectrum_Noised);
@@ -131,7 +132,8 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::receiveSpectrumAfterPMT(Q
     coder::array<double, 2U> Iv_Noised;
     QVector<double> *Spectrum_Noised;
     // MyMath::convertQVectorToArray(energy_vector, Iv);
-    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR);
+    double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
+    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
     Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
     result->append(sign_vector);
     result->append(Spectrum_Noised);

@@ -120,22 +120,28 @@ static void plus(coder::array<double, 2U> &in1,
 // Return Type  : void
 //
 void AddNoiseNondB(const coder::array<double, 2U> &Iv, double SNR,
-                   coder::array<double, 2U> &Iv_Noised, double *SNR_cal)
+                   coder::array<double, 2U> &Iv_Noised, double *SNR_cal, double poissrnd_lambda)
 {
   coder::array<double, 2U> y_tmp;
   double d;
   double u;
   int i;
   int iter;
+  int add_flag = 1;
   if (!isInitialized_AddNoiseNondB)
   {
     AddNoiseNondB_initialize();
   }
   y_tmp.set_size(1, Iv.size(1));
   iter = Iv.size(1);
+  if (poissrnd_lambda <= 0.0)
+  {
+    add_flag = 0;
+  }
   for (i = 0; i < iter; i++)
   {
-    y_tmp[i] = Iv[i] * 2.0E+10;
+    // y_tmp[i] = Iv[i] * 6E+22; // lambda 6w22-8e22
+    y_tmp[i] = Iv[i] * poissrnd_lambda;
   }
   Iv_Noised.set_size(1, y_tmp.size(1));
   i = y_tmp.size(1);
@@ -337,10 +343,25 @@ void AddNoiseNondB(const coder::array<double, 2U> &Iv, double SNR,
   {
     iter = Iv.size(1) - 1;
     Iv_Noised.set_size(1, Iv.size(1));
-    for (i = 0; i <= iter; i++)
+    if (add_flag == 1)
     {
-      Iv_Noised[i] = Iv[i] + Iv_Noised[i];
+      for (i = 0; i <= iter; i++)
+      {
+        Iv_Noised[i] = Iv[i] + Iv_Noised[i];
+      }
     }
+    else
+    {
+      for (i = 0; i <= iter; i++)
+      {
+        Iv_Noised[i] = Iv[i];
+      }
+    }
+    // for (i = 0; i <= iter; i++)
+    // {
+    //   Iv_Noised[i] = Iv[i] + Iv_Noised[i];
+    //   // Iv_Noised[i] = Iv[i];
+    // }
   }
   else
   {

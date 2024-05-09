@@ -264,7 +264,7 @@ void RetrievalAlgorithm(double number,
   }
   funcCount = FiniteDifferences.numEvals + 1;
   // b_gamma = 1.0E-100; // InitDamping
-  b_gamma = 1.0E-100;
+  b_gamma = 1.0E-30;
   for (int b_i{0}; b_i < 3; b_i++)
   {
     aIdx = (m_temp + 3) * (b_i + 1);
