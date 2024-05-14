@@ -9,6 +9,7 @@
 #ifndef MY_PI
 #define MY_PI 3.14159265358979323846
 #endif
+#include <QMutex>
 
 class MyMath
 {
@@ -26,6 +27,8 @@ public:
     // static void convolution_fftw(const coder::array<double, 2U> &input,
     //                              const coder::array<double, 2U> &kernel,
     //                              coder::array<double, 2U> &L_out);
+private:
+    static QMutex mutex;
 };
 
 #endif // MYMATH_H

@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
 
     w.show();
     // rw.show();
+    QThreadPool::globalInstance()->setMaxThreadCount(16);
     return a.exec();
 }
 

@@ -10,6 +10,8 @@ RetrievalWindow::RetrievalWindow(QWidget *parent)
     ui->setupUi(this);
     // 绑定按键事件
     boundButtonEvent();
+    // 初始化窗口样式
+    initWindowStyle();
     // 存入lineEdit数据到内存中
     saveLineEditGroupsText();
 
@@ -19,6 +21,77 @@ RetrievalWindow::RetrievalWindow(QWidget *parent)
     }
     Singleton<TextEditManager>::getInstance()->setTextEdit(getRetrievalTextEdit());
     Singleton<TextEditManager>::getInstance()->initTextEditStyle();
+}
+
+// setStyleSheet("QPushButton{"
+//                                   "position: absolute;"
+//                                   "top: 50%;"
+//                                   "left: 50%;"
+//                                   "font: 28px \"微软雅黑\";"
+//                                   "font-weight: 500;"
+//                                   "color: #FFFFFF;"
+//                                   "width: 150px;"
+//                                   "height: 60px;"
+//                                   "background-color: rgba(52, 73, 94, 1);"
+//                                   "border-color: #2f3640;"
+//                                   "border-radius: 10px;"
+//                                   "border-style: solid;"
+//                                   "border-width: 2px;"
+//                                   "margin-left: auto;"
+//                                   "margin-top: 10px;"
+//                                   "}"
+//                                   "QPushButton:hover{"
+//                                   "color: rgba(52, 73, 94, 1);"
+//                                   "background-color: #FFFFFF;"
+//                                   "border-color: #2f3640;"
+//                                   "}"
+//                                   "QPushButton::pressed,QPushButton:checked{"
+//                                   "color: #FFFFFF;"
+//                                   "background-color: qlineargradient(spread pad, x1 0, y1 0, x2 0, y2 1, stop 0 #273c75, stop 1 #487eb0);"
+//                                   "}"
+//                                   "QPushButton:disabled{"
+//                                   "color: #2f3640;"
+//                                   "background-color: #dcdde1;"
+//                                   "border-color: #dcdde1;"
+//                                   "}"); // 设置样式
+
+void RetrievalWindow::initWindowStyle()
+{
+    // 查找ui中的所有按键
+    for (auto &&button : ui->centralwidget->findChildren<QPushButton *>())
+    {
+        button->setStyleSheet("QPushButton{"
+                              "position: absolute;"
+                              "top: 50%;"
+                              "left: 50%;"
+                              "font: 28px \"微软雅黑\";"
+                              "font-weight: 500;"
+                              "color: #FFFFFF;"
+                              "width: 150px;"
+                              "height: 60px;"
+                              "background-color: rgba(52, 73, 94, 1);"
+                              "border-color: #2f3640;"
+                              "border-radius: 10px;"
+                              "border-style: solid;"
+                              "border-width: 2px;"
+                              "margin-left: auto;"
+                              "margin-top: 10px;"
+                              "}"
+                              "QPushButton:hover{"
+                              "color: rgba(52, 73, 94, 1);"
+                              "background-color: #FFFFFF;"
+                              "border-color: #2f3640;"
+                              "}"
+                              "QPushButton::pressed,QPushButton:checked{"
+                              "color: #FFFFFF;"
+                              "background-color: qlineargradient(spread pad, x1 0, y1 0, x2 0, y2 1, stop 0 #273c75, stop 1 #487eb0);"
+                              "}"
+                              "QPushButton:disabled{"
+                              "color: #2f3640;"
+                              "background-color: #dcdde1;"
+                              "border-color: #dcdde1;"
+                              "}"); // 设置样式
+    }
 }
 
 RetrievalWindow::~RetrievalWindow()

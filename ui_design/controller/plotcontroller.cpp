@@ -4,7 +4,7 @@
 PlotController *PlotController::plotControllerInstance = nullptr;
 
 PlotController::PlotController(PlotView *_view, PageDataGenerator *_model, QObject *parent)
-    : QObject(parent), view(_view), model(_model)
+    : QObject(parent), view(_view), model(_model), rw(nullptr)
 {
     void (PlotView::*onStartButtonClicked)(const int page_index) = &PlotView::onStartButtonClicked;
     connect(view, onStartButtonClicked, this, &PlotController::handleStartButtonClicked);

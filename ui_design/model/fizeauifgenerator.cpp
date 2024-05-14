@@ -88,6 +88,47 @@ QVector<QVector<double> *> *FizeauIFGenerator::generateFizeauIFData()
     return result;
 }
 
+QVector<double> *FizeauIFGenerator::Fizeau_Polyarea = nullptr;
+
+QVector<double> *FizeauIFGenerator::getAfterFizeauSpectrumData(QVector<double> *spectrum_data)
+{
+    QVector<QVector<double> *> *Fizeau_IF;
+    QVector<double> *xData;
+    QVector<double> *result;
+    // 拷贝fizeau_IF，再对其进行面积归一化
+    if (Fizeau_Polyarea == nullptr)
+    {
+        Fizeau_IF = generateFizeauIFData();
+        Fizeau_Polyarea = new QVector<double>(*Fizeau_IF->at(1));
+        // 归一化
+        xData = FrequenceDataGenerator::generateRelativeFrequenceData();
+        double area = MyMath::polyarea(*xData, *Fizeau_Polyarea);
+        for (int i = 0; i < Fizeau_Polyarea->size(); ++i)
+        {
+            (*Fizeau_Polyarea)[i] = (*Fizeau_Polyarea)[i] / area;
+        }
+
+        result = MyMath::convolution(spectrum_data, Fizeau_Polyarea);
+
+        // QVector<QVector<double> *> *resultVector = new QVector<QVector<double> *>();
+        // resultVector->append(xData);
+        // resultVector->append(result);
+
+        delete xData;
+        delete Fizeau_IF->at(0);
+        delete Fizeau_IF->at(1);
+        delete Fizeau_IF;
+    }
+    else if (Fizeau_Polyarea != nullptr)
+    {
+        result = MyMath::convolution(spectrum_data, Fizeau_Polyarea);
+    }
+
+    delete spectrum_data;
+
+    return result;
+}
+
 QVector<QVector<double> *> *FizeauIFGenerator::calculateSpectrumAfterFizeau(QVector<double> *fizeau_IF)
 {
     Singleton<Logger>::getInstance()->logMessage("计算通过菲涅尔干涉仪后的光谱", Logger::Log);
@@ -107,13 +148,30 @@ QVector<QVector<double> *> *FizeauIFGenerator::calculateSpectrumAfterFizeau(QVec
     QVector<double> *xData = new QVector<double>();
     QVector<double> *yData = new QVector<double>();
     constantStorage->convertQSharedPointerToQVector(dataContainer, xData, yData);
-
-    // 拷贝fizeau_IF，再对其进行面积归一化
     QVector<double> *fizeau_IF_copy = new QVector<double>(*fizeau_IF);
+    // if (Fizeau_Polyarea == nullptr)
+    // {
+    //     fizeau_IF_copy = new QVector<double>(*fizeau_IF);
+    // }
+    // else
+    // {
+    //     fizeau_IF_copy = new QVector<double>(*Fizeau_Polyarea);
+    // }
+
     double area = MyMath::polyarea(*xData, *fizeau_IF_copy);
     for (int i = 0; i < fizeau_IF_copy->size(); ++i)
     {
         (*fizeau_IF_copy)[i] = (*fizeau_IF_copy)[i] / area;
+    }
+
+    if (Fizeau_Polyarea == nullptr)
+    {
+        Fizeau_Polyarea = new QVector<double>(*fizeau_IF_copy);
+    }
+    else
+    {
+        delete Fizeau_Polyarea;
+        Fizeau_Polyarea = new QVector<double>(*fizeau_IF_copy);
     }
 
     QVector<double> *result = MyMath::convolution(yData, fizeau_IF_copy);

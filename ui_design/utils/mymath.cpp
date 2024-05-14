@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+QMutex MyMath::mutex;
+
 MyMath::MyMath() {}
 
 // 将 coder::array 转换为 QVector
@@ -88,6 +90,7 @@ QVector<double> *MyMath::convolution(QVector<double> *input, QVector<double> *ke
 // 计算N点FFT函数
 void MyMath::myFFT(QVector<double> *input, fftw_complex *out, int N)
 {
+    mutex.lock();
     double *in;
     fftw_plan plan;
 
@@ -116,11 +119,13 @@ void MyMath::myFFT(QVector<double> *input, fftw_complex *out, int N)
     // 释放内存
     fftw_destroy_plan(plan);
     fftw_free(in);
+    mutex.unlock();
 }
 
 // 计算N点IFFT函数
 void MyMath::myIFFT(fftw_complex *in, QVector<double> *out, int N)
 {
+    mutex.lock();
     double *result;
     fftw_plan plan;
 
@@ -142,4 +147,5 @@ void MyMath::myIFFT(fftw_complex *in, QVector<double> *out, int N)
     // 释放内存
     fftw_destroy_plan(plan);
     fftw_free(result);
+    mutex.unlock();
 }

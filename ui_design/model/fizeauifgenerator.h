@@ -10,6 +10,10 @@ public:
 
     static QVector<QVector<double> *> *generateFizeauIFData();
     static QVector<QVector<double> *> *calculateSpectrumAfterFizeau(QVector<double> *fizeau_IF);
+    static QVector<double> *getAfterFizeauSpectrumData(QVector<double> *spectrum_data);
+
+public:
+    static QVector<double> *Fizeau_Polyarea;
 };
 
 #endif // FIZEAUIFGENERATOR_H

@@ -21,7 +21,8 @@ extern void drawNsMByDepth(
     double tau, double r, const coder::array<double, 2U> &M,
     double energy_ratio, double N_dark, double beta, double Xi, double Xi_F,
     coder::array<double, 2U> &N_Brillouin, coder::array<double, 2U> &N_Mie,
-    coder::array<double, 2U> &N_Rayleigh, coder::array<double, 2U> &Ns);
+    coder::array<double, 2U> &N_Rayleigh, coder::array<double, 2U> &Ns,
+    coder::array<double, 2U> &SNR_db = coder::array<double, 2U>());
 
 #endif
 //

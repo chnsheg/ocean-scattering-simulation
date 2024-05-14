@@ -65,7 +65,8 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     QVector<double> *Spectrum_Noised;
     // MyMath::convertQVectorToArray(energy_vector, Iv);
     double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
-    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
+    // AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
+    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, 0);
     Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
     // result->append(sign_vector);
     // result->append(Spectrum_Noised);
@@ -91,6 +92,39 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     //              << "sign: " << sign_vector->at(i + 1) << "energy: " << Spectrum_Noised->at(i) << Qt::endl;
     // }
 
+    //     afterPMTData: 0.00600039
+    // afterPMTData: 0.014514
+    // afterPMTData: 0.0458723
+    // afterPMTData: 0.0484146
+    // afterPMTData: 0.015531
+    // afterPMTData: 0.00774155
+    // afterPMTData: 0.00583176
+    // afterPMTData: 0.0080638
+    // afterPMTData: 0.00796253
+    // afterPMTData: 0.00584695
+    // afterPMTData: 0.00790417
+    // afterPMTData: 0.0161331
+    // afterPMTData: 0.0494295
+    // afterPMTData: 0.0447573
+    // afterPMTData: 0.0139654
+    // afterPMTData: 0.00582907
+    // Spectrum_Noised->replace(0, 0.00600039);
+    // Spectrum_Noised->replace(1, 0.014514);
+    // Spectrum_Noised->replace(2, 0.0458723);
+    // Spectrum_Noised->replace(3, 0.0484146);
+    // Spectrum_Noised->replace(4, 0.015531);
+    // Spectrum_Noised->replace(5, 0.00774155);
+    // Spectrum_Noised->replace(6, 0.00583176);
+    // Spectrum_Noised->replace(7, 0.0080638);
+    // Spectrum_Noised->replace(8, 0.00796253);
+    // Spectrum_Noised->replace(9, 0.00584695);
+    // Spectrum_Noised->replace(10, 0.00790417);
+    // Spectrum_Noised->replace(11, 0.0161331);
+    // Spectrum_Noised->replace(12, 0.0494295);
+    // Spectrum_Noised->replace(13, 0.0447573);
+    // Spectrum_Noised->replace(14, 0.0139654);
+    // Spectrum_Noised->replace(15, 0.00582907);
+
     // delete RF;
     delete xData;
     delete energy_vector;
@@ -99,7 +133,7 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     return result;
 }
 
-QVector<QVector<double> *> *PMTReceptionDataGenerator::receiveSpectrumAfterPMT(QVector<double> *spectrum)
+QVector<double> *PMTReceptionDataGenerator::receiveSpectrumAfterPMT(QVector<double> *spectrum)
 {
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
@@ -117,7 +151,7 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::receiveSpectrumAfterPMT(Q
     MyMath::convertQVectorToArray(RF, frequency);
     MyMath::convertQVectorToArray(spectrum, InputSpectrum);
 
-    QVector<QVector<double> *> *result = new QVector<QVector<double> *>();
+    // QVector<QVector<double> *> *result = new QVector<QVector<double> *>();
     QVector<double> *energy_vector = new QVector<double>();
     QVector<double> *sign_vector = new QVector<double>();
 
@@ -127,30 +161,33 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::receiveSpectrumAfterPMT(Q
     sign_vector = MyMath::convertArrayToQVector(channel_sign);
 
     // 从存储中获取SNR
-    double SNR = constantStorage->getConstant(constantMap->getConstantName(6, 5)).toDouble();
+    // double SNR = constantStorage->getConstant(constantMap->getConstantName(6, 5)).toDouble();
     // coder::array<double, 2U> Iv;
-    coder::array<double, 2U> Iv_Noised;
-    QVector<double> *Spectrum_Noised;
+    // coder::array<double, 2U> Iv_Noised;
+    // QVector<double> *Spectrum_Noised;
     // MyMath::convertQVectorToArray(energy_vector, Iv);
-    double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
-    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
-    Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
-    result->append(sign_vector);
-    result->append(Spectrum_Noised);
+    // double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
+    // AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
+    // AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, 0);
+    // Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
+    // result->append(sign_vector);
+    // result->append(energy_vector);
     // result->append(sign_vector);
     // result->append(energy_vector);
 
-    for (int i = 0; i < result->at(0)->size(); ++i)
-    {
-        // 加噪前
-        qDebug() << "sign: " << sign_vector->at(i) << "energy: " << energy_vector->at(i) << Qt::endl;
-        // 加噪后
-        qDebug() << "sign: " << result->at(0)->at(i) << "energy: " << result->at(1)->at(i) << Qt::endl;
-    }
+    // for (int i = 0; i < result->at(0)->size(); ++i)
+    // {
+    //     // 加噪前
+    //     qDebug() << "sign: " << sign_vector->at(i) << "energy: " << energy_vector->at(i) << Qt::endl;
+    //     // 加噪后
+    //     qDebug() << "sign: " << result->at(0)->at(i) << "energy: " << result->at(1)->at(i) << Qt::endl;
+    // }
 
     delete RF;
-    delete energy_vector;
-    return result;
+    delete sign_vector;
+    delete spectrum;
+
+    return energy_vector;
 }
 
 void PMTReceptionDataGenerator::retrievalFormPMT()
@@ -396,8 +433,8 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     // }
 
     // 输出resnorm, residual, exitflag, output, lambda, jacobia
-    qDebug() << "resnorm: " << resnorm;
-    qDebug() << "exitflag: " << exitflag;
+    // qDebug() << "resnorm: " << resnorm;
+    // qDebug() << "exitflag: " << exitflag;
 
     // Singleton<Logger>::getInstance()->logMessage("resnorm: " + QString::number(resnorm), Logger::Info);
     // Singleton<Logger>::getInstance()->logMessage("exitflag: " + QString::number(exitflag), Logger::Info);
@@ -405,4 +442,151 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     delete xData;
     delete yData;
     // delete PMT_energy_vector;
+}
+
+QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<double> *pmt_data, double z)
+{
+    ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
+    ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
+
+    coder::array<double, 2U> PMT_energy;
+    coder::array<double, 2U> Fizeau_spectrum;
+    coder::array<double, 2U> residual;
+    coder::array<double, 2U> jacobia;
+
+    double number = constantStorage->getConstant(constantMap->getConstantName(3, 0)).toDouble();
+
+    // QVector<double> *PMT_energy_vector = constantStorage->getConstant(constantMap->getConstantName(5, 14)).value<QVector<double> *>();
+
+    // if (PMT_energy_vector == nullptr || PMT_energy_vector->isEmpty())
+    // {
+    //     Singleton<Logger>::getInstance()->logMessage("PMT_Energy为空！请先生成PMT接收数据！", Logger::Warning);
+    //     return;
+    // }
+
+    // QSharedPointer<QCPGraphDataContainer> dataContainer;
+    // //  constantStorage->getConstant(constantMap->getConstantName(5, 11))
+    // dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, 12)).value<QSharedPointer<QCPGraphDataContainer>>();
+
+    QVector<double> *yData = FizeauIFGenerator::Fizeau_Polyarea;
+
+    // if (dataContainer.isNull())
+    // {
+    //     Singleton<Logger>::getInstance()->logMessage("请先生成Fizeau仪器函数！", Logger::Warning);
+    //     return;
+    // }
+
+    // QVector<double> *xData = new QVector<double>();
+    // QVector<double> *yData = new QVector<double>();
+    // constantStorage->convertQSharedPointerToQVector(dataContainer, xData, yData);
+
+    // // 获取相对频率数据
+    // QVector<double> *RF = FrequenceDataGenerator::generateRelativeFrequenceData();
+
+    // // 先对Fizeau_spectrum进行面积归一化
+    // double area = MyMath::polyarea(*RF, *yData);
+    // for (int i = 0; i < yData->size(); ++i)
+    // {
+    //     (*yData)[i] = (*yData)[i] / area;
+    // }
+    // delete RF;
+
+    MyMath::convertQVectorToArray(pmt_data, PMT_energy);
+    MyMath::convertQVectorToArray(yData, Fizeau_spectrum);
+
+    // double Initial_lower[3] = {7.0e9, 0.2e9, 0.1e9};
+    // double Initial_upper[3] = {8.3e9, 1e9, 0.3e9};
+    // double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
+
+    double Initial_lower[3] = {7.2e9, 0.2e9, 0.1e9}; // 初始值越小，拟合越精确，耗时越短
+    double Initial_upper[3] = {7.8e9, 0.8e9, 0.3e9};
+    double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
+    // double Initial_lower[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 6)).toDouble(),
+    //                            constantStorage->getConstant(constantMap->getConstantName(9, 7)).toDouble(),
+    //                            constantStorage->getConstant(constantMap->getConstantName(9, 8)).toDouble()};
+
+    // double Initial_upper[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 3)).toDouble(),
+    //                            constantStorage->getConstant(constantMap->getConstantName(9, 4)).toDouble(),
+    //                            constantStorage->getConstant(constantMap->getConstantName(9, 5)).toDouble()};
+
+    // double Initial_value[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 0)).toDouble(),
+    //                            constantStorage->getConstant(constantMap->getConstantName(9, 1)).toDouble(),
+    //                            constantStorage->getConstant(constantMap->getConstantName(9, 2)).toDouble()};
+
+    // 显示初始条件和约束
+    // Singleton<Logger>::getInstance()->logMessage("Initial_lower: " + QString::number(Initial_lower[0]) + ", " + QString::number(Initial_lower[1]) + ", " + QString::number(Initial_lower[2]), Logger::Info);
+    // Singleton<Logger>::getInstance()->logMessage("Initial_upper: " + QString::number(Initial_upper[0]) + ", " + QString::number(Initial_upper[1]) + ", " + QString::number(Initial_upper[2]), Logger::Info);
+    // Singleton<Logger>::getInstance()->logMessage("Initial_value: " + QString::number(Initial_value[0]) + ", " + QString::number(Initial_value[1]) + ", " + QString::number(Initial_value[2]), Logger::Info);
+
+    // params = [532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.3333, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4];
+    // double params[19] = {532e-9, 12e9, 1, 100e6, 20e-3, 0.08, 0.00, 2.4e-4, 0.00, 1.33, 10, 150, 0.04, 0.05, 1, 10, 2, 0.13, 0.4};
+
+    double wave_length = constantStorage->getConstant(constantMap->getConstantName(0, 1)).toDouble();
+    double freq_range = constantStorage->getConstant(constantMap->getConstantName(0, 3)).toDouble();
+    double intensity = constantStorage->getConstant(constantMap->getConstantName(0, 2)).toDouble();
+    double laser_width = constantStorage->getConstant(constantMap->getConstantName(0, 0)).toDouble();
+    double laser_energy = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double alpha = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
+    double beta_p = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble(); // 有一个参数没用到
+    double beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
+    double n = constantStorage->getConstant(constantMap->getConstantName(1, 4)).toDouble();
+    // double z = constantStorage->getConstant(constantMap->getConstantName(7, 6)).toDouble();
+    double H = constantStorage->getConstant(constantMap->getConstantName(7, 7)).toDouble();
+    double r = constantStorage->getConstant(constantMap->getConstantName(7, 4)).toDouble();
+    double M = constantStorage->getConstant(constantMap->getConstantName(7, 0)).toDouble();
+    double N_dark = constantStorage->getConstant(constantMap->getConstantName(7, 5)).toDouble();
+    double beta = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
+    double xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
+    double xi_f = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
+    double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
+
+    double params[19] = {wave_length, freq_range, intensity, laser_width, laser_energy, alpha, beta_p, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f};
+
+    double fitted_value[3];
+    double resnorm;
+    double exitflag;
+    struct0_T output;
+    struct1_T lambda;
+
+    RetrievalAlgorithm(number, PMT_energy, Fizeau_spectrum, Initial_lower, Initial_upper, Initial_value, params, fitted_value, &resnorm, residual, &exitflag, &output, &lambda, jacobia);
+
+    // Singleton<Logger>::getInstance()->logMessage("PMT接收数据处理完成！", Logger::Info);
+
+    //% 处理结果：
+    // res.B_shift = fitted_value(1);
+    // res.B_width = fitted_value(2);
+    // res.R_width = fitted_value(3);
+    // res.N_photo = fitted_value(4);
+
+    double res_B_shift = fitted_value[0];
+    double res_B_width = fitted_value[1];
+    double res_R_width = fitted_value[2];
+    // double res_N_photo = fitted_value[3];
+
+    double Bri_shift = constantStorage->getConstant(constantMap->getConstantName(6, 1)).toDouble() * 1e9;
+    double Bri_width = constantStorage->getConstant(constantMap->getConstantName(6, 0)).toDouble() * 1e9;
+    double Ray_Width = 0.15e9;
+    // double PhotonNum = constantStorage->getConstant(constantMap->getConstantName(6, 6)).toDouble();
+    double Water_Temperature = constantStorage->getConstant(constantMap->getConstantName(1, 0)).toDouble();
+    double Water_Salinity = constantStorage->getConstant(constantMap->getConstantName(1, 1)).toDouble();
+
+    // % 反演环境要素：
+    // [REF.Tem, REF.Sal] = Retrieval_TS(res.B_shift, res.B_width);
+
+    double REF_Tem;
+    double REF_Sal;
+    Retrieval_TS(res_B_shift, res_B_width, &REF_Tem, &REF_Sal);
+
+    qDebug() << "Result: " << REF_Tem << ", " << REF_Sal << Qt::endl;
+
+    QVector<double> *result = new QVector<double>();
+    result->append(res_B_shift);
+    result->append(res_B_width);
+    result->append(res_R_width);
+    result->append(REF_Tem);
+    result->append(REF_Sal);
+    // delete PMT_energy_vector;
+    delete pmt_data;
+
+    return result;
 }

@@ -38,6 +38,10 @@ public:
     int captureImageData(int index, QRect captureRect); // 用于捕获绘图界面的图像
     int getImageData(int index, QPixmap *pixmap);
     int getInfoData(int index, QMap<QString, QVariant> *info);
+    void caculateRetrievalErrorByDepth();
+    static void receiveSystemCallbackFunc(int index, double N_Bri, double N_Rayleigh, double SNR, QVector<QVector<double> *> *receivedDataContainer);
+
+    QVector<QVector<double> *> *receivedDataContainer; // 存储各个深度的数据
 
 signals:
     void dataGenerated(QVector<QVector<double> *> *xDataVector,

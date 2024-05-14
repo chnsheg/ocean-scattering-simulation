@@ -37,6 +37,7 @@ public:
     QCustomPlot *getMesurementCustomPlot();
 
 private:
+    void initWindowStyle();
     void boundButtonEvent();
     void drawRetrievalErrorScatterPlot();
     void drawMesurementErrorScatterPlot();

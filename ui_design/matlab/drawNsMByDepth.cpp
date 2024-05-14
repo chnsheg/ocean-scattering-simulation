@@ -38,26 +38,34 @@ static void binary_expand_op(coder::array<double, 2U> &in1,
   int loop_ub;
   int stride_0_1;
   int stride_1_1;
-  if (in1.size(1) == 1) {
+  if (in1.size(1) == 1)
+  {
     i = in2.size(1);
-  } else {
+  }
+  else
+  {
     i = in1.size(1);
   }
   b_in2.set_size(1, i);
   stride_0_1 = (in2.size(1) != 1);
   stride_1_1 = (in1.size(1) != 1);
-  if (in1.size(1) == 1) {
+  if (in1.size(1) == 1)
+  {
     loop_ub = in2.size(1);
-  } else {
+  }
+  else
+  {
     loop_ub = in1.size(1);
   }
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     b_in2[i] =
         in2[i * stride_0_1] * in3 * in1[i * stride_1_1] * in4 * in5 * in6;
   }
   in1.set_size(1, b_in2.size(1));
   loop_ub = b_in2.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     in1[i] = b_in2[i];
   }
 }
@@ -76,25 +84,33 @@ static void binary_expand_op(coder::array<double, 2U> &in1, double in2,
   int loop_ub;
   int stride_0_1;
   int stride_1_1;
-  if (in3.size(1) == 1) {
+  if (in3.size(1) == 1)
+  {
     i = in1.size(1);
-  } else {
+  }
+  else
+  {
     i = in3.size(1);
   }
   b_in1.set_size(1, i);
   stride_0_1 = (in1.size(1) != 1);
   stride_1_1 = (in3.size(1) != 1);
-  if (in3.size(1) == 1) {
+  if (in3.size(1) == 1)
+  {
     loop_ub = in1.size(1);
-  } else {
+  }
+  else
+  {
     loop_ub = in3.size(1);
   }
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     b_in1[i] = in1[i * stride_0_1] * in2 * in3[i * stride_1_1];
   }
   in1.set_size(1, b_in1.size(1));
   loop_ub = b_in1.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     in1[i] = b_in1[i];
   }
 }
@@ -130,11 +146,12 @@ void drawNsMByDepth(double energe, double Alpha_water, double Beta_p,
                     double Beta_m, double lambda, double n,
                     const coder::array<double, 2U> &z, double H, double tau,
                     double r, const coder::array<double, 2U> &M,
-                    double energy_ratio, double, double, double Xi, double Xi_F,
+                    double energy_ratio, double N_dark, double beta, double Xi, double Xi_F,
                     coder::array<double, 2U> &N_Brillouin,
                     coder::array<double, 2U> &N_Mie,
                     coder::array<double, 2U> &N_Rayleigh,
-                    coder::array<double, 2U> &Ns)
+                    coder::array<double, 2U> &Ns,
+                    coder::array<double, 2U> &SNR_db)
 {
   coder::array<double, 2U> b_N_Rayleigh;
   coder::array<double, 2U> b_r;
@@ -188,57 +205,72 @@ void drawNsMByDepth(double energe, double Alpha_water, double Beta_p,
   N_Mie.set_size(1, z.size(1));
   b_n = n * H;
   nx = z.size(1);
-  for (int i{0}; i < nx; i++) {
+  for (int i{0}; i < nx; i++)
+  {
     double varargin_1;
     varargin_1 = z[i] + b_n;
     N_Mie[i] = varargin_1 * varargin_1;
   }
   N_Mie.set_size(1, N_Mie.size(1));
   nx = N_Mie.size(1) - 1;
-  for (int i{0}; i <= nx; i++) {
+  for (int i{0}; i <= nx; i++)
+  {
     N_Mie[i] = Nd * (x / N_Mie[i]);
   }
   N_Brillouin.set_size(1, z.size(1));
   Nd = -2.0 * Alpha_water;
   nx = z.size(1);
-  for (int i{0}; i < nx; i++) {
+  for (int i{0}; i < nx; i++)
+  {
     N_Brillouin[i] = Nd * z[i];
   }
   nx = N_Brillouin.size(1);
-  for (k = 0; k < nx; k++) {
+  for (k = 0; k < nx; k++)
+  {
     N_Brillouin[k] = std::exp(N_Brillouin[k]);
   }
-  if (N_Mie.size(1) == N_Brillouin.size(1)) {
+  if (N_Mie.size(1) == N_Brillouin.size(1))
+  {
     nx = N_Mie.size(1) - 1;
     N_Brillouin.set_size(1, N_Mie.size(1));
-    for (int i{0}; i <= nx; i++) {
+    for (int i{0}; i <= nx; i++)
+    {
       N_Brillouin[i] = N_Mie[i] * Beta_m * N_Brillouin[i] * Delta_z * Xi * Xi_F;
     }
-  } else {
+  }
+  else
+  {
     binary_expand_op(N_Brillouin, N_Mie, Beta_m, Delta_z, Xi, Xi_F);
   }
   b_r.set_size(1, z.size(1));
   nx = z.size(1);
-  for (int i{0}; i < nx; i++) {
+  for (int i{0}; i < nx; i++)
+  {
     b_r[i] = Nd * z[i];
   }
   nx = b_r.size(1);
-  for (k = 0; k < nx; k++) {
+  for (k = 0; k < nx; k++)
+  {
     b_r[k] = std::exp(b_r[k]);
   }
-  if (N_Mie.size(1) == b_r.size(1)) {
+  if (N_Mie.size(1) == b_r.size(1))
+  {
     nx = N_Mie.size(1) - 1;
     N_Mie.set_size(1, N_Mie.size(1));
-    for (int i{0}; i <= nx; i++) {
+    for (int i{0}; i <= nx; i++)
+    {
       N_Mie[i] = N_Mie[i] * Beta_p * b_r[i];
     }
-  } else {
+  }
+  else
+  {
     binary_expand_op(N_Mie, Beta_p, b_r);
   }
   // number of output Brillouin photons
   N_Rayleigh.set_size(1, N_Brillouin.size(1));
   nx = N_Brillouin.size(1);
-  for (int i{0}; i < nx; i++) {
+  for (int i{0}; i < nx; i++)
+  {
     N_Rayleigh[i] = energy_ratio * N_Brillouin[i];
   }
   // S_r =  0.04 * S_m;
@@ -247,28 +279,38 @@ void drawNsMByDepth(double energe, double Alpha_water, double Beta_p,
   // Signal Noise Ratio
   b_r.set_size(1, M.size(1));
   nx = M.size(1);
-  for (int i{0}; i < nx; i++) {
+  for (int i{0}; i < nx; i++)
+  {
     b_r[i] = M[i];
   }
   nx = M.size(1);
-  for (k = 0; k < nx; k++) {
+  for (k = 0; k < nx; k++)
+  {
     b_r[k] = std::sqrt(b_r[k]);
   }
-  if (N_Rayleigh.size(1) == N_Brillouin.size(1)) {
+  if (N_Rayleigh.size(1) == N_Brillouin.size(1))
+  {
     b_N_Rayleigh.set_size(1, N_Rayleigh.size(1));
     nx = N_Rayleigh.size(1);
-    for (int i{0}; i < nx; i++) {
+    for (int i{0}; i < nx; i++)
+    {
       b_N_Rayleigh[i] = N_Rayleigh[i] + N_Brillouin[i];
     }
     Ns.set_size(b_r.size(1), b_N_Rayleigh.size(1));
+    SNR_db.set_size(b_r.size(1), b_N_Rayleigh.size(1));
     nx = b_N_Rayleigh.size(1);
-    for (int i{0}; i < nx; i++) {
+    for (int i{0}; i < nx; i++)
+    {
       k = b_r.size(1);
-      for (int i1{0}; i1 < k; i1++) {
+      for (int i1{0}; i1 < k; i1++)
+      {
         Ns[i1 + Ns.size(0) * i] = b_r[i1] * b_N_Rayleigh[i];
+        SNR_db[i1 + SNR_db.size(0) * i] = b_N_Rayleigh[i] * b_r[i1] / (std::sqrt(b_N_Rayleigh[i] * beta) + N_dark);
       }
     }
-  } else {
+  }
+  else
+  {
     binary_expand_op(Ns, b_r, N_Rayleigh, N_Brillouin);
   }
 }
