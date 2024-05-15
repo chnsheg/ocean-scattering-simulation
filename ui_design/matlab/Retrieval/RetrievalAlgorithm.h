@@ -24,7 +24,8 @@ RetrievalAlgorithm(double number, const coder::array<double, 2U> &PMT_energy,
                    double fitted_value[3], double *resnorm,
                    coder::array<double, 2U> &residual, double *exitflag,
                    struct0_T *output, struct1_T *lambda,
-                   coder::array<double, 2U> &jacobia);
+                   coder::array<double, 2U> &jacobia,
+                   double tolerance = 1e-24);
 
 void RetrievalAlgorithm_anonFcn1(
     const coder::array<double, 2U> &MeasurementEnergy, double ChannelNumber,

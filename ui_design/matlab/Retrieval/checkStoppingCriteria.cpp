@@ -37,7 +37,8 @@ namespace coder
                                     const double dx[3], int funcCount,
                                     boolean_T stepSuccessful, int *iter,
                                     double projSteepestDescentInfNorm,
-                                    boolean_T hasFiniteBounds)
+                                    boolean_T hasFiniteBounds,
+                                    double tolerance)
         {
           double absx;
           double normGradF;
@@ -58,13 +59,23 @@ namespace coder
           {
             normGradF = absx;
           }
+          // if (hasFiniteBounds &&
+          //     (projSteepestDescentInfNorm * projSteepestDescentInfNorm <=
+          //      1.0E-24 * normGradF * relFactor))
+          // {
+          //   exitflag = 1;
+          // }
+          // else if ((!hasFiniteBounds) && (normGradF <= 1.0E-24 * relFactor))
+          // {
+          //   exitflag = 1;
+          // }
           if (hasFiniteBounds &&
               (projSteepestDescentInfNorm * projSteepestDescentInfNorm <=
-               1.0E-24 * normGradF * relFactor))
+               tolerance * normGradF * relFactor))
           {
             exitflag = 1;
           }
-          else if ((!hasFiniteBounds) && (normGradF <= 1.0E-24 * relFactor))
+          else if ((!hasFiniteBounds) && (normGradF <= tolerance * relFactor))
           {
             exitflag = 1;
           }
@@ -186,7 +197,7 @@ namespace coder
         //
         int checkStoppingCriteria(const double gradf[3], double relFactor,
                                   int funcCount, double projSteepestDescentInfNorm,
-                                  boolean_T hasFiniteBounds)
+                                  boolean_T hasFiniteBounds, double tolerance)
         {
           double absx;
           double normGradF;
@@ -207,13 +218,16 @@ namespace coder
           {
             normGradF = absx;
           }
+          // if (hasFiniteBounds &&
+          //     (projSteepestDescentInfNorm * projSteepestDescentInfNorm <=
+          //      1.0E-24 * normGradF * relFactor))
           if (hasFiniteBounds &&
               (projSteepestDescentInfNorm * projSteepestDescentInfNorm <=
-               1.0E-24 * normGradF * relFactor))
+               tolerance * normGradF * relFactor))
           {
             exitflag = 1;
           }
-          else if ((!hasFiniteBounds) && (normGradF <= 1.0E-24 * relFactor))
+          else if ((!hasFiniteBounds) && (normGradF <= tolerance * relFactor))
           {
             exitflag = 1;
           }
@@ -229,8 +243,8 @@ namespace coder
         }
 
       } // namespace levenbergMarquardt
-    }   // namespace coder
-  }     // namespace optim
+    } // namespace coder
+  } // namespace optim
 } // namespace coder
 
 //

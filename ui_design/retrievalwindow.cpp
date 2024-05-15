@@ -112,6 +112,22 @@ void RetrievalWindow::initWindowStyle()
     customPlot2->axisRect()->setRangeZoom(Qt::Vertical);
     customPlot2->axisRect()->setRangeZoomAxes(nullptr, customPlot2->yAxis);
     customPlot2->axisRect()->setRangeZoomFactor(0.5, 0.5);
+
+    // 初始化进度条控件
+    ui->progressBar->setRange(0, 100);
+    ui->progressBar->setValue(0);
+    ui->progressBar->setFormat("PMT反演进度：%p%");
+    ui->progressBar->setAlignment(Qt::AlignCenter);
+    // 美化进度条样式
+    ui->progressBar->setStyleSheet("QProgressBar{"
+                                   "border: 2px solid grey;"
+                                   "border-radius: 5px;"
+                                   "text-align: center;"
+                                   "}"
+                                   "QProgressBar::chunk{"
+                                   "background-color: #487eb0;"
+                                   "width: 10px;"
+                                   "}"); // 设置样式
 }
 
 RetrievalWindow::~RetrievalWindow()
@@ -508,6 +524,9 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
         PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
         connect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
     }
+
+    // 更新进度条
+    ui->progressBar->setValue((m_mesurementError.size() * 100) / Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(constantMap->getConstantName(9, 9)).toInt());
 }
 
 QTextEdit *RetrievalWindow::getRetrievalTextEdit()
@@ -568,4 +587,5 @@ void RetrievalWindow::saveLineEditGroupsText()
     constantStorage->setConstant(constantMap->getConstantName(9, 9), ui->lineEdit_1->text());
     constantStorage->setConstant(constantMap->getConstantName(9, 10), ui->lineEdit_2->text());
     constantStorage->setConstant(constantMap->getConstantName(9, 11), ui->lineEdit_3->text());
+    constantStorage->setConstant(constantMap->getConstantName(9, 12), ui->lineEdit->text());
 }

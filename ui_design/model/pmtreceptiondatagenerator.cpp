@@ -314,6 +314,7 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     double xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
     double xi_f = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
     double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
+    double tolerance = constantStorage->getConstant(constantMap->getConstantName(9, 12)).toDouble();
 
     double params[19] = {wave_length, freq_range, intensity, laser_width, laser_energy, alpha, beta_p, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f};
 
@@ -323,7 +324,7 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     struct0_T output;
     struct1_T lambda;
 
-    RetrievalAlgorithm(number, PMT_energy, Fizeau_spectrum, Initial_lower, Initial_upper, Initial_value, params, fitted_value, &resnorm, residual, &exitflag, &output, &lambda, jacobia);
+    RetrievalAlgorithm(number, PMT_energy, Fizeau_spectrum, Initial_lower, Initial_upper, Initial_value, params, fitted_value, &resnorm, residual, &exitflag, &output, &lambda, jacobia, tolerance);
 
     // Singleton<Logger>::getInstance()->logMessage("PMT接收数据处理完成！", Logger::Info);
 
@@ -552,6 +553,7 @@ QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<dou
     double xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
     double xi_f = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
     double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
+    double tolerance = constantStorage->getConstant(constantMap->getConstantName(9, 12)).toDouble();
 
     double params[19] = {wave_length, freq_range, intensity, laser_width, laser_energy, alpha, beta_p, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f};
 
@@ -561,7 +563,7 @@ QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<dou
     struct0_T output;
     struct1_T lambda;
 
-    RetrievalAlgorithm(number, PMT_energy, Fizeau_spectrum, Initial_lower, Initial_upper, Initial_value, params, fitted_value, &resnorm, residual, &exitflag, &output, &lambda, jacobia);
+    RetrievalAlgorithm(number, PMT_energy, Fizeau_spectrum, Initial_lower, Initial_upper, Initial_value, params, fitted_value, &resnorm, residual, &exitflag, &output, &lambda, jacobia, tolerance);
 
     // Singleton<Logger>::getInstance()->logMessage("PMT接收数据处理完成！", Logger::Info);
 

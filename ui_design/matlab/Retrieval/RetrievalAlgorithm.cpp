@@ -63,7 +63,8 @@ void RetrievalAlgorithm(double number,
                         double fitted_value[3], double *resnorm,
                         coder::array<double, 2U> &residual, double *exitflag,
                         struct0_T *output, struct1_T *lambda,
-                        coder::array<double, 2U> &jacobia)
+                        coder::array<double, 2U> &jacobia,
+                        double tolerance)
 {
   static const char cv[19]{'l', 'e', 'v', 'e', 'n', 'b', 'e', 'r', 'g', '-',
                            'm', 'a', 'r', 'q', 'u', 'a', 'r', 'd', 't'};
@@ -136,6 +137,12 @@ void RetrievalAlgorithm(double number,
   //      lsqnonlin(@error_fitted_power, Initial_value, Initial_lower,
   //      Initial_upper, options);
   //  修改lsqnonlin调用以传递新增参数,包括MeasurementEnergy、ChannelNumber，同时接收产生的误差
+
+  if (tolerance == 0.0)
+  {
+    tolerance = 1.0E-20;
+  }
+
   b_this.workspace.fun.workspace.ChannelNumber = number;
   b_this.workspace.fun.workspace.MeasurementEnergy.set_size(1,
                                                             PMT_energy.size(1));
@@ -302,7 +309,7 @@ void RetrievalAlgorithm(double number,
   else
   {
     bIdx = coder::optim::coder::levenbergMarquardt::checkStoppingCriteria(
-        gradf, relFactor, FiniteDifferences.numEvals + 1, t, hasFiniteBounds);
+        gradf, relFactor, FiniteDifferences.numEvals + 1, t, hasFiniteBounds, tolerance);
   }
   exitg1 = false;
   while ((!exitg1) && (bIdx == -5))
@@ -558,7 +565,7 @@ void RetrievalAlgorithm(double number,
           hasUB);
       bIdx = coder::optim::coder::levenbergMarquardt::b_checkStoppingCriteria(
           gradf, relFactor, funDiff, fitted_value, dx, funcCount,
-          stepSuccessful, &iter, t, hasFiniteBounds);
+          stepSuccessful, &iter, t, hasFiniteBounds, tolerance);
 
       // 打印迭代次数和funDiff
       qDebug() << "iter: " << iter << "resnorm: " << resnormNew << "funDiff: " << funDiff;

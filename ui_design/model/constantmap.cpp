@@ -81,7 +81,8 @@ QVector<QString> retrievalConstantVector = QVector<QString>({"initialBrillouinSh
                                                              "lowerRayleighLine",
                                                              "depthNum",
                                                              "depthLower",
-                                                             "depthUpper"});
+                                                             "depthUpper",
+                                                             "Tolerance"});
 
 ConstantGroup physicalConstantGroup(&physicalConstantVector);
 ConstantGroup laserConstantGroup(&laserConstantVector);
