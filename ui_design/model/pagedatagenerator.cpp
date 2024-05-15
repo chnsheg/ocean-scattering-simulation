@@ -20,6 +20,8 @@ PageDataGenerator::PageDataGenerator(QObject *parent)
     Singleton<ConstantStorage>::getInstance(nullptr);
     // 注册元类型
     qRegisterMetaType<QSharedPointer<QCPGraphDataContainer>>("QSharedPointer<QCPGraphDataContainer>");
+    qRegisterMetaType<QVector<QVector<double> *> *>("QVector<QVector<double> *> *");
+
     receivedDataContainer = nullptr;
 }
 
@@ -142,7 +144,7 @@ void PageDataGenerator::generatePairOfData(int page_index)
         xDataVector->append(laserLineWidthEffectData->at(2));
         yDataVector->append(laserLineWidthEffectData->at(1));
         yDataVector->append(laserLineWidthEffectData->at(3));
-        caculateRetrievalErrorByDepth();
+        // caculateRetrievalErrorByDepth();
         emit dataGenerated(xDataVector, yDataVector, 2);
     }
     // 释放InputDataListManager内存
@@ -182,14 +184,15 @@ void PageDataGenerator::caculateRetrievalErrorByDepth()
     // 分配zDepth大小的内存，每个线程计算的结果对应replace掉DataContainer中的一个位置
     receivedDataContainer = new QVector<QVector<double> *>(zDepth->size());
     // 创建zDepth大小的线程，每个线程计算一个深度的误差
-    qDebug() << "scatteringData" << N_Bri->at(10) << N_Rayleigh->at(10) << SNR->at(10);
     for (int i = 0; i < zDepth->size(); i++)
     {
-        TaskRunner *object = TaskRunner::runTask<RetrievalThread>(PageDataGenerator::receiveSystemCallbackFunc, 1, N_Bri->at(i), N_Rayleigh->at(i), SNR->at(i), receivedDataContainer, i);
+        qDebug() << "zDepth:" << zDepth->at(i);
+        TaskRunner *object = TaskRunner::runTask<RetrievalThread>(PageDataGenerator::receiveSystemCallbackFunc, 1, N_Bri->at(i), N_Rayleigh->at(i), SNR->at(i), receivedDataContainer, i, zDepth->at(i));
+        connect(object, &TaskRunner::taskCompleted, this, &PageDataGenerator::handleTaskCompletedSlot);
     }
 }
 
-void PageDataGenerator::receiveSystemCallbackFunc(int index, double N_Bri, double N_Rayleigh, double SNR, QVector<QVector<double> *> *receivedDataContainer)
+void PageDataGenerator::receiveSystemCallbackFunc(int index, double N_Bri, double N_Rayleigh, double SNR, QVector<QVector<double> *> *receivedDataContainer, double depth)
 {
     // receivedDataContainer->replace(index, new QVector<double>({N_Bri, N_Rayleigh, SNR}));
     // qDebug() << "receivedDataContainer->size():" << receivedDataContainer->size();
@@ -198,13 +201,7 @@ void PageDataGenerator::receiveSystemCallbackFunc(int index, double N_Bri, doubl
     QVector<double> *afterFizeauData = FizeauIFGenerator::getAfterFizeauSpectrumData(underwaterData);
     qDebug() << "afterFizeauData:" << afterFizeauData->at(1100);
     QVector<double> *afterPMTData = PMTReceptionDataGenerator::receiveSpectrumAfterPMT(afterFizeauData);
-
-    // for (int i = 0; i < afterPMTData->size(); i++)
-    // {
-    //     qDebug() << "afterPMTData:" << afterPMTData->at(i);
-    // }
-
-    QVector<double> *retrievalData = PMTReceptionDataGenerator::retrievalBySpecializePMT(afterPMTData, 3 * index);
+    QVector<double> *retrievalData = PMTReceptionDataGenerator::retrievalBySpecializePMT(afterPMTData, depth);
     receivedDataContainer->replace(index, retrievalData);
 
     qDebug() << "receivedDataContainer index:" << index;

@@ -299,6 +299,7 @@ void drawNsMByDepth(double energe, double Alpha_water, double Beta_p,
     Ns.set_size(b_r.size(1), b_N_Rayleigh.size(1));
     SNR_db.set_size(b_r.size(1), b_N_Rayleigh.size(1));
     nx = b_N_Rayleigh.size(1);
+    qDebug() << "b_N_Rayleigh.size(1):" << b_r[0];
     for (int i{0}; i < nx; i++)
     {
       k = b_r.size(1);

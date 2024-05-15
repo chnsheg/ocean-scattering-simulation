@@ -155,10 +155,20 @@ QVector<double> *PMTReceptionDataGenerator::receiveSpectrumAfterPMT(QVector<doub
     QVector<double> *energy_vector = new QVector<double>();
     QVector<double> *sign_vector = new QVector<double>();
 
-    PMTReceive(frequency, InputSpectrum, 16, 0.8e-3, 0.2e-3, channel_energy, channel_sign);
+    double NumberChannels = constantStorage->getConstant(constantMap->getConstantName(3, 0)).toDouble();
+    double channel_width = constantStorage->getConstant(constantMap->getConstantName(3, 1)).toDouble();
+    double channel_space = constantStorage->getConstant(constantMap->getConstantName(3, 2)).toDouble();
+
+    PMTReceive(frequency, InputSpectrum, NumberChannels, channel_width, channel_space, channel_energy, channel_sign);
 
     energy_vector = MyMath::convertArrayToQVector(channel_energy);
     sign_vector = MyMath::convertArrayToQVector(channel_sign);
+
+    // for (int i = 0; i < sign_vector->size() - 1; ++i)
+    // {
+    //     // 打印能量
+    //     qDebug() << "energy++" << energy_vector->at(i) << Qt::endl;
+    // }
 
     // 从存储中获取SNR
     // double SNR = constantStorage->getConstant(constantMap->getConstantName(6, 5)).toDouble();
@@ -444,8 +454,11 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     // delete PMT_energy_vector;
 }
 
+// QMutex PMTReceptionDataGenerator::mutex;
+
 QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<double> *pmt_data, double z)
 {
+    // mutex.lock();
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
 
@@ -498,20 +511,20 @@ QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<dou
     // double Initial_upper[3] = {8.3e9, 1e9, 0.3e9};
     // double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
 
-    double Initial_lower[3] = {7.2e9, 0.2e9, 0.1e9}; // 初始值越小，拟合越精确，耗时越短
-    double Initial_upper[3] = {7.8e9, 0.8e9, 0.3e9};
-    double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
-    // double Initial_lower[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 6)).toDouble(),
-    //                            constantStorage->getConstant(constantMap->getConstantName(9, 7)).toDouble(),
-    //                            constantStorage->getConstant(constantMap->getConstantName(9, 8)).toDouble()};
+    // double Initial_lower[3] = {7.2e9, 0.2e9, 0.1e9}; // 初始值越小，拟合越精确，耗时越短
+    // double Initial_upper[3] = {7.8e9, 0.8e9, 0.3e9};
+    // double Initial_value[3] = {7.6732e9, 0.617e9, 0.15e9};
+    double Initial_lower[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 6)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 7)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 8)).toDouble()};
 
-    // double Initial_upper[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 3)).toDouble(),
-    //                            constantStorage->getConstant(constantMap->getConstantName(9, 4)).toDouble(),
-    //                            constantStorage->getConstant(constantMap->getConstantName(9, 5)).toDouble()};
+    double Initial_upper[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 3)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 4)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 5)).toDouble()};
 
-    // double Initial_value[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 0)).toDouble(),
-    //                            constantStorage->getConstant(constantMap->getConstantName(9, 1)).toDouble(),
-    //                            constantStorage->getConstant(constantMap->getConstantName(9, 2)).toDouble()};
+    double Initial_value[3] = {constantStorage->getConstant(constantMap->getConstantName(9, 0)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 1)).toDouble(),
+                               constantStorage->getConstant(constantMap->getConstantName(9, 2)).toDouble()};
 
     // 显示初始条件和约束
     // Singleton<Logger>::getInstance()->logMessage("Initial_lower: " + QString::number(Initial_lower[0]) + ", " + QString::number(Initial_lower[1]) + ", " + QString::number(Initial_lower[2]), Logger::Info);
@@ -577,7 +590,7 @@ QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<dou
     double REF_Sal;
     Retrieval_TS(res_B_shift, res_B_width, &REF_Tem, &REF_Sal);
 
-    qDebug() << "Result: " << REF_Tem << ", " << REF_Sal << Qt::endl;
+    // qDebug() << "Result: " << REF_Tem << ", " << REF_Sal << Qt::endl;
 
     QVector<double> *result = new QVector<double>();
     result->append(res_B_shift);
@@ -587,6 +600,7 @@ QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<dou
     result->append(REF_Sal);
     // delete PMT_energy_vector;
     delete pmt_data;
+    // mutex.unlock();
 
     return result;
 }

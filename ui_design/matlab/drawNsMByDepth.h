@@ -13,6 +13,7 @@
 #include "coder_array.h"
 #include <cstddef>
 #include <cstdlib>
+#include <qDebug.h>
 
 // Function Declarations
 extern void drawNsMByDepth(

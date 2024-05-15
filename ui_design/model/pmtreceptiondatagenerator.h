@@ -18,6 +18,9 @@ public:
     static QVector<double> *receiveSpectrumAfterPMT(QVector<double> *spectrum);
     static void retrievalFormPMT();
     static QVector<double> *retrievalBySpecializePMT(QVector<double> *pmt_data, double z);
+
+    // private:
+    //     static QMutex mutex;
 };
 
 #endif // PMTRECEPTIONDATAGENERATOR_H

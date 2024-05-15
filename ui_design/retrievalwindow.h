@@ -5,6 +5,7 @@
 #include "manager/customplotmanager.h"
 #include "manager/texteditmanager.h"
 #include "utils/logger.h"
+#include <QMap>
 
 namespace Ui
 {
@@ -21,12 +22,25 @@ class RetrievalWindow : public QMainWindow
         double BrillouinShiftError;
         double BrillouinWidthError;
         double rayleighWidthError;
+
+        bool operator==(const MesurementError &other) const
+        {
+            return BrillouinShiftError == other.BrillouinShiftError &&
+                   BrillouinWidthError == other.BrillouinWidthError &&
+                   rayleighWidthError == other.rayleighWidthError;
+        }
     };
 
     struct RetrievalError
     {
         double temperatureError;
         double salinityError;
+
+        bool operator==(const RetrievalError &other) const
+        {
+            return temperatureError == other.temperatureError &&
+                   salinityError == other.salinityError;
+        }
     };
 
 public:
@@ -42,13 +56,17 @@ private:
     void drawRetrievalErrorScatterPlot();
     void drawMesurementErrorScatterPlot();
     void calculateRetrievalError();
+    void calculateDepthsRetrievalError(int index, double depth, QVector<double> *retrievalData);
     Ui::RetrievalWindow *ui;
-    QVector<MesurementError> m_mesurementError;
-    QVector<RetrievalError> m_retrievalError;
+    // QVector<MesurementError> m_mesurementError;
+    // QVector<RetrievalError> m_retrievalError;
+    QMap<double, MesurementError> m_mesurementError;
+    QMap<double, RetrievalError> m_retrievalError;
 
 public slots:
     void onShowButtonClicked();
     void onClearButtonClicked();
+    void onExtendButtonClicked();
     void saveLineEditGroupsText();
     void onRetrievalCompleted(QVariantList *args);
 

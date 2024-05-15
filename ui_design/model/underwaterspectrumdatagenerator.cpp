@@ -547,9 +547,22 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::getNsByDepthData()
     QVector<QVector<double> *> *NsVector;
     QVector<QVector<double> *> *SNRVector;
 
-    for (int i = 0; i < 40; ++i)
+    // for (int i = 0; i < 40; ++i)
+    // {
+    //     zVector->append(3 * i);
+    // }
+
+    double depthNum = constantStorage->getConstant(constantMap->getConstantName(9, 9)).toDouble();
+    double depthStart = constantStorage->getConstant(constantMap->getConstantName(9, 10)).toDouble();
+    double depthEnd = constantStorage->getConstant(constantMap->getConstantName(9, 11)).toDouble();
+    double depthStep = (depthEnd - depthStart) / depthNum;
+
+    qDebug() << "depthNum: " << depthNum;
+    qDebug() << "M_scatter: " << M_value;
+
+    for (int i = 0; i < depthNum; ++i)
     {
-        zVector->append(3 * i);
+        zVector->append(depthStart + i * depthStep);
     }
 
     MVector->append(M_value);
@@ -577,6 +590,11 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::getNsByDepthData()
         // resultContainer->append(N_MieVector->at(i));
         resultContainer->append(N_RayleighVector->at(i));
         resultContainer->append(SNRVector->at(i));
+    }
+
+    for (int i = 0; i < depthNum; ++i)
+    {
+        qDebug() << "z: " << zVector->at(i) << "N:" << N_BrillouinVector->at(0)->at(i) + N_RayleighVector->at(0)->at(i);
     }
     // resultContainer->append(MVector);
 

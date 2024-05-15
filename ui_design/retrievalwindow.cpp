@@ -10,10 +10,10 @@ RetrievalWindow::RetrievalWindow(QWidget *parent)
     ui->setupUi(this);
     // 绑定按键事件
     boundButtonEvent();
-    // 初始化窗口样式
-    initWindowStyle();
     // 存入lineEdit数据到内存中
     saveLineEditGroupsText();
+    // PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
+    // connect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
 
     for (auto &&customPlot : ui->centralwidget->findChildren<QCustomPlot *>())
     {
@@ -21,6 +21,9 @@ RetrievalWindow::RetrievalWindow(QWidget *parent)
     }
     Singleton<TextEditManager>::getInstance()->setTextEdit(getRetrievalTextEdit());
     Singleton<TextEditManager>::getInstance()->initTextEditStyle();
+
+    // 初始化窗口样式
+    initWindowStyle();
 }
 
 // setStyleSheet("QPushButton{"
@@ -92,6 +95,23 @@ void RetrievalWindow::initWindowStyle()
                               "border-color: #dcdde1;"
                               "}"); // 设置样式
     }
+
+    QCustomPlot *customPlot1 = getRetrievalCustomPlot();
+    QCustomPlot *customPlot2 = getMesurementCustomPlot();
+
+    // 设置customPlot1按照y轴放大缩小
+    customPlot1->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+    customPlot1->axisRect()->setRangeDrag(Qt::Vertical | Qt::Horizontal);
+    customPlot1->axisRect()->setRangeZoom(Qt::Vertical);
+    customPlot1->axisRect()->setRangeZoomAxes(nullptr, customPlot1->yAxis);
+    customPlot1->axisRect()->setRangeZoomFactor(0.5, 0.5);
+
+    // 设置customPlot2按照y轴放大缩小
+    customPlot2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+    customPlot2->axisRect()->setRangeDrag(Qt::Vertical | Qt::Horizontal);
+    customPlot2->axisRect()->setRangeZoom(Qt::Vertical);
+    customPlot2->axisRect()->setRangeZoomAxes(nullptr, customPlot2->yAxis);
+    customPlot2->axisRect()->setRangeZoomFactor(0.5, 0.5);
 }
 
 RetrievalWindow::~RetrievalWindow()
@@ -107,6 +127,8 @@ void RetrievalWindow::boundButtonEvent()
     connect(ui->show3_2, &QPushButton::clicked, this, &RetrievalWindow::onShowButtonClicked);
     // 绑定“重置”按钮点击事件
     connect(ui->clear3_2, &QPushButton::clicked, this, &RetrievalWindow::onClearButtonClicked);
+
+    connect(ui->tracer3_2, &QPushButton::clicked, this, &RetrievalWindow::onExtendButtonClicked);
 }
 
 // “显示”按钮点击事件
@@ -118,6 +140,19 @@ void RetrievalWindow::onShowButtonClicked()
     // 绑定反演结束信号
     connect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
     model->generateDynamicAction(0);
+}
+
+void RetrievalWindow::onExtendButtonClicked()
+{
+    saveLineEditGroupsText();
+    // 清除原来的数据
+    m_mesurementError.clear();
+    m_retrievalError.clear();
+
+    PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
+    // 绑定反演结束信号
+    connect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
+    model->caculateRetrievalErrorByDepth();
 }
 
 // 反演完毕后的事件处理
@@ -137,6 +172,11 @@ void RetrievalWindow::onRetrievalCompleted(QVariantList *args)
     {
         Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "PMT反演失败！", Logger::Warning);
     }
+    else if (args->at(0).toInt() == 2)
+    {
+        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "开始进行各深度下的PMT数据反演！", Logger::Info);
+        calculateDepthsRetrievalError(args->at(1).toInt(), args->at(2).toDouble(), args->at(3).value<QVector<double> *>());
+    }
 }
 
 void RetrievalWindow::drawRetrievalErrorScatterPlot()
@@ -149,13 +189,21 @@ void RetrievalWindow::drawRetrievalErrorScatterPlot()
         QVector<double> temperatureError;
         QVector<double> salinityError;
         QVector<double> retrievalTimes;
-        double max_y = std::abs(m_retrievalError.at(0).temperatureError);
-
+        double max_y = std::abs(m_retrievalError.value(0).temperatureError);
+        double max_x = 0;
         for (auto &&retrievalError : m_retrievalError)
         {
             temperatureError.push_back(retrievalError.temperatureError);
             salinityError.push_back(retrievalError.salinityError);
-            retrievalTimes.push_back(retrievalTimes.size() + 1);
+            // retrievalTimes.push_back(m_retrievalError.key(retrievalError));
+            for (auto it = m_retrievalError.constBegin(); it != m_retrievalError.constEnd(); ++it)
+            {
+                if (it.value() == retrievalError && retrievalTimes.contains(it.key()) == false)
+                {
+                    retrievalTimes.push_back(it.key());
+                }
+            }
+
             qDebug() << "RetrievalError: " << retrievalError.temperatureError << " " << retrievalError.salinityError;
 
             // 顺便查找在所有数据中的绝对值的最大值
@@ -166,6 +214,10 @@ void RetrievalWindow::drawRetrievalErrorScatterPlot()
             if (std::abs(retrievalError.salinityError) > max_y)
             {
                 max_y = std::abs(retrievalError.salinityError);
+            }
+            if (retrievalTimes.back() > max_x)
+            {
+                max_x = retrievalTimes.back();
             }
         }
 
@@ -183,7 +235,7 @@ void RetrievalWindow::drawRetrievalErrorScatterPlot()
         customPlot->graph(0)->setName("Temperature Error");
         customPlot->xAxis->setLabel("Retrieval Times");
         customPlot->yAxis->setLabel("Error (°C/‰)");
-        customPlot->xAxis->setRange(0, retrievalTimes.size() + 1);
+        customPlot->xAxis->setRange(-0.1 * max_x, max_x * 1.1);
         if (max_y == 0)
         {
             max_y = 1;
@@ -216,15 +268,25 @@ void RetrievalWindow::drawMesurementErrorScatterPlot()
         QVector<double> BrillouinWidthError;
         QVector<double> rayleighWidthError;
         QVector<double> retrievalTimes;
-        double max_y = std::abs(m_mesurementError.at(0).BrillouinShiftError);
+        double max_y = std::abs(m_mesurementError.value(0).BrillouinShiftError);
+        double max_x = 0;
 
         for (auto &&mesurementError : m_mesurementError)
         {
             BrillouinShiftError.push_back(mesurementError.BrillouinShiftError);
             BrillouinWidthError.push_back(mesurementError.BrillouinWidthError);
             rayleighWidthError.push_back(mesurementError.rayleighWidthError);
-            retrievalTimes.push_back(retrievalTimes.size() + 1);
-            qDebug() << "MesurementError: " << mesurementError.BrillouinShiftError << " " << mesurementError.BrillouinWidthError << " " << mesurementError.rayleighWidthError;
+            // retrievalTimes.push_back(m_mesurementError.key(mesurementError));
+
+            for (auto it = m_mesurementError.constBegin(); it != m_mesurementError.constEnd(); ++it)
+            {
+                if (it.value() == mesurementError && retrievalTimes.contains(it.key()) == false)
+                {
+                    retrievalTimes.push_back(it.key());
+                }
+            }
+
+            qDebug() << "retrievalTimes" << retrievalTimes.back();
 
             // 顺便查找在所有数据中的绝对值的最大值
             if (std::abs(mesurementError.BrillouinShiftError) > max_y)
@@ -238,6 +300,10 @@ void RetrievalWindow::drawMesurementErrorScatterPlot()
             if (std::abs(mesurementError.rayleighWidthError) > max_y)
             {
                 max_y = std::abs(mesurementError.rayleighWidthError);
+            }
+            if (retrievalTimes.back() > max_x)
+            {
+                max_x = retrievalTimes.back();
             }
         }
 
@@ -254,7 +320,8 @@ void RetrievalWindow::drawMesurementErrorScatterPlot()
         customPlot->graph(0)->setName("Brillouin Shift Error");
         customPlot->xAxis->setLabel("Retrieval Times");
         customPlot->yAxis->setLabel("Error (GHz)");
-        customPlot->xAxis->setRange(0, retrievalTimes.size() + 1);
+        // customPlot->xAxis->setRange(0, retrievalTimes.size() + 1);
+        customPlot->xAxis->setRange(-0.1 * max_x, max_x * 1.1);
         if (max_y == 0)
         {
             max_y = 1;
@@ -343,12 +410,104 @@ void RetrievalWindow::calculateRetrievalError()
     retrievalError.temperatureError = Error_tem;
     retrievalError.salinityError = Error_sal;
 
-    m_mesurementError.push_back(mesurementError);
-    m_retrievalError.push_back(retrievalError);
+    // m_mesurementError.push_back(mesurementError);
+    // m_retrievalError.push_back(retrievalError);
+    double index = m_mesurementError.size();
+    m_mesurementError.insert(index, mesurementError);
+    m_retrievalError.insert(index, retrievalError);
 
     // 绘制散点图
     drawMesurementErrorScatterPlot();
     drawRetrievalErrorScatterPlot();
+}
+
+// 计算反演误差
+void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVector<double> *retrievalData)
+{
+    ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
+    ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
+
+    // constantStorage->setConstant(constantMap->getConstantName(6, 7), QVariant::fromValue(res_B_shift));
+    //     constantStorage->setConstant(constantMap->getConstantName(6, 8), QVariant::fromValue(res_B_width));
+    //     constantStorage->setConstant(constantMap->getConstantName(6, 9), QVariant::fromValue(res_R_width));
+    //     constantStorage->setConstant(constantMap->getConstantName(6, 10), QVariant::fromValue(REF_Tem));
+    //     constantStorage->setConstant(constantMap->getConstantName(6, 11), QVariant::fromValue(REF_Sal));
+    // double res_B_shift = constantStorage->getConstant(constantMap->getConstantName(6, 7)).toDouble();
+    // double res_B_width = constantStorage->getConstant(constantMap->getConstantName(6, 8)).toDouble();
+    // double res_R_width = constantStorage->getConstant(constantMap->getConstantName(6, 9)).toDouble();
+    // double REF_Tem = constantStorage->getConstant(constantMap->getConstantName(6, 10)).toDouble();
+    // double REF_Sal = constantStorage->getConstant(constantMap->getConstantName(6, 11)).toDouble();
+    QVector<double> *data = retrievalData;
+    double res_B_shift = data->at(0);
+    double res_B_width = data->at(1);
+    double res_R_width = data->at(2);
+    double REF_Tem = data->at(3);
+    double REF_Sal = data->at(4);
+
+    double Bri_shift = constantStorage->getConstant(constantMap->getConstantName(6, 1)).toDouble() * 1e9;
+    double Bri_width = constantStorage->getConstant(constantMap->getConstantName(6, 0)).toDouble() * 1e9;
+    double Ray_Width = 0.15e9;
+    double Water_Temperature = constantStorage->getConstant(constantMap->getConstantName(1, 0)).toDouble();
+    double Water_Salinity = constantStorage->getConstant(constantMap->getConstantName(1, 1)).toDouble();
+
+    // TODO
+    double Error_shift = res_B_shift - Bri_shift;
+    double Error_width = res_B_width - Bri_width;
+    double Error_Rwidth = res_R_width - Ray_Width;
+    // double Error_Photon = res_N_photo - PhotonNum;
+
+    // Error.tem = REF.Tem - EnvironmentalFactors.tem;
+    // Error.sal = REF.Sal - EnvironmentalFactors.sal;
+
+    double Error_tem = REF_Tem - Water_Temperature;
+    double Error_sal = REF_Sal - Water_Salinity;
+
+    int fontSize = 8;
+
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Result Index: " + QString::number(index), Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "-------------------------------------------------------------------------", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Spectral parameters|Measured(GHz)|Theoretical(GHz)|error(GHz)", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), " Brillouin width   " + QString::number(res_B_width / 1e9) + "    " + QString::number(Bri_width / 1e9) + "    " + QString::number(Error_width / 1e9), Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), " Brillouin shift   " + QString::number(res_B_shift / 1e9) + "  " + QString::number(Bri_shift / 1e9) + "  " + QString::number(Error_shift / 1e9), Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), " RAyleigh width    " + QString::number(res_R_width / 1e9) + "  " + QString::number(Ray_Width / 1e9) + "  " + QString::number(Error_Rwidth / 1e9), Logger::Info, fontSize);
+
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "-------------------------------------------------------------------------", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Parameters | Measured | Theoretical | error (%4.2f m: %4.2f)|", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Environmental tem| " + QString::number(REF_Tem) + " °C | " + QString::number(Water_Temperature) + " °C | " + QString::number(Error_tem) + " °C |", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Environmental Sal| " + QString::number(REF_Sal) + " ‰ | " + QString::number(Water_Salinity) + " ‰  | " + QString::number(Error_sal) + " ‰ |", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "-------------------------------------------------------------------------", Logger::Info, fontSize);
+
+    // 封装误差数据
+    MesurementError mesurementError;
+    mesurementError.BrillouinShiftError = Error_shift / 1e9;
+    mesurementError.BrillouinWidthError = Error_width / 1e9;
+    mesurementError.rayleighWidthError = Error_Rwidth / 1e9;
+
+    RetrievalError retrievalError;
+    retrievalError.temperatureError = Error_tem;
+    retrievalError.salinityError = Error_sal;
+
+    qDebug() << "Error_depth: " << depth;
+
+    m_mesurementError.insert(depth, mesurementError);
+    m_retrievalError.insert(depth, retrievalError);
+
+    // 绘制散点图
+    drawMesurementErrorScatterPlot();
+    drawRetrievalErrorScatterPlot();
+
+    // constantStorage->setConstant(constantMap->getConstantName(9, 9), ui->lineEdit_1->text());
+    if (m_mesurementError.size() == Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(constantMap->getConstantName(9, 9)).toInt())
+    {
+        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "各深度下的PMT数据反演结束！", Logger::Info);
+        PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
+        disconnect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
+    }
+    else
+    {
+        PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
+        connect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
+    }
 }
 
 QTextEdit *RetrievalWindow::getRetrievalTextEdit()
@@ -369,7 +528,16 @@ QCustomPlot *RetrievalWindow::getMesurementCustomPlot()
 // “重置”按钮点击事件
 void RetrievalWindow::onClearButtonClicked()
 {
-    // TODO
+    // 清空所有数据
+    m_mesurementError.clear();
+    m_retrievalError.clear();
+    // 清除散点图
+    QCustomPlot *customPlot1 = getRetrievalCustomPlot();
+    QCustomPlot *customPlot2 = getMesurementCustomPlot();
+    customPlot1->clearGraphs();
+    customPlot2->clearGraphs();
+    customPlot1->replot();
+    customPlot2->replot();
 }
 
 // 存入lineEdit数据到内存中
@@ -397,4 +565,7 @@ void RetrievalWindow::saveLineEditGroupsText()
     constantStorage->setConstant(constantMap->getConstantName(9, 6), ui->lineEdit_26->text());
     constantStorage->setConstant(constantMap->getConstantName(9, 7), ui->lineEdit_28->text());
     constantStorage->setConstant(constantMap->getConstantName(9, 8), ui->lineEdit_30->text());
+    constantStorage->setConstant(constantMap->getConstantName(9, 9), ui->lineEdit_1->text());
+    constantStorage->setConstant(constantMap->getConstantName(9, 10), ui->lineEdit_2->text());
+    constantStorage->setConstant(constantMap->getConstantName(9, 11), ui->lineEdit_3->text());
 }

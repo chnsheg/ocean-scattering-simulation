@@ -39,7 +39,7 @@ public:
     int getImageData(int index, QPixmap *pixmap);
     int getInfoData(int index, QMap<QString, QVariant> *info);
     void caculateRetrievalErrorByDepth();
-    static void receiveSystemCallbackFunc(int index, double N_Bri, double N_Rayleigh, double SNR, QVector<QVector<double> *> *receivedDataContainer);
+    static void receiveSystemCallbackFunc(int index, double N_Bri, double N_Rayleigh, double SNR, QVector<QVector<double> *> *receivedDataContainer, double depth);
 
     QVector<QVector<double> *> *receivedDataContainer; // 存储各个深度的数据
 

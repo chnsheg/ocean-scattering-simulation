@@ -5,13 +5,17 @@
 #include "base/taskrunner.h"
 #include <QDebug>
 #include "retrievalwindow.h"
+#include "dynamicpagedatageneratorthread.h"
+// #include <QVariant>
+
+// Q_DECLARE_METATYPE(QVector<double> *)
 
 class RetrievalThread : public TaskRunner
 {
     Q_OBJECT
 public:
     explicit RetrievalThread(std::function<void()> callback);
-    RetrievalThread(std::function<void(int, double, double, double, QVector<QVector<double> *> *)> callback_int, int threadType, double N_Bri, double N_Rayleigh, double SNR, QVector<QVector<double> *> *receivedDataContainer, int memory_index);
+    RetrievalThread(std::function<void(int, double, double, double, QVector<QVector<double> *> *, double)> callback_int, int threadType, double N_Bri, double N_Rayleigh, double SNR, QVector<QVector<double> *> *receivedDataContainer, int memory_index, double depth);
 
     ~RetrievalThread() override
     {
@@ -22,8 +26,8 @@ public:
     void deleteRetrievalThread() { delete this; }
 
 private:
-    std::function<void()> callback;                                                              // 存储回调函数的函数对象
-    std::function<void(int, double, double, double, QVector<QVector<double> *> *)> callback_int; // 存储回调函数的函数对象
+    std::function<void()> callback;                                                                      // 存储回调函数的函数对象
+    std::function<void(int, double, double, double, QVector<QVector<double> *> *, double)> callback_int; // 存储回调函数的函数对象
     int _threadType;
     double _N_Bri;
     double _N_Rayleigh;
@@ -33,6 +37,7 @@ private:
     static int objectCount;
     static int receiveThreadIndex;
     int _memory_index;
+    double _depth;
 };
 
 #endif // RETRIEVALTHREAD_H
