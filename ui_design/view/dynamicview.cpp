@@ -352,9 +352,12 @@ void DynamicPage::displayCurve(int pageIndex,
             {
                 plot->addGraph();
                 plot->graph(i)->setPen(QPen(colorContainer.at(i), 3));
+                qDebug() << "xData->at(i)->size():" << xData->at(i)->size();
+                qDebug() << "yData->at(0)->size():" << yData->at(0)->size();
                 plot->graph(i)->setData(*(*xData)[i], *(*yData)[0]);
                 if (legendList != QStringList() && i < legendList.size())
                 {
+                    qDebug() << "legendList.at(i):" << legendList.at(i);
                     plot->graph(i)->setName(legendList.at(i));
                 }
                 // emit storeRuntimeDataSignal(plot->graph(i)->data(), pageObjectId, getCurveNum(pageIndex) + i);

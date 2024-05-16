@@ -90,10 +90,10 @@ void DynamicPageDataGeneratorThread::run()
             {
                 laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateSNRDepthByMData();
                 // 取到laserLineWidthEffectData最后一个元素，以它的大小为循环次数
-                yDataVector->append(laserLineWidthEffectData->at(0));
+                xDataVector->append(laserLineWidthEffectData->at(0));
                 for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
                 {
-                    xDataVector->append(laserLineWidthEffectData->at(j + 1));
+                    yDataVector->append(laserLineWidthEffectData->at(j + 1));
                     legendList.append("M = " + QString::number(laserLineWidthEffectData->last()->at(j)));
                 }
                 // emit dynamicDataGenerated(xDataVector, yDataVector, i, QString("SNR随深度变化"), legendList); // i 表示第几面的曲线
@@ -127,6 +127,8 @@ void DynamicPageDataGeneratorThread::run()
                 labelList.clear();
                 for (int j = 0; j < laserLineWidthEffectData->last()->size(); j++)
                 {
+                    // qDebug() << "laserLineWidthEffectData->last()->at(j):" << laserLineWidthEffectData->last()->at(j);
+                    // qDebug() << "laserLineWidthEffectData->at(0)->size():" << laserLineWidthEffectData->at(0)->size();
                     yDataVector->append(laserLineWidthEffectData->at(j + 1));
                     legendList.append("M = " + QString::number(laserLineWidthEffectData->last()->at(j)));
                 }
