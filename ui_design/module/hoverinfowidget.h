@@ -38,6 +38,8 @@ public:
     int getHoverInfoWidgetWidth();
     int getHoverInfoWidgetHeight();
 
+    bool getPinStatus();
+
     void resizeEvent(QResizeEvent *event) override;
 
 protected:

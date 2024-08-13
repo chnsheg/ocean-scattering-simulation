@@ -244,10 +244,10 @@ void HoverInfoWidget::hideWithEffect()
 
 void HoverInfoWidget::closeNow()
 {
-    if (pinned)
-    {
-        return;
-    }
+    // if (pinned)
+    // {
+    //     return;
+    // }
     close();
 }
 
@@ -334,6 +334,11 @@ void HoverInfoWidget::onPinButtonClicked()
 {
     pinned = !pinned;
     pinButton->setText(pinned ? "📍" : "📌");
+}
+
+bool HoverInfoWidget::getPinStatus()
+{
+    return pinned;
 }
 
 void HoverInfoWidget::onResizeButtonClicked()

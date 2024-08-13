@@ -584,7 +584,7 @@ void PlotView::switchPlotPageButtonClicked(int index)
     qDebug() << "globalTopLeft: " << globalTopLeft;
     QRect paintRect = QRect(globalTopLeft, globalRect.size());
 
-    emit switchPageButtonClicked(showPageIndex[index], paintRect);
+    emit switchPageButtonClicked(showPageIndex[index], paintRect, getCurrentPageIndex());
 }
 
 void PlotView::handleShow1ButtonGroupManagerEvent(Show1ButtonGroupId buttonGroupId)

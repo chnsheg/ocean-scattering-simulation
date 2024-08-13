@@ -35,7 +35,7 @@ public slots:
     void handleDynamicButtonClicked(int index);
     void handleSaveConstantButtonClicked(int index, int save_type);
     void handleImportConstantButtonClicked(int index, int import_type);
-    void handleSwitchPageButtonClicked(int page_index, QRect area = QRect());
+    void handleSwitchPageButtonClicked(int page_index, QRect area = QRect(), int from_page_index = 0);
     void handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index);
     void handleShowButtonHover(int index, const QPoint &pos);
     void handleShowButtonLeave(int index);

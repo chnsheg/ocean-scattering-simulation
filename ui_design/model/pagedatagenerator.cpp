@@ -27,13 +27,16 @@ PageDataGenerator::PageDataGenerator(QObject *parent)
 
 PageDataGenerator::~PageDataGenerator() {}
 
+/**
+ * @brief 生成激光和光谱数据
+ */
 QVector<double> *PageDataGenerator::generateData(DataType dataType)
 {
     QVector<double> *data = nullptr;
     switch (dataType)
     {
     case DataType::Frequence:
-        data = FrequenceDataGenerator::generateRelativeFrequenceData();
+        data = FrequenceDataGenerator::generateRelativeFrequenceData(); // 注意这里的数据是相对频率
         break;
     case DataType::Laser:
         data = LaserDataGenerator::generateLaserData();
@@ -47,22 +50,7 @@ QVector<double> *PageDataGenerator::generateData(DataType dataType)
     case DataType::RayScattering:
         data = SpectrumDataGenerator::generateRayScatteringData();
         break;
-    // case DataType::UnderwaterScattering:
-    //     UnderwaterScatteringDataGenerator::generateUnderwaterScatteringData(data);
-    //     break;
-    // case DataType::FizeauInstrument:
-    //     data = FizeauDataGenerator::generateFizeauData();
-    //     break;
-    // case DataType::FizeauSpectra:
-    //     data = FizeauDataGenerator::generateSpectrumAfterFizeau();
-    //     break;
-    // case DataType::PMTFrequency:
-    //     PMTFrequencyDataGenerator::generatePMTFrequencyData(data);
-    //     break;
-    // case DataType::PMTEnergy:
-    //     PMTEnergyDataGenerator::generatePMTEnergyData(data);
-    //     break;
-    // Add more cases for other page types
+
     default:
         data = nullptr;
         break;
@@ -71,6 +59,10 @@ QVector<double> *PageDataGenerator::generateData(DataType dataType)
     return data;
 }
 
+/**
+ * @brief 总的数据调用和返回的接口，直接返回绘图的容器
+ * @param page_index 页面索引
+ */
 void PageDataGenerator::generatePairOfData(int page_index)
 {
     QVector<QVector<double> *> *xDataVector;
@@ -153,6 +145,10 @@ void PageDataGenerator::generatePairOfData(int page_index)
     // delete inputDataList;
 }
 
+/**
+ * @brief 新建一个线程生成动态界面的数据
+ * @param index 页面索引
+ */
 void PageDataGenerator::generateDynamicData(int index)
 {
     TaskRunner *object = TaskRunner::runTask<DynamicPageDataGeneratorThread>(index);
@@ -194,6 +190,15 @@ void PageDataGenerator::caculateRetrievalErrorByDepth()
     }
 }
 
+/**
+ * @brief 接收系统的回调函数，交给PMT反演线程来执行
+ * @param index 线程索引
+ * @param N_Bri 布里渊光子数
+ * @param N_Rayleigh 瑞利光子数
+ * @param SNR 信噪比
+ * @param receivedDataContainer 存储接收数据的容器
+ * @param depth 深度
+ */
 void PageDataGenerator::receiveSystemCallbackFunc(int index, double N_Bri, double N_Rayleigh, double SNR, QVector<QVector<double> *> *receivedDataContainer, double depth)
 {
     // receivedDataContainer->replace(index, new QVector<double>({N_Bri, N_Rayleigh, SNR}));
@@ -235,6 +240,11 @@ int PageDataGenerator::getImageData(int index, QPixmap *pixmap)
     return 1; // 获取图片成功
 }
 
+/**
+ * @brief 将页面的信息传递给悬浮窗口
+ * @param index 页面索引
+ * @param info 信息
+ */
 int PageDataGenerator::getInfoData(int index, QMap<QString, QVariant> *info)
 {
     // 遍历constantstorage，拿到对应页面所有的信息
@@ -286,6 +296,11 @@ int PageDataGenerator::getInfoData(int index, QMap<QString, QVariant> *info)
     return 1; // 获取信息成功
 }
 
+/**
+ * @brief 多线程任务完成后的槽函数，统一在此处理
+ * @param args 参数列表
+ * @param taskName 任务名称
+ */
 void PageDataGenerator::handleTaskCompletedSlot(QString taskName, QVariantList *args)
 {
     if (taskName.contains("ScreenCaptureTask"))
@@ -336,6 +351,13 @@ void PageDataGenerator::handleTaskCompletedSlot(QString taskName, QVariantList *
     }
 }
 
+/**
+ * @brief 存储运行时数据
+ * @param dataContainer 数据容器
+ * @param page_index 页面索引
+ * @param curve_index 曲线索引
+ * @param page_type 页面类型，用来分辨主要的绘图界面和扩展的动态绘图界面
+ */
 void PageDataGenerator::storeRuntimeDataByIndex(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index, int page_type)
 {
     if (page_type == 0)

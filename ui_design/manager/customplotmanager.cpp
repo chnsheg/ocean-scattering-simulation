@@ -49,6 +49,11 @@ CustomPlotManager::~CustomPlotManager()
     }
 }
 
+/**
+ * @brief CustomPlotManager::getCustomPlotRect
+ * @return
+ * 获取 QCustomPlot 的矩形区域
+ */
 QRect CustomPlotManager::getCustomPlotRect()
 {
     return customPlot->viewport();
@@ -144,6 +149,13 @@ QCustomPlot *CustomPlotManager::getCustomPlot()
     return customPlot;
 }
 
+/**
+ * @brief CustomPlotManager::plotGraphToBuffer
+ * @param xData
+ * @param yData
+ * @param curve_index
+ * 绘制曲线到缓冲区，注意没有调用replot()方法，需要在外部调用
+ */
 void CustomPlotManager::plotGraphToBuffer(const QVector<double> *xData,
                                           const QVector<double> *yData,
                                           int curve_index)
@@ -184,6 +196,13 @@ void CustomPlotManager::setPenToRunFluently(int curve_index)
     customPlot->graph(curve_index)->setPen(QPen(colorContainer.at(curve_index), 1));
 }
 
+/**
+ * @brief CustomPlotManager::plotGraph
+ * @param xData
+ * @param yData
+ * @param curve_index
+ * 绘制曲线
+ */
 void CustomPlotManager::plotGraph(const QVector<double> *xData,
                                   const QVector<double> *yData,
                                   int curve_index)
@@ -192,6 +211,14 @@ void CustomPlotManager::plotGraph(const QVector<double> *xData,
     refreshPlot();
 }
 
+/**
+ * @brief CustomPlotManager::plotBarGraphToBuffer
+ * @param xData
+ * @param yData
+ * @param curve_index
+ * @param legendName
+ * 绘制柱状图到缓冲区，注意总共绘制两个柱状图，一个是噪声柱状图，一个是纯净柱状图，并且一个curve_index为1，一个curve_index为2
+ */
 void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
                                              const QVector<double> *yData,
                                              int curve_index, QString legendName)
@@ -412,6 +439,10 @@ void CustomPlotManager::clearPlot()
     // customPlot->replot();
 }
 
+/**
+ * @brief CustomPlotManager::hidePlot
+ * 隐藏曲线显示
+ */
 void CustomPlotManager::hidePlot()
 {
     stopGenerateTracerEventSignal();
@@ -502,6 +533,12 @@ int CustomPlotManager::getCount()
     return customPlot->graphCount();
 }
 
+/**
+ * @brief CustomPlotManager::getDataContainer
+ * @param curve_index
+ * @return
+ * 获取QCustomPlot中的数据容器
+ */
 QSharedPointer<QCPGraphDataContainer> CustomPlotManager::getDataContainer(int curve_index)
 {
     // qDebug() << "CustomPlotManager::getDataContainer:" << customPlot->graph(curve_index)->data().data() << Qt::endl;

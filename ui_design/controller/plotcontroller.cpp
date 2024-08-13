@@ -55,6 +55,12 @@ void PlotController::handleStartButtonClicked(int page_index)
     model->generatePairOfData(page_index);
 }
 
+/**
+ * @brief 处理数据生成信号
+ * @param xDataVector x轴数据
+ * @param yDataVector y轴数据
+ * @param curve_num 曲线数量
+ */
 void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector,
                                          QVector<QVector<double> *> *yDataVector,
                                          int curve_num)
@@ -67,7 +73,7 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
         Singleton<Logger>::getInstance()->logMessage("请设置所有输入变量！", Logger::Warning);
         return;
     }
-    if (xDataVector->size() == yDataVector->size())
+    if (xDataVector->size() == yDataVector->size()) // 有多条非共用x轴数据的曲线需要绘制
     {
         for (int i = 0; i < xDataVector->size(); i++)
         {
@@ -103,6 +109,12 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
     yDataVector = nullptr;
 }
 
+/**
+ * @brief 处理存储运行时数据信号
+ * @param dataContainer 数据容器
+ * @param page_index 页面索引
+ * @param curve_index 曲线索引
+ */
 void PlotController::handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index)
 {
     // // 通知model存储数据
@@ -129,16 +141,27 @@ void PlotController::handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataCon
     }
 }
 
+/**
+ * @brief 处理清除按钮点击事件
+ */
 void PlotController::handleClearButtonClicked()
 {
     view->updateViewClearSlot();
 }
 
+/**
+ * @brief 处理悬浮按钮点击事件
+ */
 void PlotController::handleTracerButtonClicked()
 {
     view->updateViewTracerSlot();
 }
 
+/**
+ * @brief 处理悬浮按钮悬停事件
+ * @param index 按钮索引
+ * @param pos 悬停位置
+ */
 void PlotController::handleShowButtonHover(int index, const QPoint &pos)
 {
     HoverInfoWidget *hoverInfoWidget;
@@ -202,8 +225,12 @@ void PlotController::handleShowButtonHover(int index, const QPoint &pos)
         qDebug() << "获取信息成功！";
     }
 
-    hoverInfoWidget->move(pos.x(), pos.y() + 100);
-    qDebug() << "pos: " << pos;
+    if (!hoverInfoWidget->getPinStatus())
+    {
+
+        hoverInfoWidget->move(pos.x(), pos.y() + 100);
+    }
+    // qDebug() << "pos: " << pos;
     hoverInfoWidget->showWithEffect();
 
     // hoverInfoWidget被关闭时，清除hoverInfoWidget的指针和opened列表中的索引
@@ -214,6 +241,10 @@ void PlotController::handleShowButtonHover(int index, const QPoint &pos)
         hoverInfoWidgetsOpened.removeOne(index); });
 }
 
+/**
+ * @brief 处理悬浮按钮离开事件
+ * @param index 按钮索引
+ */
 void PlotController::handleShowButtonLeave(int index)
 {
     int _index = index - Show1ButtonGroupId::leaveButton_1;
@@ -228,6 +259,10 @@ void PlotController::handleShowButtonLeave(int index)
     }
 }
 
+/**
+ * @brief 处理动态按钮点击事件
+ * @param index 按钮索引
+ */
 void PlotController::handleDynamicButtonClicked(int index)
 {
     // 通知model存储数据
@@ -319,6 +354,11 @@ void PlotController::handleDynamicButtonClicked(int index)
     }
 }
 
+/**
+ * @brief 保存常量
+ * @param index 常量组索引
+ * @param save_type 保存类型
+ */
 void PlotController::handleSaveConstantButtonClicked(int index, int save_type)
 {
     switch (save_type)
@@ -338,6 +378,11 @@ void PlotController::handleSaveConstantButtonClicked(int index, int save_type)
     }
 }
 
+/**
+ * @brief 导入常量
+ * @param index 常量组索引
+ * @param save_type 保存类型
+ */
 void PlotController::handleImportConstantButtonClicked(int index, int save_type)
 {
     // 通知model存储数据
@@ -366,6 +411,12 @@ void PlotController::handleImportConstantButtonClicked(int index, int save_type)
     }
 }
 
+/**
+ * @brief 导入常量完成
+ * @param page_index 页面索引
+ * @param xDataVector x轴数据
+ * @param yDataVector y轴数据
+ */
 void PlotController::handleImportConstantCompleted(const int page_index, const QVector<QVector<QVector<double> *> *> *xDataVector,
                                                    const QVector<QVector<QVector<double> *> *> *yDataVector)
 {
@@ -447,7 +498,14 @@ void PlotController::handleImportConstantCompleted(const int page_index, const Q
     }
 }
 
-void PlotController::handleSwitchPageButtonClicked(int page_index, QRect area)
+/**
+ * @brief 切换页面
+ * @param page_index 切换目标页面索引
+ * @param area 截图区域
+ * @param from_page_index 来源页面索引
+ */
+
+void PlotController::handleSwitchPageButtonClicked(int page_index, QRect area, int from_page_index)
 {
     // 通知model截图
     if (area != QRect())
@@ -458,14 +516,22 @@ void PlotController::handleSwitchPageButtonClicked(int page_index, QRect area)
     }
 
     // 先关闭所有的hoverInfoWidget
-    if (!view->showPageIndex.contains(page_index))
-    {
-        for (int i = 0; i < hoverInfoWidgetsVector.size(); ++i)
-        {
-            hoverInfoWidgetsVector.at(i)->closeNow();
-        }
-    }
+    // if (!view->showPageIndex.contains(page_index))
+    // {
+    //     // for (int i = 0; i < hoverInfoWidgetsVector.size(); ++i)
+    //     // {
+    //     //     hoverInfoWidgetsVector.at(i)->closeNow();
+    //     // }
 
+    //     // hoverInfoWidgetsVector.at(from_page_index)->closeNow();
+    // }
+    // 仅关闭切换至页面的hoverInfoWidget，可以保证悬浮窗更新
+    int anchor = hoverInfoWidgetsOpened.indexOf(page_index - 1);
+
+    if (page_index != 0 && anchor != -1)
+    {
+        hoverInfoWidgetsVector.at(anchor)->closeNow();
+    }
     // 通知view切换页面，page_index从0开始
     view->updateViewPageSlot(page_index);
 }

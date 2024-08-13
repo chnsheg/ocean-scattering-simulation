@@ -55,7 +55,7 @@ signals:
                                                                                                                                    // 2: save runtime data to current page, 3: save runtime data to all pages
     void onImportConstantButtonClicked(int index, int import_type);                                                                // 0: import constants to current page, 1: import constants to all pages；
                                                                                                                                    // 2: import runtime data to current page, 3: import runtime data to all pages
-    void switchPageButtonClicked(int page_index, QRect area = QRect());                                                            // interface_index 用于区分返回的界面
+    void switchPageButtonClicked(int page_index, QRect area = QRect(), int from_page_index = 0);                                   // interface_index 用于区分返回的界面
     void storeRuntimeDataSignal(QSharedPointer<QCPGraphDataContainer> dataContainer, const int page_index, const int curve_index); // 用于存储运行时数据
 
 public slots:
