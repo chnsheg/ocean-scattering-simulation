@@ -218,12 +218,13 @@ void drawSNRDepthByAlpha(double energe,
     //  dark current
     // M = 1; % Integration times
     // beta = 2;
-    x = std::sqrt(M);
+    // x = std::sqrt(M);
+    x = M;
     b_x.set_size(1, N_Brillouin.size(1));
     nx = N_Brillouin.size(1);
     for (int k{0}; k < nx; k++)
     {
-      b_x[k] = N_Brillouin[k] * beta;
+      b_x[k] = N_Brillouin[k] * beta * x; // add
     }
     nx = b_x.size(1);
     for (int k{0}; k < nx; k++)
@@ -236,7 +237,7 @@ void drawSNRDepthByAlpha(double energe,
       N_Brillouin.set_size(1, N_Brillouin.size(1));
       for (int k{0}; k <= nx; k++)
       {
-        N_Brillouin[k] = N_Brillouin[k] * x / (b_x[k] + N_dark);
+        N_Brillouin[k] = N_Brillouin[k] * x / (b_x[k] + N_dark); // add
       }
     }
     else

@@ -313,11 +313,11 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateSNRDepthByM
     {
         zVector->append(i);
     }
-
+    // zVector->append(40.88);
     MVector->append(1);
-    MVector->append(100);
-    MVector->append(1000);
-    MVector->append(10000);
+    MVector->append(10);
+    MVector->append(20);
+    MVector->append(30);
 
     MyMath::convertQVectorToArray(zVector, z);
     MyMath::convertQVectorToArray(MVector, M);
@@ -380,7 +380,7 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateSNRDepthByA
     QVector<double> *AlphaVector = new QVector<double>();
     QVector<QVector<double> *> *SNR_dbVector;
 
-    for (int i = 0; i < 40; ++i)
+    for (int i = 0; i < 100; ++i)
     {
         zVector->append(i);
     }
@@ -458,15 +458,15 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateNsMByDepthD
     QVector<double> *N_RayleighVector;
     QVector<QVector<double> *> *NsVector;
 
-    for (int i = 0; i < 40; ++i)
+    for (int i = 20; i < 60; ++i)
     {
         zVector->append(i);
     }
 
+    MVector->append(1);
     MVector->append(10);
-    MVector->append(100);
-    MVector->append(1000);
-    MVector->append(10000);
+    MVector->append(20);
+    MVector->append(30);
 
     MyMath::convertQVectorToArray(zVector, z);
     MyMath::convertQVectorToArray(MVector, M);
@@ -583,6 +583,18 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::getNsByDepthData()
 
     QVector<QVector<double> *> *resultContainer = new QVector<QVector<double> *>();
     resultContainer->append(zVector);
+
+    // 每个深度的N值乘对应的M值
+    for (int i = 0; i < MVector->size(); ++i)
+    {
+        for (int j = 0; j < depthNum; ++j)
+        {
+            N_BrillouinVector->at(i)->replace(j, N_BrillouinVector->at(i)->at(j) * MVector->at(i));
+            N_MieVector->at(i)->replace(j, N_MieVector->at(i)->at(j) * MVector->at(i));
+            N_RayleighVector->at(i)->replace(j, N_RayleighVector->at(i)->at(j) * MVector->at(i));
+        }
+    }
+
     for (int i = 0; i < MVector->size(); ++i)
     {
         // resultContainer->append(NsVector->at(i));

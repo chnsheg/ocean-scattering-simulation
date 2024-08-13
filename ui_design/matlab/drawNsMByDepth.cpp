@@ -286,7 +286,8 @@ void drawNsMByDepth(double energe, double Alpha_water, double Beta_p,
   nx = M.size(1);
   for (k = 0; k < nx; k++)
   {
-    b_r[k] = std::sqrt(b_r[k]);
+    // b_r[k] = std::sqrt(b_r[k]);
+    b_r[k] = b_r[k];
   }
   if (N_Rayleigh.size(1) == N_Brillouin.size(1))
   {
@@ -306,7 +307,7 @@ void drawNsMByDepth(double energe, double Alpha_water, double Beta_p,
       for (int i1{0}; i1 < k; i1++)
       {
         Ns[i1 + Ns.size(0) * i] = b_r[i1] * b_N_Rayleigh[i];
-        SNR_db[i1 + SNR_db.size(0) * i] = b_N_Rayleigh[i] * b_r[i1] / (std::sqrt(b_N_Rayleigh[i] * beta) + N_dark);
+        SNR_db[i1 + SNR_db.size(0) * i] = b_N_Rayleigh[i] * std::sqrt(b_r[i1]) / (std::sqrt(b_N_Rayleigh[i] * beta) + N_dark);
       }
     }
   }

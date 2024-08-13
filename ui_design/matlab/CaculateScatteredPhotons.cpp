@@ -8,6 +8,7 @@
 // Include Files
 #include "CaculateScatteredPhotons.h"
 #include <cmath>
+#include <QDebug>
 
 // Function Definitions
 //
@@ -96,12 +97,15 @@ void CaculateScatteredPhotons(double energe, double Alpha_water, double Beta_p,
   //  纯水中瑞利散射和布里渊散射的能量比小于
   //  0.04，这意味着瑞利光的强度明显低于水中的布里渊光
   // Signal Noise Ratio
-  N_SP = *N_Rayleigh + *N_Brillouin;
+  N_SP = M * (*N_Rayleigh + *N_Brillouin);
   //  Day time
   //  dark current
   // M = 1; % Integration times
   // beta = 2;
-  *SNR = N_SP * std::sqrt(M) / (std::sqrt(N_SP * beta) + N_dark);
+  // *SNR = N_SP * std::sqrt(M) / (std::sqrt(N_SP * beta) + N_dark);  // 乘根号M
+  *SNR = N_SP / (std::sqrt(N_SP * beta) + N_dark);
+
+  qDebug() << "calculate SNR: " << *SNR;
 }
 
 //

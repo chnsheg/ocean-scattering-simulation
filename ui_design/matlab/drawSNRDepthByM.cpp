@@ -10,6 +10,7 @@
 #include "div.h"
 #include "coder_array.h"
 #include <cmath>
+#include <qDebug.h>
 
 // Function Declarations
 static void binary_expand_op(coder::array<double, 2U> &in1,
@@ -42,26 +43,34 @@ static void binary_expand_op(coder::array<double, 2U> &in1,
   int loop_ub;
   int stride_0_1;
   int stride_1_1;
-  if (in1.size(1) == 1) {
+  if (in1.size(1) == 1)
+  {
     i = in2.size(1);
-  } else {
+  }
+  else
+  {
     i = in1.size(1);
   }
   b_in2.set_size(1, i);
   stride_0_1 = (in2.size(1) != 1);
   stride_1_1 = (in1.size(1) != 1);
-  if (in1.size(1) == 1) {
+  if (in1.size(1) == 1)
+  {
     loop_ub = in2.size(1);
-  } else {
+  }
+  else
+  {
     loop_ub = in1.size(1);
   }
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     b_in2[i] =
         in2[i * stride_0_1] * in3 * in1[i * stride_1_1] * in4 * in5 * in6;
   }
   in1.set_size(1, b_in2.size(1));
   loop_ub = b_in2.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     in1[i] = b_in2[i];
   }
 }
@@ -80,25 +89,33 @@ static void binary_expand_op(coder::array<double, 2U> &in1, double in2,
   int loop_ub;
   int stride_0_1;
   int stride_1_1;
-  if (in3.size(1) == 1) {
+  if (in3.size(1) == 1)
+  {
     i = in1.size(1);
-  } else {
+  }
+  else
+  {
     i = in3.size(1);
   }
   b_in1.set_size(1, i);
   stride_0_1 = (in1.size(1) != 1);
   stride_1_1 = (in3.size(1) != 1);
-  if (in3.size(1) == 1) {
+  if (in3.size(1) == 1)
+  {
     loop_ub = in1.size(1);
-  } else {
+  }
+  else
+  {
     loop_ub = in3.size(1);
   }
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     b_in1[i] = in1[i * stride_0_1] * in2 * in3[i * stride_1_1];
   }
   in1.set_size(1, b_in1.size(1));
   loop_ub = b_in1.size(1);
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     in1[i] = b_in1[i];
   }
 }
@@ -117,20 +134,27 @@ static void plus(coder::array<double, 2U> &in1,
   int loop_ub;
   int stride_0_1;
   int stride_1_1;
-  if (in3.size(1) == 1) {
+  if (in3.size(1) == 1)
+  {
     i = in2.size(1);
-  } else {
+  }
+  else
+  {
     i = in3.size(1);
   }
   in1.set_size(1, i);
   stride_0_1 = (in2.size(1) != 1);
   stride_1_1 = (in3.size(1) != 1);
-  if (in3.size(1) == 1) {
+  if (in3.size(1) == 1)
+  {
     loop_ub = in2.size(1);
-  } else {
+  }
+  else
+  {
     loop_ub = in3.size(1);
   }
-  for (i = 0; i < loop_ub; i++) {
+  for (i = 0; i < loop_ub; i++)
+  {
     in1[i] = in2[i * stride_0_1] + in3[i * stride_1_1];
   }
 }
@@ -173,6 +197,7 @@ void drawSNRDepthByM(double energe, double Alpha_water, double Beta_p,
                      coder::array<double, 2U> &SNR_db)
 {
   coder::array<double, 2U> N_SP;
+  coder::array<double, 2U> N_SP_M;
   coder::array<double, 2U> SNR;
   double Delta_z;
   double Nd;
@@ -224,70 +249,89 @@ void drawSNRDepthByM(double energe, double Alpha_water, double Beta_p,
   N_Mie.set_size(1, z.size(1));
   b_n = n * H;
   nx = z.size(1);
-  for (i = 0; i < nx; i++) {
+  for (i = 0; i < nx; i++)
+  {
     double varargin_1;
     varargin_1 = z[i] + b_n;
     N_Mie[i] = varargin_1 * varargin_1;
   }
   N_Mie.set_size(1, N_Mie.size(1));
   nx = N_Mie.size(1) - 1;
-  for (i = 0; i <= nx; i++) {
+  for (i = 0; i <= nx; i++)
+  {
     N_Mie[i] = Nd * (x / N_Mie[i]);
   }
   N_Brillouin.set_size(1, z.size(1));
   Nd = -2.0 * Alpha_water;
   nx = z.size(1);
-  for (i = 0; i < nx; i++) {
+  for (i = 0; i < nx; i++)
+  {
     N_Brillouin[i] = Nd * z[i];
   }
   nx = N_Brillouin.size(1);
-  for (int k{0}; k < nx; k++) {
+  for (int k{0}; k < nx; k++)
+  {
     N_Brillouin[k] = std::exp(N_Brillouin[k]);
   }
-  if (N_Mie.size(1) == N_Brillouin.size(1)) {
+  if (N_Mie.size(1) == N_Brillouin.size(1))
+  {
     nx = N_Mie.size(1) - 1;
     N_Brillouin.set_size(1, N_Mie.size(1));
-    for (i = 0; i <= nx; i++) {
+    for (i = 0; i <= nx; i++)
+    {
       N_Brillouin[i] = N_Mie[i] * Beta_m * N_Brillouin[i] * Delta_z * Xi * Xi_F;
     }
-  } else {
+  }
+  else
+  {
     binary_expand_op(N_Brillouin, N_Mie, Beta_m, Delta_z, Xi, Xi_F);
   }
   N_SP.set_size(1, z.size(1));
   nx = z.size(1);
-  for (i = 0; i < nx; i++) {
+  for (i = 0; i < nx; i++)
+  {
     N_SP[i] = Nd * z[i];
   }
   nx = N_SP.size(1);
-  for (int k{0}; k < nx; k++) {
+  for (int k{0}; k < nx; k++)
+  {
     N_SP[k] = std::exp(N_SP[k]);
   }
-  if (N_Mie.size(1) == N_SP.size(1)) {
+  if (N_Mie.size(1) == N_SP.size(1))
+  {
     nx = N_Mie.size(1) - 1;
     N_Mie.set_size(1, N_Mie.size(1));
-    for (i = 0; i <= nx; i++) {
+    for (i = 0; i <= nx; i++)
+    {
       N_Mie[i] = N_Mie[i] * Beta_p * N_SP[i];
     }
-  } else {
+  }
+  else
+  {
     binary_expand_op(N_Mie, Beta_p, N_SP);
   }
   // number of output Brillouin photons
   N_Rayleigh.set_size(1, N_Brillouin.size(1));
   nx = N_Brillouin.size(1);
-  for (i = 0; i < nx; i++) {
+  for (i = 0; i < nx; i++)
+  {
     N_Rayleigh[i] = energy_ratio * N_Brillouin[i];
   }
   // S_r =  0.04 * S_m;
   //  纯水中瑞利散射和布里渊散射的能量比小于
   //  0.04，这意味着瑞利光的强度明显低于水中的布里渊光
   // Signal Noise Ratio
-  if (N_Rayleigh.size(1) == N_Brillouin.size(1)) {
+  if (N_Rayleigh.size(1) == N_Brillouin.size(1))
+  {
     N_SP.set_size(1, N_Rayleigh.size(1));
     nx = N_Rayleigh.size(1);
-    for (i = 0; i < nx; i++) {
+    for (i = 0; i < nx; i++)
+    {
       N_SP[i] = N_Rayleigh[i] + N_Brillouin[i];
     }
-  } else {
+  }
+  else
+  {
     plus(N_SP, N_Rayleigh, N_Brillouin);
   }
   //  Day time
@@ -295,40 +339,69 @@ void drawSNRDepthByM(double energe, double Alpha_water, double Beta_p,
   // M = 1; % Integration times
   // beta = 2;
   SNR_db.set_size(M.size(1), N_SP.size(1));
+  N_SP_M.set_size(M.size(1), N_SP.size(1)); // add
   nx = M.size(1) * N_SP.size(1);
-  for (i = 0; i < nx; i++) {
+  for (i = 0; i < nx; i++)
+  {
     SNR_db[i] = 0.0;
+    N_SP_M[i] = 0.0;
   }
   i = M.size(1);
-  for (int b_i{0}; b_i < i; b_i++) {
-    x = std::sqrt(M[b_i]);
+
+  nx = N_SP.size(1);
+  for (int b_i{0}; b_i < i; b_i++)
+  {
+    // 获取各积分次数下、各深度的光子数
+    x = M[b_i];
+    for (int k{0}; k < nx; k++)
+    {
+      N_SP_M[b_i + N_SP_M.size(0) * k] = N_SP[k] * x;
+    }
+  }
+
+  for (int b_i{0}; b_i < i; b_i++)
+  {
+    // x = std::sqrt(M[b_i]);
+    x = M[b_i];
     SNR.set_size(1, N_SP.size(1));
     nx = N_SP.size(1);
-    for (int k{0}; k < nx; k++) {
-      SNR[k] = N_SP[k] * beta;
+    for (int k{0}; k < nx; k++)
+    {
+      // SNR[k] = N_SP[k] * beta;
+      SNR[k] = N_SP_M[b_i + N_SP_M.size(0) * k] * beta;
     }
     nx = SNR.size(1);
-    for (int k{0}; k < nx; k++) {
+    for (int k{0}; k < nx; k++)
+    {
       SNR[k] = std::sqrt(SNR[k]);
     }
-    if (N_SP.size(1) == SNR.size(1)) {
+    if (N_SP.size(1) == SNR.size(1))
+    {
       nx = N_SP.size(1) - 1;
       SNR.set_size(1, N_SP.size(1));
-      for (int k{0}; k <= nx; k++) {
-        SNR[k] = N_SP[k] * x / (SNR[k] + N_dark);
+      for (int k{0}; k <= nx; k++)
+      {
+        // SNR[k] = N_SP[k] * x / (SNR[k] + N_dark);
+        // SNR[k] = N_SP_M[b_i + N_SP_M.size(0) * k] * sqrt(x) / (SNR[k] + N_dark); //乘根号M
+        SNR[k] = N_SP_M[b_i + N_SP_M.size(0) * k] / (SNR[k] + N_dark);
       }
-    } else {
+    }
+    else
+    {
       binary_expand_op(SNR, N_SP, x, N_dark);
     }
     nx = SNR.size(1);
-    for (int k{0}; k < nx; k++) {
+    for (int k{0}; k < nx; k++)
+    {
       SNR[k] = std::log10(SNR[k]);
     }
     nx = SNR.size(1);
-    for (int k{0}; k < nx; k++) {
+    for (int k{0}; k < nx; k++)
+    {
       SNR_db[b_i + SNR_db.size(0) * k] = 10.0 * SNR[k];
     }
   }
+  qDebug() << "drawSNRDepthByM finished: " << N_SP_M[0] << "SNR:" << SNR_db[0] << "z:" << z[0] << "M:" << M[0];
 }
 
 //

@@ -518,6 +518,45 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
         Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "各深度下的PMT数据反演结束！", Logger::Info);
         PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
         disconnect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
+        // 在温盐图中绘制一条T=0.5℃的等温线和S=1‰的等盐线
+        QCustomPlot *customPlot = getRetrievalCustomPlot();
+        customPlot->addGraph();
+        customPlot->graph(2)->setPen(QPen(Qt::yellow, 2, Qt::DashLine));
+        customPlot->graph(2)->setName("T=0.5℃");
+
+        for (int i = 0; i < 80; i++)
+        {
+            customPlot->graph(2)->addData(i, 0.5);
+        }
+
+        customPlot->addGraph();
+        customPlot->graph(3)->setPen(QPen(Qt::yellow, 2, Qt::DashLine));
+        customPlot->graph(3)->setName("T=-0.5℃");
+
+        for (int i = 0; i < 80; i++)
+        {
+            customPlot->graph(3)->addData(i, -0.5);
+        }
+
+        customPlot->addGraph();
+        customPlot->graph(4)->setPen(QPen(Qt::green, 2, Qt::DashLine));
+        customPlot->graph(4)->setName("S=1‰");
+
+        for (int i = 0; i < 80; i++)
+        {
+            customPlot->graph(4)->addData(i, 1);
+        }
+
+        customPlot->addGraph();
+        customPlot->graph(5)->setPen(QPen(Qt::green, 2, Qt::DashLine));
+        customPlot->graph(5)->setName("S=-1‰");
+
+        for (int i = 0; i < 80; i++)
+        {
+            customPlot->graph(5)->addData(i, -1);
+        }
+
+        customPlot->replot();
     }
     else
     {

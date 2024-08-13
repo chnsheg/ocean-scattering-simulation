@@ -1099,11 +1099,11 @@ void RetrievalAlgorithm_anonFcn1(
   ndbl = params[10] + params[9] * params[11];
   // solid angle of receiver 接收器的立体角
   // Number of received scattered photons
-  cdiff = params[0] * params[4] / 1.9864458571489286E-25 *
+  cdiff = params[0] * params[4] / 1.9864458571489286E-25 * params[14] *
           (3.1415926535897931 * (params[13] * params[13]) / (ndbl * ndbl)) *
           params[7] * std::exp(-2.0 * params[5] * params[10]) *
           (2.99792458E+8 * (1.0 / params[3]) / (2.0 * params[9])) * params[17] *
-          params[18];
+          params[18]; // params[14]是M，积分次数
   // number of output Brillouin photons
   ndbl = params[12] * cdiff;
   // S_r =  0.04 * S_m;
