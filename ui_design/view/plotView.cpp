@@ -287,7 +287,11 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     }
     else if (anchor == 5 && curve_index == 1)
     {
-        Singleton<CustomPlotManager>::getInstance()->plotBarGraphToBuffer(xData, yData, curve_index, "PMT接收光谱");
+        Singleton<CustomPlotManager>::getInstance()->plotBarGraphToBuffer(xData, yData, curve_index, "加噪后的PMT接收光谱");
+    }
+    else if (anchor == 5 && curve_index == 2)
+    {
+        Singleton<CustomPlotManager>::getInstance()->plotBarGraphToBuffer(xData, yData, curve_index, "未加噪的PMT接收光谱");
     }
     // 根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
     switch (anchor)

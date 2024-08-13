@@ -16,6 +16,10 @@
  * 构造函数
  */
 
+QMetaObject::Connection CustomPlotManager::connection1 = QMetaObject::Connection();
+QMetaObject::Connection CustomPlotManager::connection2 = QMetaObject::Connection();
+QMetaObject::Connection CustomPlotManager::connection3 = QMetaObject::Connection();
+
 CustomPlotManager::CustomPlotManager(QCustomPlot *_customPlot, QObject *parent)
     : QObject(parent), customPlot(_customPlot)
 {
@@ -205,7 +209,20 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     // 检查是否已存在名为"Bars"的QCPBars实例
     for (int i = 0; i < customPlot->plottableCount(); ++i)
     {
-        if (qobject_cast<QCPBars *>(customPlot->plottable(i)))
+        // if (qobject_cast<QCPBars *>(customPlot->plottable(i)))
+        // {
+        //     bars = qobject_cast<QCPBars *>(customPlot->plottable(i));
+        //     // 这里假设customPlot只能有一个柱形图，如果有多个柱形图，可以在这里继续循环或者退出循环
+        //     break;
+        // }
+
+        if (customPlot->plottable(i)->objectName() == "NoisedBars" && curve_index == 1)
+        {
+            bars = qobject_cast<QCPBars *>(customPlot->plottable(i));
+            // 这里假设customPlot只能有一个柱形图，如果有多个柱形图，可以在这里继续循环或者退出循环
+            break;
+        }
+        else if (customPlot->plottable(i)->objectName() == "PureBars" && curve_index == 2)
         {
             bars = qobject_cast<QCPBars *>(customPlot->plottable(i));
             // 这里假设customPlot只能有一个柱形图，如果有多个柱形图，可以在这里继续循环或者退出循环
@@ -213,59 +230,96 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
         }
     }
 
-    customPlot->yAxis2->setVisible(true);
-    customPlot->yAxis2->setTickLabels(true);
-    customPlot->yAxis2->setTickLabelColor(Qt::yellow);
-    customPlot->yAxis2->setLabelColor(QColor(226, 60, 255));
-    // 等比例移动第二条坐标轴
-    void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
-    connect(customPlot->yAxis,
-            rangeChanged,
-            customPlot->yAxis2,
-            [=](const QCPRange &newRange, const QCPRange &oldRange)
-            {
-                QCPRange y2Range = customPlot->yAxis2->range();
-                double dy = newRange.lower - oldRange.lower;
-                double rate = dy / (oldRange.upper - oldRange.lower);
-                double y2Lower = y2Range.lower + rate * (y2Range.upper - y2Range.lower);
-                double y2Upper = y2Range.upper + rate * (y2Range.upper - y2Range.lower);
-                customPlot->yAxis2->setRange(y2Lower, y2Upper);
-            });
-    connect(customPlot->xAxis,
-            rangeChanged,
-            customPlot->xAxis2,
-            [=](const QCPRange &newRange, const QCPRange &oldRange)
-            {
-                QCPRange x2Range = customPlot->xAxis2->range();
-                double dx = newRange.lower - oldRange.lower;
-                double rate = dx / (oldRange.upper - oldRange.lower);
-                double x2Lower = x2Range.lower + rate * (x2Range.upper - x2Range.lower);
-                double x2Upper = x2Range.upper + rate * (x2Range.upper - x2Range.lower);
-                customPlot->xAxis2->setRange(x2Lower, x2Upper);
-            });
-
     if (!bars)
     {
         bars = new QCPBars(xAxis, yAxis);
         // bars->setName(legendName); // 仅在创建新实例时设置名称
     }
-    bars->setAntialiased(false);                          // 为了更好的边框效果，关闭抗齿锯
-    bars->setObjectName("Bars");                          // 设置objectName
-    bars->setName(legendName);                            // 设置图例
-    bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
-    bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
+    bars->setAntialiased(false); // 为了更好的边框效果，关闭抗齿锯
+    // bars->setObjectName("Bars");                          // 设置objectName
+    bars->setName(legendName); // 设置图例
+    // bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
+    // bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
+
+    if (curve_index == 1)
+    {
+        bars->setObjectName("NoisedBars");
+        bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
+        // bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
+        // 设置透明度
+        bars->setBrush(QColor(20, 68, 106, 128));
+    }
+    else if (curve_index == 2)
+    {
+        bars->setObjectName("PureBars");
+        bars->setPen(QPen(QColor(255, 0, 0).lighter(130))); // 设置柱状图的边框颜色
+        // bars->setBrush(QColor(255, 0, 0));                  // 设置柱状图的画刷颜色
+        // 设置透明度
+        bars->setBrush(QColor(123, 104, 238, 72));
+    }
 
     QCPRange x1Range = customPlot->xAxis->range();
     xAxis->setRange(x1Range.lower, x1Range.upper); // 设置x轴范围
     xAxis->setLabel("x");
     xAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
 
-    // yAxis->setRange(0, 12.1); // 设置y轴范围
-    yAxis->setRange(0, *maxElement); // 设置y轴范围
-    yAxis->setPadding(35);           // 轴的内边距
+    QCPRange y1Range = customPlot->yAxis2->range();
+
+    if (curve_index == 1)
+    {
+        yAxis->setRange(0, *maxElement); // 设置y轴范围
+    }
+    else if (curve_index == 2)
+    {
+        // 对比maxElement和y1Range.upper的大小，取最大值
+        double y1Upper = std::max(*maxElement, y1Range.upper);
+        yAxis->setRange(0, y1Upper); // 设置y轴范围
+    }
+
+    yAxis->setPadding(35); // 轴的内边距
     yAxis->setLabel("y");
     yAxis->setUpperEnding(QCPLineEnding::esSpikeArrow);
-    bars->setData(*xData, *yData);
+
+    if (curve_index == 1)
+    {
+        customPlot->yAxis2->setVisible(true);
+        customPlot->yAxis2->setTickLabels(true);
+        customPlot->yAxis2->setTickLabelColor(Qt::yellow);
+        customPlot->yAxis2->setLabelColor(QColor(226, 60, 255));
+
+        if (connection1 && connection2)
+        {
+            disconnect(connection1);
+            disconnect(connection2);
+        }
+
+        // 等比例移动第二条坐标轴
+        void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
+        connection1 = connect(customPlot->yAxis,
+                              rangeChanged,
+                              customPlot->yAxis2,
+                              [=](const QCPRange &newRange, const QCPRange &oldRange)
+                              {
+                                  QCPRange y2Range = customPlot->yAxis2->range();
+                                  double dy = newRange.lower - oldRange.lower;
+                                  double rate = dy / (oldRange.upper - oldRange.lower);
+                                  double y2Lower = y2Range.lower + rate * (y2Range.upper - y2Range.lower);
+                                  double y2Upper = y2Range.upper + rate * (y2Range.upper - y2Range.lower);
+                                  customPlot->yAxis2->setRange(y2Lower, y2Upper);
+                              });
+        connection2 = connect(customPlot->xAxis,
+                              rangeChanged,
+                              customPlot->xAxis2,
+                              [=](const QCPRange &newRange, const QCPRange &oldRange)
+                              {
+                                  QCPRange x2Range = customPlot->xAxis2->range();
+                                  double dx = newRange.lower - oldRange.lower;
+                                  double rate = dx / (oldRange.upper - oldRange.lower);
+                                  double x2Lower = x2Range.lower + rate * (x2Range.upper - x2Range.lower);
+                                  double x2Upper = x2Range.upper + rate * (x2Range.upper - x2Range.lower);
+                                  customPlot->xAxis2->setRange(x2Lower, x2Upper);
+                              });
+    }
 
     // 设置宽度为4/5
     // bars->setWidthType(QCPBars::WidthType::wtPlotCoords);
@@ -280,52 +334,57 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
         bars->setWidth((*xData)[xData->size() - 1]);
     }
 
-    // 设置透明度
-    bars->setBrush(QColor(20, 68, 106, 128));
+    // // 设置透明度
+    // bars->setBrush(QColor(20, 68, 106, 128));
 
+    bars->setData(*xData, *yData);
     // 使bar切换到第二个坐标轴
     bars->setValueAxis(customPlot->yAxis2);
-    bars->rescaleAxes();
+    bars->rescaleAxes(true);
 
-    // 在bars上显示对应的y值
-    QCPBarsDataContainer *barsData = bars->data().data();
-    // 如果原来界面上有valueLabels，先删除
-    for (int i = 0; i < customPlot->layerCount(); ++i)
+    if (curve_index == 1)
     {
-        if (customPlot->layer(i)->name() == "valueLabels")
+
+        // 在bars上显示对应的y值
+        QCPBarsDataContainer *barsData = bars->data().data();
+        // 如果原来界面上有valueLabels，先删除
+        for (int i = 0; i < customPlot->layerCount(); ++i)
         {
-            // 删除layer(i)层中的QCPItemText
-            for (int j = 0; j < customPlot->layer(i)->children().size(); ++j)
+            if (customPlot->layer(i)->name() == "valueLabels")
             {
-                // 清除这个图层中的元素
-                customPlot->layer(i)->children().at(j)->setVisible(false);
+                // 删除layer(i)层中的QCPItemText
+                for (int j = 0; j < customPlot->layer(i)->children().size(); ++j)
+                {
+                    // 清除这个图层中的元素
+                    customPlot->layer(i)->children().at(j)->setVisible(false);
+                }
             }
         }
-    }
-    for (int i = 0; i < barsData->size(); ++i)
-    {
-        const QCPBarsData *data = barsData->at(i);
-        double x = data->key;
-        double y = data->value;
-        QString label = QString::number(y);
-        customPlot->addLayer("valueLabels", nullptr, QCustomPlot::limAbove);
-        QCPItemText *valueLabel = new QCPItemText(customPlot);
-        valueLabel->setPositionAlignment(Qt::AlignHCenter | Qt::AlignTop); // 对齐方式
-        // 显示到bar的上方
+        for (int i = 0; i < barsData->size(); ++i)
+        {
+            const QCPBarsData *data = barsData->at(i);
+            double x = data->key;
+            double y = data->value;
+            QString label = QString::number(y);
+            customPlot->addLayer("valueLabels", nullptr, QCustomPlot::limAbove);
+            QCPItemText *valueLabel = new QCPItemText(customPlot);
+            valueLabel->setPositionAlignment(Qt::AlignCenter | Qt::AlignTop); // 对齐方式
+            // 显示到bar的顶上方
 
-        valueLabel->position->setType(QCPItemPosition::ptPlotCoords);
-        valueLabel->position->setCoords(x, y);
-        valueLabel->setText(label);
-        // valueLabel->setFont(QFont(font().family(), 10));
-        valueLabel->setPen(QPen(Qt::NoPen));
-        // 背景设置为透明
-        valueLabel->setBrush(QBrush(QColor(128, 128, 0, 0)));
+            valueLabel->position->setType(QCPItemPosition::ptPlotCoords);
+            valueLabel->position->setCoords(x, y);
+            valueLabel->setText(label);
+            // valueLabel->setFont(QFont(font().family(), 10));
+            valueLabel->setPen(QPen(Qt::NoPen));
+            // 背景设置为透明
+            valueLabel->setBrush(QBrush(QColor(128, 128, 0, 0)));
 
-        // 设置字体颜色
-        valueLabel->setColor(QColor(255, 255, 255));
-        // valueLabel->position->setCoords(x, y - 0.5); // Adjust the y-coordinate to position the label above the bar
+            // 设置字体颜色
+            valueLabel->setColor(QColor(255, 255, 255));
+            // valueLabel->position->setCoords(x, y - 0.5); // Adjust the y-coordinate to position the label above the bar
 
-        valueLabel->setLayer("valueLabels");
+            valueLabel->setLayer("valueLabels");
+        }
     }
 
     // 显示bars
@@ -364,7 +423,7 @@ void CustomPlotManager::hidePlot()
     for (int i = 0; i < customPlot->plottableCount(); ++i)
     {
         qDebug() << "plottable:" << customPlot->plottable(i)->name() << Qt::endl;
-        if (customPlot->plottable(i)->objectName() == "Bars")
+        if (customPlot->plottable(i)->objectName() == "NoisedBars")
         {
             customPlot->plottable(i)->setVisible(false);
             for (int i = 0; i < customPlot->layerCount(); ++i) // 隐藏valueLabels
@@ -378,6 +437,10 @@ void CustomPlotManager::hidePlot()
                     }
                 }
             }
+        }
+        else if (customPlot->plottable(i)->objectName() == "PureBars")
+        {
+            customPlot->plottable(i)->setVisible(false);
         }
     }
     // 隐藏图例显示
@@ -394,7 +457,7 @@ bool CustomPlotManager::showPlot()
     for (int i = 0; i < customPlot->plottableCount(); ++i)
     {
         qDebug() << "show_plottable:" << customPlot->plottable(i)->objectName() << Qt::endl;
-        if (customPlot->plottable(i)->objectName() == "Bars")
+        if (customPlot->plottable(i)->objectName() == "NoisedBars")
         {
             customPlot->plottable(i)->setVisible(true);
             for (int i = 0; i < customPlot->layerCount(); ++i)
@@ -408,6 +471,10 @@ bool CustomPlotManager::showPlot()
                     }
                 }
             }
+        }
+        else if (customPlot->plottable(i)->objectName() == "PureBars")
+        {
+            customPlot->plottable(i)->setVisible(true);
         }
     }
     // 显示曲线显示
@@ -502,20 +569,26 @@ void CustomPlotManager::createSecondAxis(double lower, double upper, QString lab
         customPlot->yAxis2->setLabelColor(QColor(226, 60, 255));
         // 设置第二条坐标轴可以拖动
         customPlot->yAxis2->setLabel(label);
+
+        if (connection3) // 此处会产生问题，假如有多个地方调用此函数创建第二坐标轴，会导致connection3被覆盖，并解除上一次的连接
+        {
+            disconnect(connection3);
+        }
+
         // 等比例移动第二条坐标轴
         void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
-        connect(customPlot->yAxis,
-                rangeChanged,
-                customPlot->yAxis2,
-                [=](const QCPRange &newRange, const QCPRange &oldRange)
-                {
-                    QCPRange y2Range = customPlot->yAxis2->range();
-                    double dy = newRange.lower - oldRange.lower;
-                    double rate = dy / (oldRange.upper - oldRange.lower);
-                    double y2Lower = y2Range.lower + rate * (y2Range.upper - y2Range.lower);
-                    double y2Upper = y2Range.upper + rate * (y2Range.upper - y2Range.lower);
-                    customPlot->yAxis2->setRange(y2Lower, y2Upper);
-                });
+        connection3 = connect(customPlot->yAxis,
+                              rangeChanged,
+                              customPlot->yAxis2,
+                              [=](const QCPRange &newRange, const QCPRange &oldRange)
+                              {
+                                  QCPRange y2Range = customPlot->yAxis2->range();
+                                  double dy = newRange.lower - oldRange.lower;
+                                  double rate = dy / (oldRange.upper - oldRange.lower);
+                                  double y2Lower = y2Range.lower + rate * (y2Range.upper - y2Range.lower);
+                                  double y2Upper = y2Range.upper + rate * (y2Range.upper - y2Range.lower);
+                                  customPlot->yAxis2->setRange(y2Lower, y2Upper);
+                              });
     }
 }
 

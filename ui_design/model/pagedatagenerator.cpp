@@ -142,10 +142,12 @@ void PageDataGenerator::generatePairOfData(int page_index)
 
         xDataVector->append(laserLineWidthEffectData->at(0));
         xDataVector->append(laserLineWidthEffectData->at(2));
+        xDataVector->append(laserLineWidthEffectData->at(4)); // 未加噪信号
         yDataVector->append(laserLineWidthEffectData->at(1));
         yDataVector->append(laserLineWidthEffectData->at(3));
+        yDataVector->append(laserLineWidthEffectData->at(5)); // 未加噪信号
         // caculateRetrievalErrorByDepth();
-        emit dataGenerated(xDataVector, yDataVector, 2);
+        emit dataGenerated(xDataVector, yDataVector, 3);
     }
     // 释放InputDataListManager内存
     // delete inputDataList;

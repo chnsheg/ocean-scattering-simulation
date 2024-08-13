@@ -65,8 +65,8 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     QVector<double> *Spectrum_Noised;
     // MyMath::convertQVectorToArray(energy_vector, Iv);
     double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
-    // AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
-    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, 0);
+    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
+    // AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, 0);
     Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
     // result->append(sign_vector);
     // result->append(Spectrum_Noised);
@@ -83,6 +83,9 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     result->append(yData);
     result->append(sign_vector);
     result->append(Spectrum_Noised);
+    // 以拷贝的方式，复制存储一份sign_vector
+    result->append(new QVector<double>(*sign_vector));
+    result->append(energy_vector);
 
     // for (int i = 0; i < sign_vector->size() - 1; ++i)
     // {
@@ -127,7 +130,7 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
 
     // delete RF;
     delete xData;
-    delete energy_vector;
+    // delete energy_vector;
     // delete yData;
 
     return result;

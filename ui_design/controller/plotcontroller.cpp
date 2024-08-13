@@ -69,7 +69,7 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
     }
     if (xDataVector->size() == yDataVector->size())
     {
-        for (int i = 0; i < xDataVector->size(); ++i)
+        for (int i = 0; i < xDataVector->size(); i++)
         {
             xData = xDataVector->at(i);
             yData = yDataVector->at(i);
@@ -85,7 +85,7 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
     else
     {
         xData = xDataVector->at(0); // 默认所有曲线的x轴数据都是一样的
-        for (int i = 0; i < curve_num; ++i)
+        for (int i = 0; i < curve_num; i++)
         {
             yData = yDataVector->at(i);
             view->updateViewCurveSlot(xData, yData, i);

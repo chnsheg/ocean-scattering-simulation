@@ -57,6 +57,9 @@ signals:
 private:
     CustomPlotManager(QCustomPlot *_customPlot, QObject *parent = nullptr);
     QCustomPlot *customPlot;
+    static QMetaObject::Connection connection1;
+    static QMetaObject::Connection connection2;
+    static QMetaObject::Connection connection3;
 };
 
 #endif // CUSTOMPLOTMANAGER_H
