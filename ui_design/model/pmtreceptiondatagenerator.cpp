@@ -49,25 +49,43 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
     MyMath::convertQVectorToArray(RF, frequency);
     MyMath::convertQVectorToArray(yData, InputSpectrum);
 
-    PMTReceive(frequency, InputSpectrum, NumberChannels, channel_width, channel_space, channel_energy, channel_sign);
-
-    QVector<QVector<double> *> *result = new QVector<QVector<double> *>();
-    QVector<double> *energy_vector = new QVector<double>();
-    QVector<double> *sign_vector = new QVector<double>();
-
-    energy_vector = MyMath::convertArrayToQVector(channel_energy);
-    sign_vector = MyMath::convertArrayToQVector(channel_sign);
-
     // 从存储中获取SNR
     double SNR = constantStorage->getConstant(constantMap->getConstantName(6, 5)).toDouble();
     // coder::array<double, 2U> Iv;
     coder::array<double, 2U> Iv_Noised;
+    coder::array<double, 2U> Pmt_Noised;
     QVector<double> *Spectrum_Noised;
     // MyMath::convertQVectorToArray(energy_vector, Iv);
     double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
-    AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
-    // AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, 0);
+
+    QVector<double> *energy_vector = new QVector<double>();
+    QVector<double> *sign_vector = new QVector<double>();
+    QVector<QVector<double> *> *result = new QVector<QVector<double> *>();
+
+    // 先不加噪接收一次
+    PMTReceive(frequency, InputSpectrum, NumberChannels, channel_width, channel_space, channel_energy, channel_sign);
+    energy_vector = MyMath::convertArrayToQVector(channel_energy);
+    sign_vector = MyMath::convertArrayToQVector(channel_sign);
+    // 对输入光谱进行加噪
+    AddNoiseNondB(InputSpectrum, SNR, Iv_Noised, &SNR, poissrnd_lambda);
+
+    // 用yData存储加噪后的光谱
     Spectrum_Noised = MyMath::convertArrayToQVector(Iv_Noised);
+    delete yData;
+    yData = Spectrum_Noised;
+
+    PMTReceive(frequency, Iv_Noised, NumberChannels, channel_width, channel_space, Pmt_Noised, channel_sign);
+
+    // // 从存储中获取SNR
+    // double SNR = constantStorage->getConstant(constantMap->getConstantName(6, 5)).toDouble();
+    // // coder::array<double, 2U> Iv;
+    // coder::array<double, 2U> Iv_Noised;
+    // QVector<double> *Spectrum_Noised;
+    // // MyMath::convertQVectorToArray(energy_vector, Iv);
+    // double poissrnd_lambda = constantStorage->getConstant(constantMap->getConstantName(3, 3)).toDouble();
+    // AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, poissrnd_lambda);
+    // AddNoiseNondB(channel_energy, SNR, Iv_Noised, &SNR, 0);
+    Spectrum_Noised = MyMath::convertArrayToQVector(Pmt_Noised);
     // result->append(sign_vector);
     // result->append(Spectrum_Noised);
     // result->append(sign_vector);

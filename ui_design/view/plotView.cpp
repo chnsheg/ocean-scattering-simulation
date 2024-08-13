@@ -343,6 +343,8 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     case 5:
         if (curve_index == 0)
         {
+            // 改变线宽，使得曲线绘制过程更加流畅
+            Singleton<CustomPlotManager>::getInstance()->setPenToRunFluently(curve_index);
             Singleton<CustomPlotManager>::getInstance()->setLegendName("原光谱", 0);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot();
             Singleton<Logger>::getInstance()->logMessage("PMT接收光谱绘制完毕", Logger::Log);
