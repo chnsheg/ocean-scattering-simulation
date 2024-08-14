@@ -40,6 +40,8 @@ public:
 
     int getCurveNum(int pageIndex);
 
+    QCustomPlot *getCustomPlot(int index);
+
 private slots:
     // 处理“上一页面”按钮点击事件
     void onPrevPageClicked();

@@ -145,6 +145,9 @@ void RetrievalWindow::boundButtonEvent()
     connect(ui->clear3_2, &QPushButton::clicked, this, &RetrievalWindow::onClearButtonClicked);
 
     connect(ui->tracer3_2, &QPushButton::clicked, this, &RetrievalWindow::onExtendButtonClicked);
+
+    // 绑定“统计”按钮点击事件
+    connect(ui->stat3_2, &QPushButton::clicked, this, &RetrievalWindow::onStatisticButtonClicked);
 }
 
 // “显示”按钮点击事件
@@ -169,6 +172,402 @@ void RetrievalWindow::onExtendButtonClicked()
     // 绑定反演结束信号
     connect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
     model->caculateRetrievalErrorByDepth();
+}
+
+// 对m_retrievalError中的数据进行直方图统计
+void RetrievalWindow::onStatisticButtonClicked()
+{
+    DynamicPage *dynamicView;
+    int anchor = 0;
+
+    if (dynamicViewOpened.contains(0)) // 统计按键对应的动态页面索引为0
+    {
+        // 查找index对应的dynamicViewOpened中的索引
+        anchor = dynamicViewOpened.indexOf(0);
+        dynamicView = dynamicViewVector.at(anchor);
+    }
+    else
+    {
+        dynamicView = new DynamicPage(2);
+        dynamicViewVector.append(dynamicView);
+        dynamicViewOpened.append(0);
+        anchor = dynamicViewVector.size() - 1; // 指向当前打开的dynamicView
+    }
+
+    connect(dynamicView, &DynamicPage::closeDynamicPageSignal, this, [=](int index)
+            {
+        dynamicViewVector.removeOne(dynamicView);
+        dynamicViewOpened.removeOne(anchor); });
+
+    void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
+    // 绑定customPlot的坐标轴范围变化信号到匿名函数
+    connect(dynamicView->getCustomPlot(0)->xAxis, rangeChanged, this, [=](const QCPRange &newRange, const QCPRange &oldRange)
+            {
+            // 如果新范围相比旧范围变大或缩小2倍，则重新计算直方图统计
+            double newRangeSize = newRange.upper - newRange.lower;
+            double oldRangeSize = m_maxRange - m_minRange;
+            if (newRangeSize > oldRangeSize * 1.5 || newRangeSize < oldRangeSize / 1.5)
+            {
+            // m_maxRange = newRange.upper;
+            // m_minRange = newRange.lower;
+            double scale = oldRangeSize/newRangeSize;
+                // 首先判断m_retrievalError中是否有数据
+            if (m_retrievalError.size() == 0)
+            {
+                Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "无法进行直方图统计，请先生成数据", Logger::Warning);
+                return;
+            }
+
+            // 计算温度和盐度误差的直方图统计
+            QVector<double> temperatureError;
+            for (auto &&retrievalError : m_retrievalError)
+            {
+                temperatureError.push_back(std::abs(retrievalError.temperatureError));
+            }
+            int num1 = temperatureError.size() / 2;
+                drawHistogram(dynamicView->getCustomPlot(0), calculateHistogramWithinRange(temperatureError, newRange.lower, newRange.upper, (int)(num1 *scale)), "Temperature Error");
+                // 缩放customPlot的x轴范围
+                dynamicView->getCustomPlot(0)->xAxis->setRange(newRange);
+                dynamicView->getCustomPlot(0)->replot();
+            } });
+
+    connect(dynamicView->getCustomPlot(1)->xAxis, rangeChanged, this, [=](const QCPRange &newRange, const QCPRange &oldRange)
+            {
+            // 如果新范围相比旧范围变大或缩小2倍，则重新计算直方图统计
+            double newRangeSize = newRange.upper - newRange.lower;
+            double oldRangeSize = m_maxRange - m_minRange;
+            if (newRangeSize > oldRangeSize * 1.5 || newRangeSize < oldRangeSize / 1.5){
+            // m_maxRange = newRange.upper;
+            // m_minRange = newRange.lower;
+            double scale = oldRangeSize/newRangeSize;
+                // 首先判断m_retrievalError中是否有数据
+            if (m_retrievalError.size() == 0)
+            {
+                Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "无法进行直方图统计，请先生成数据", Logger::Warning);
+                return;
+            }
+
+            // 计算温度和盐度误差的直方图统计
+            QVector<double> salinityError;
+            for (auto &&retrievalError : m_retrievalError)
+            {
+                salinityError.push_back(std::abs(retrievalError.salinityError));
+            }
+            int num2 = salinityError.size() / 2;
+                drawHistogram(dynamicView->getCustomPlot(1), calculateHistogramWithinRange(salinityError, newRange.lower, newRange.upper, (int)(num2 *scale)), "Temperature Error");
+                // 缩放customPlot的x轴范围
+                dynamicView->getCustomPlot(1)->xAxis->setRange(newRange);
+                dynamicView->getCustomPlot(1)->replot();
+            } });
+
+    calculateTSStatistics(dynamicViewVector.at(anchor));
+}
+
+// 对m_retrievalError中的数据计算直方图统计
+void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
+{
+    // 首先判断m_retrievalError中是否有数据
+    if (m_retrievalError.size() == 0)
+    {
+        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "无法进行直方图统计，请先生成数据", Logger::Warning);
+        return;
+    }
+
+    // 计算温度和盐度误差的直方图统计
+    QVector<double> temperatureError;
+    QVector<double> salinityError;
+    for (auto &&retrievalError : m_retrievalError)
+    {
+        temperatureError.push_back(std::abs(retrievalError.temperatureError));
+        salinityError.push_back(std::abs(retrievalError.salinityError));
+    }
+    int num1 = temperatureError.size() / 2 <= 20 ? temperatureError.size() / 2 : 20; // 点数越多，区间越窄
+    int num2 = salinityError.size() / 2 <= 20 ? salinityError.size() / 2 : 20;
+    drawHistogram(dynamicView->getCustomPlot(0), calculateHistogram(temperatureError, num1), "Temperature Error");
+    drawHistogram(dynamicView->getCustomPlot(1), calculateHistogram(salinityError, num2), "Salinity Error");
+
+    // 设置坐标轴范围
+    dynamicView->getCustomPlot(0)->rescaleAxes(true);
+    dynamicView->getCustomPlot(1)->rescaleAxes(true);
+
+    // dynamicView->getCustomPlot(0)->xAxis->setRange(0.9 * m_minRange, 1.1 * m_maxRange);
+    // dynamicView->getCustomPlot(1)->xAxis->setRange(0.9 * m_minRange, 1.1 * m_maxRange);
+    // auto maxElement = std::max_element(temperatureError.begin(), temperatureError.end(), [](double a, double b)
+    //                                    {
+    //                                        return a < b; // 使用正确的比较器条件
+    //                                    });
+    // double maxTemperatureError = *maxElement;
+    // maxElement = std::max_element(salinityError.begin(), salinityError.end(), [](double a, double b)
+    //                               {
+    //                                   return a < b; // 使用正确的比较器条件
+    //                               });
+    // double maxSalinityError = *maxElement;
+    // dynamicView->getCustomPlot(0)->yAxis->setRange(0, maxTemperatureError + 1);
+    // dynamicView->getCustomPlot(1)->yAxis->setRange(0, maxSalinityError + 1);
+
+    dynamicView->getCustomPlot(0)->replot();
+    dynamicView->getCustomPlot(1)->replot();
+    dynamicView->show();
+}
+
+/**
+ * @brief 计算直方图统计
+ * @param data 数据
+ * @param binCount 区间个数
+ * @return QMap<double, int> 直方图统计结果，key为区间中心，value为区间内数据个数
+ */
+QMap<double, int> RetrievalWindow::calculateHistogram(const QVector<double> &data, int binCount)
+{
+    QMap<double, int> histogram;
+    if (data.isEmpty())
+    {
+        return histogram;
+    }
+
+    // 计算数据的最小值和最大值
+    double minValue = *std::min_element(data.begin(), data.end());
+    double maxValue = *std::max_element(data.begin(), data.end());
+
+    // 计算每个区间的宽度
+    double binWidth = (maxValue - minValue) / binCount;
+
+    m_maxRange = maxValue + 0.5 * binWidth;
+    m_minRange = minValue - 0.5 * binWidth;
+
+    // 初始化直方图的每个区间
+    for (int i = 0; i < binCount; ++i)
+    {
+        double binCenter = minValue + (i + 0.5) * binWidth;
+        histogram[binCenter] = 0;
+    }
+
+    // 对数据进行归类
+    for (double value : data)
+    {
+        int binIndex = std::floor((value - minValue) / binWidth);
+        if (binIndex >= binCount)
+        {
+            binIndex = binCount - 1; // 把最大值放入最后一个区间
+        }
+        double binCenter = minValue + (binIndex + 0.5) * binWidth;
+        histogram[binCenter]++;
+    }
+
+    return histogram;
+}
+
+QMap<double, int> RetrievalWindow::calculateHistogramWithinRange(const QVector<double> &data, double minRange, double maxRange, int binCount)
+{
+    QMap<double, int> histogram;
+    if (data.isEmpty())
+    {
+        return histogram;
+    }
+
+    // 过滤出在指定范围内的数据
+    // QVector<double> filteredData;
+    // for (double value : data)
+    // {
+    //     if (value >= minRange && value <= maxRange)
+    //     {
+    //         filteredData.append(value);
+    //     }
+    // }
+
+    if (data.isEmpty())
+    {
+        return histogram;
+    }
+
+    // 计算过滤后数据的最小值和最大值
+    double minValue = *std::min_element(data.begin(), data.end());
+    double maxValue = *std::max_element(data.begin(), data.end());
+
+    // 计算每个区间的宽度
+    double binWidth = (maxValue - minValue) / binCount;
+
+    // 初始化直方图的每个区间
+    for (int i = 0; i < binCount; ++i)
+    {
+        double binCenter = minValue + (i + 0.5) * binWidth;
+        histogram[binCenter] = 0;
+    }
+
+    // 对过滤后的数据进行归类
+    for (double value : data)
+    {
+        int binIndex = std::floor((value - minValue) / binWidth);
+        if (binIndex >= binCount)
+        {
+            binIndex = binCount - 1; // 把最大值放入最后一个区间
+        }
+        double binCenter = minValue + (binIndex + 0.5) * binWidth;
+        histogram[binCenter]++;
+    }
+
+    // 仅截取前40个histogram显示
+    if (histogram.size() > 40)
+    {
+        QMap<double, int> newHistogram;
+        int i = 0;
+        for (auto it = histogram.begin(); it != histogram.end(); ++it)
+        {
+            if (i < 40)
+            {
+                newHistogram[it.key()] = it.value();
+            }
+            else
+            {
+                break;
+            }
+            i++;
+        }
+        return newHistogram;
+    }
+
+    return histogram;
+}
+
+void RetrievalWindow::drawHistogram(QCustomPlot *customPlot, const QMap<double, int> &histogram, QString title)
+{
+    QVector<double> binCenters;
+    QVector<double> binHeights;
+
+    // 遍历直方图数据，填充绘图用的 QVector
+    for (auto it = histogram.begin(); it != histogram.end(); ++it)
+    {
+        binCenters.append(it.key());
+        binHeights.append(it.value());
+    }
+
+    QCPBars *bars = nullptr;
+
+    for (int i = 0; i < customPlot->plottableCount(); ++i)
+    {
+        // if (qobject_cast<QCPBars *>(customPlot->plottable(i)))
+        // {
+        //     bars = qobject_cast<QCPBars *>(customPlot->plottable(i));
+        //     // 这里假设customPlot只能有一个柱形图，如果有多个柱形图，可以在这里继续循环或者退出循环
+        //     break;
+        // }
+
+        if (customPlot->plottable(i)->objectName() == "Bars")
+        {
+            bars = qobject_cast<QCPBars *>(customPlot->plottable(i));
+            // 这里假设customPlot只能有一个柱形图，如果有多个柱形图，可以在这里继续循环或者退出循环
+            break;
+        }
+    }
+
+    // 创建柱状图
+    if (!bars)
+    {
+        bars = new QCPBars(customPlot->xAxis, customPlot->yAxis);
+        bars->setObjectName("Bars");
+    }
+
+    // 设置柱状图颜色
+    bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
+    // bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
+    // 设置透明度
+    bars->setBrush(QColor(20, 68, 106, 128));
+
+    // 设置柱状图的宽度
+    if (binCenters.size() > 1)
+    {
+        bars->setWidth(binCenters[1] - binCenters[0]);
+    }
+    else
+    {
+        bars->setWidth(1); // 当只有一个数据点时，设置宽度为1
+    }
+
+    bars->setData(binCenters, binHeights);
+
+    // 设置坐标轴的标签
+    customPlot->xAxis->setLabel("Value");
+    customPlot->yAxis->setLabel("Frequency");
+
+    // 使用 QCPAxisTickerText 设置自定义的刻度标签
+    QSharedPointer<QCPAxisTickerText> textTicker(new QCPAxisTickerText);
+    for (double center : binCenters)
+    {
+        textTicker->addTick(center, QString::number(center, 'f', 2)); // 添加刻度和标签
+    }
+    customPlot->xAxis->setTicker(textTicker);
+
+    // 如果原来直方图顶部存在文本标签，则拿到QCustomPlot中的QCPItemText
+    QCPItemText *textLabel = nullptr;
+    QCPItemText *widthLabel = nullptr;
+
+    // 如果原来界面上有valueLabels，先删除
+    for (int i = 0; i < customPlot->layerCount(); ++i)
+    {
+        if (customPlot->layer(i)->name() == "valueLabels")
+        {
+            // 删除layer(i)层中的QCPItemText
+            for (int j = 0; j < customPlot->layer(i)->children().size(); ++j)
+            {
+                // 清除这个图层中的元素
+                customPlot->layer(i)->children().at(j)->setVisible(false);
+            }
+        }
+        else if (customPlot->layer(i)->name() == "widthLabel")
+        {
+            // 删除layer(i)层中的QCPItemText
+            for (int j = 0; j < customPlot->layer(i)->children().size(); ++j)
+            {
+                // 清除这个图层中的元素
+                customPlot->layer(i)->children().at(j)->setVisible(false);
+            }
+        }
+    }
+
+    // 添加直方图顶部的文本标签（显示频数）
+    for (int i = 0; i < binCenters.size(); ++i)
+    {
+        customPlot->addLayer("valueLabels", nullptr, QCustomPlot::limAbove); // 添加一个图层
+        textLabel = new QCPItemText(customPlot);
+        textLabel->setPositionAlignment(Qt::AlignBottom | Qt::AlignHCenter);
+        textLabel->position->setType(QCPItemPosition::ptPlotCoords);
+        textLabel->position->setCoords(binCenters[i], binHeights[i]); // 设置文本标签的位置
+        textLabel->setText(QString::number(binHeights[i]));           // 显示的文本内容
+        textLabel->setFont(QFont("Helvetica", 12));                   // 设置字体和大小
+        textLabel->setPen(QPen(Qt::NoPen));                           // 设置文本边框颜色
+        textLabel->setBrush(QBrush(QColor(128, 128, 0, 0)));          // 设置文本背景颜色
+        textLabel->setColor(QColor(255, 255, 255));                   // 设置文本颜色
+        textLabel->setLayer("valueLabels");                           // 设置图层
+    }
+
+    // 检查是否已存在标题元素，并移除
+    if (customPlot->plotLayout()->elementCount() > 0 && dynamic_cast<QCPTextElement *>(customPlot->plotLayout()->element(0, 0)))
+    {
+        customPlot->plotLayout()->removeAt(0);
+        customPlot->plotLayout()->simplify(); // 清理空行
+    }
+
+    // 显示柱状图的宽度
+    customPlot->addLayer("widthLabel", nullptr, QCustomPlot::limAbove);
+    widthLabel = new QCPItemText(customPlot);
+    widthLabel->setPositionAlignment(Qt::AlignTop | Qt::AlignRight);
+    widthLabel->position->setType(QCPItemPosition::ptAxisRectRatio);
+    // 显示到正中间
+    widthLabel->position->setCoords(0.9, 0.05);
+    widthLabel->setText(QString("Bar Width: %1").arg(binCenters[1] - binCenters[0], 0, 'f', 3));
+    widthLabel->setFont(QFont("Helvetica", 12, QFont::Bold));
+    widthLabel->setPen(QPen(QColor(255, 255, 255, 0)));
+    widthLabel->setBrush(QBrush(QColor(255, 255, 255, 0)));
+    widthLabel->setColor(QColor(255, 255, 255));
+    widthLabel->setLayer("widthLabel");
+
+    // 设置标题
+    customPlot->plotLayout()->insertRow(0);
+    customPlot->plotLayout()->addElement(0, 0, new QCPTextElement(customPlot, title, QFont("sans", 14, QFont::Bold)));
+
+    // 自动缩放坐标轴以适应数据
+    // customPlot->rescaleAxes();
+
+    // customPlot->replot();
 }
 
 // 反演完毕后的事件处理

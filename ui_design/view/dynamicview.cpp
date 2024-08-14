@@ -27,6 +27,8 @@ DynamicPage::~DynamicPage()
     delete showCursorButton;
     delete closeButton;
 
+    dynamicPageObjectNum--;
+
     emit closeDynamicPageSignal(pageObjectId);
 
     // 关闭窗口
@@ -406,6 +408,12 @@ void DynamicPage::updateDynamicView(QVector<QVector<double> *> *xData,
                                     QStringList labelList)
 {
     displayCurve(index, xData, yData, title, legendList, labelList);
+}
+
+QCustomPlot *DynamicPage::getCustomPlot(int index)
+{
+
+    return plots->at(index);
 }
 
 void DynamicPage::onPrevPageClicked()

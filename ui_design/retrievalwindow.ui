@@ -330,15 +330,15 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <bool>true</bool>
          </property>
          <layout class="QGridLayout" name="gridLayout_7">
-          <item row="0" column="9">
-           <widget class="QPushButton" name="tracer3_2">
+          <item row="0" column="11">
+           <widget class="QPushButton" name="back3_2">
             <property name="font">
              <font>
               <pointsize>12</pointsize>
              </font>
             </property>
             <property name="text">
-             <string>深度遍历</string>
+             <string>返回</string>
             </property>
            </widget>
           </item>
@@ -354,18 +354,6 @@ li.checked::marker { content: &quot;\2612&quot;; }
             </property>
            </widget>
           </item>
-          <item row="0" column="10">
-           <widget class="QPushButton" name="back3_2">
-            <property name="font">
-             <font>
-              <pointsize>12</pointsize>
-             </font>
-            </property>
-            <property name="text">
-             <string>返回</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="6">
            <widget class="QPushButton" name="show3_2">
             <property name="font">
@@ -375,6 +363,30 @@ li.checked::marker { content: &quot;\2612&quot;; }
             </property>
             <property name="text">
              <string>开始反演</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="9">
+           <widget class="QPushButton" name="tracer3_2">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>深度遍历</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="10">
+           <widget class="QPushButton" name="stat3_2">
+            <property name="font">
+             <font>
+              <pointsize>12</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>直方图统计</string>
             </property>
            </widget>
           </item>

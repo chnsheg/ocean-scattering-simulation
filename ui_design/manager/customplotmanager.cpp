@@ -395,7 +395,7 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
             QString label = QString::number(y);
             customPlot->addLayer("valueLabels", nullptr, QCustomPlot::limAbove);
             QCPItemText *valueLabel = new QCPItemText(customPlot);
-            valueLabel->setPositionAlignment(Qt::AlignCenter | Qt::AlignTop); // 对齐方式
+            valueLabel->setPositionAlignment(Qt::AlignBottom | Qt::AlignHCenter); // 对齐方式
             // 显示到bar的顶上方
 
             valueLabel->position->setType(QCPItemPosition::ptPlotCoords);
