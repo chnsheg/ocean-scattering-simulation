@@ -199,67 +199,6 @@ void RetrievalWindow::onStatisticButtonClicked()
         dynamicViewVector.removeOne(dynamicView);
         dynamicViewOpened.removeOne(anchor); });
 
-    void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
-    // 绑定customPlot的坐标轴范围变化信号到匿名函数
-    connect(dynamicView->getCustomPlot(0)->xAxis, rangeChanged, this, [=](const QCPRange &newRange, const QCPRange &oldRange)
-            {
-            // 如果新范围相比旧范围变大或缩小2倍，则重新计算直方图统计
-            double newRangeSize = newRange.upper - newRange.lower;
-            double oldRangeSize = m_maxRange - m_minRange;
-            if (newRangeSize > oldRangeSize * 1.5 || newRangeSize < oldRangeSize / 1.5)
-            {
-            // m_maxRange = newRange.upper;
-            // m_minRange = newRange.lower;
-            double scale = oldRangeSize/newRangeSize;
-                // 首先判断m_retrievalError中是否有数据
-            if (m_retrievalError.size() == 0)
-            {
-                Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "无法进行直方图统计，请先生成数据", Logger::Warning);
-                return;
-            }
-
-            // 计算温度和盐度误差的直方图统计
-            QVector<double> temperatureError;
-            for (auto &&retrievalError : m_retrievalError)
-            {
-                temperatureError.push_back(std::abs(retrievalError.temperatureError));
-            }
-            int num1 = temperatureError.size() / 2;
-                drawHistogram(dynamicView->getCustomPlot(0), calculateHistogramWithinRange(temperatureError, newRange.lower, newRange.upper, (int)(num1 *scale)), "Temperature Error");
-                // 缩放customPlot的x轴范围
-                dynamicView->getCustomPlot(0)->xAxis->setRange(newRange);
-                dynamicView->getCustomPlot(0)->replot();
-            } });
-
-    connect(dynamicView->getCustomPlot(1)->xAxis, rangeChanged, this, [=](const QCPRange &newRange, const QCPRange &oldRange)
-            {
-            // 如果新范围相比旧范围变大或缩小2倍，则重新计算直方图统计
-            double newRangeSize = newRange.upper - newRange.lower;
-            double oldRangeSize = m_maxRange - m_minRange;
-            if (newRangeSize > oldRangeSize * 1.5 || newRangeSize < oldRangeSize / 1.5){
-            // m_maxRange = newRange.upper;
-            // m_minRange = newRange.lower;
-            double scale = oldRangeSize/newRangeSize;
-                // 首先判断m_retrievalError中是否有数据
-            if (m_retrievalError.size() == 0)
-            {
-                Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "无法进行直方图统计，请先生成数据", Logger::Warning);
-                return;
-            }
-
-            // 计算温度和盐度误差的直方图统计
-            QVector<double> salinityError;
-            for (auto &&retrievalError : m_retrievalError)
-            {
-                salinityError.push_back(std::abs(retrievalError.salinityError));
-            }
-            int num2 = salinityError.size() / 2;
-                drawHistogram(dynamicView->getCustomPlot(1), calculateHistogramWithinRange(salinityError, newRange.lower, newRange.upper, (int)(num2 *scale)), "Temperature Error");
-                // 缩放customPlot的x轴范围
-                dynamicView->getCustomPlot(1)->xAxis->setRange(newRange);
-                dynamicView->getCustomPlot(1)->replot();
-            } });
-
     calculateTSStatistics(dynamicViewVector.at(anchor));
 }
 
@@ -283,6 +222,27 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
     }
     int num1 = temperatureError.size() / 2 <= 20 ? temperatureError.size() / 2 : 20; // 点数越多，区间越窄
     int num2 = salinityError.size() / 2 <= 20 ? salinityError.size() / 2 : 20;
+
+    if (num1 != 20)
+    {
+        num1 = temperatureError.size() / 2 >= 10 ? num1 : 10;
+    }
+
+    if (num2 != 20)
+    {
+        num2 = salinityError.size() / 2 >= 10 ? num2 : 10;
+    }
+
+    double maxValue1 = *std::max_element(temperatureError.begin(), temperatureError.end());
+    double minValue1 = *std::min_element(temperatureError.begin(), temperatureError.end());
+    double maxValue2 = *std::max_element(salinityError.begin(), salinityError.end());
+    double minValue2 = *std::min_element(salinityError.begin(), salinityError.end());
+
+    double m_maxRange1 = maxValue1 + 0.5 * (maxValue1 - minValue1);
+    double m_minRange1 = minValue1 - 0.5 * (maxValue1 - minValue1);
+    double m_maxRange2 = maxValue2 + 0.5 * (maxValue2 - minValue2);
+    double m_minRange2 = minValue2 - 0.5 * (maxValue2 - minValue2);
+
     drawHistogram(dynamicView->getCustomPlot(0), calculateHistogram(temperatureError, num1), "Temperature Error");
     drawHistogram(dynamicView->getCustomPlot(1), calculateHistogram(salinityError, num2), "Salinity Error");
 
@@ -290,24 +250,73 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
     dynamicView->getCustomPlot(0)->rescaleAxes(true);
     dynamicView->getCustomPlot(1)->rescaleAxes(true);
 
-    // dynamicView->getCustomPlot(0)->xAxis->setRange(0.9 * m_minRange, 1.1 * m_maxRange);
-    // dynamicView->getCustomPlot(1)->xAxis->setRange(0.9 * m_minRange, 1.1 * m_maxRange);
-    // auto maxElement = std::max_element(temperatureError.begin(), temperatureError.end(), [](double a, double b)
-    //                                    {
-    //                                        return a < b; // 使用正确的比较器条件
-    //                                    });
-    // double maxTemperatureError = *maxElement;
-    // maxElement = std::max_element(salinityError.begin(), salinityError.end(), [](double a, double b)
-    //                               {
-    //                                   return a < b; // 使用正确的比较器条件
-    //                               });
-    // double maxSalinityError = *maxElement;
-    // dynamicView->getCustomPlot(0)->yAxis->setRange(0, maxTemperatureError + 1);
-    // dynamicView->getCustomPlot(1)->yAxis->setRange(0, maxSalinityError + 1);
-
     dynamicView->getCustomPlot(0)->replot();
     dynamicView->getCustomPlot(1)->replot();
     dynamicView->show();
+
+    void (QCPAxis::*rangeChanged)(const QCPRange &, const QCPRange &) = &QCPAxis::rangeChanged;
+    // 绑定customPlot的坐标轴范围变化信号到匿名函数
+    connect(dynamicView->getCustomPlot(0)->xAxis, rangeChanged, this, [=](const QCPRange &newRange, const QCPRange &oldRange)
+            {
+            // 如果新范围相比旧范围变大或缩小2倍，则重新计算直方图统计
+            double newRangeSize = newRange.upper - newRange.lower;
+            // double oldRangeSize = m_maxRange - m_minRange;
+            double oldRangeSize = m_maxRange1 - m_minRange1;
+            if (newRangeSize > oldRangeSize * 1.5 || newRangeSize < oldRangeSize / 1.5)
+            {
+            // m_maxRange = newRange.upper;
+            // m_minRange = newRange.lower;
+            double scale = oldRangeSize/newRangeSize;
+                // 首先判断m_retrievalError中是否有数据
+            if (m_retrievalError.size() == 0)
+            {
+                Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "无法进行直方图统计，请先生成数据", Logger::Warning);
+                return;
+            }
+
+            // 计算温度和盐度误差的直方图统计
+            QVector<double> temperatureError;
+            for (auto &&retrievalError : m_retrievalError)
+            {
+                temperatureError.push_back(std::abs(retrievalError.temperatureError));
+            }
+            int num1 = temperatureError.size() / 2 >=10 ? temperatureError.size() / 2 : 10;
+            
+                drawHistogram(dynamicView->getCustomPlot(0), calculateHistogramWithinRange(temperatureError, newRange.lower, newRange.upper, (int)(num1 *scale)), "Temperature Error");
+                // 缩放customPlot的x轴范围
+                dynamicView->getCustomPlot(0)->xAxis->setRange(newRange);
+                dynamicView->getCustomPlot(0)->replot();
+            } });
+
+    connect(dynamicView->getCustomPlot(1)->xAxis, rangeChanged, this, [=](const QCPRange &newRange, const QCPRange &oldRange)
+            {
+            // 如果新范围相比旧范围变大或缩小2倍，则重新计算直方图统计
+            double newRangeSize = newRange.upper - newRange.lower;
+            // double oldRangeSize = m_maxRange - m_minRange;
+            double oldRangeSize = m_maxRange2 - m_minRange2;
+            if (newRangeSize > oldRangeSize * 1.5 || newRangeSize < oldRangeSize / 1.5){
+            // m_maxRange = newRange.upper;
+            // m_minRange = newRange.lower;
+            double scale = oldRangeSize/newRangeSize;
+                // 首先判断m_retrievalError中是否有数据
+            if (m_retrievalError.size() == 0)
+            {
+                Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "无法进行直方图统计，请先生成数据", Logger::Warning);
+                return;
+            }
+
+            // 计算温度和盐度误差的直方图统计
+            QVector<double> salinityError;
+            for (auto &&retrievalError : m_retrievalError)
+            {
+                salinityError.push_back(std::abs(retrievalError.salinityError));
+            }
+            int num2 = salinityError.size() / 2 >=10 ? salinityError.size() / 2 : 10;
+                drawHistogram(dynamicView->getCustomPlot(1), calculateHistogramWithinRange(salinityError, newRange.lower, newRange.upper, (int)(num2 *scale)), "Salinity Error");
+                // 缩放customPlot的x轴范围
+                dynamicView->getCustomPlot(1)->xAxis->setRange(newRange);
+                dynamicView->getCustomPlot(1)->replot();
+            } });
 }
 
 /**
@@ -331,8 +340,8 @@ QMap<double, int> RetrievalWindow::calculateHistogram(const QVector<double> &dat
     // 计算每个区间的宽度
     double binWidth = (maxValue - minValue) / binCount;
 
-    m_maxRange = maxValue + 0.5 * binWidth;
-    m_minRange = minValue - 0.5 * binWidth;
+    // m_maxRange = maxValue + 0.5 * binWidth;
+    // m_minRange = minValue - 0.5 * binWidth;
 
     // 初始化直方图的每个区间
     for (int i = 0; i < binCount; ++i)
@@ -406,13 +415,13 @@ QMap<double, int> RetrievalWindow::calculateHistogramWithinRange(const QVector<d
     }
 
     // 仅截取前40个histogram显示
-    if (histogram.size() > 40)
+    if (histogram.size() > 80)
     {
         QMap<double, int> newHistogram;
         int i = 0;
         for (auto it = histogram.begin(); it != histogram.end(); ++it)
         {
-            if (i < 40)
+            if (i < 80)
             {
                 newHistogram[it.key()] = it.value();
             }
@@ -553,7 +562,15 @@ void RetrievalWindow::drawHistogram(QCustomPlot *customPlot, const QMap<double, 
     widthLabel->position->setType(QCPItemPosition::ptAxisRectRatio);
     // 显示到正中间
     widthLabel->position->setCoords(0.9, 0.05);
-    widthLabel->setText(QString("Bar Width: %1").arg(binCenters[1] - binCenters[0], 0, 'f', 3));
+    if (binCenters.size() > 1)
+    {
+        widthLabel->setText(QString("Bar Width: %1").arg(binCenters[1] - binCenters[0], 0, 'f', 3));
+    }
+    else
+    {
+        widthLabel->setText(QString("Bar Width: 0"));
+    }
+    // widthLabel->setText(QString("Bar Width: %1").arg(binCenters[1] - binCenters[0], 0, 'f', 3));
     widthLabel->setFont(QFont("Helvetica", 12, QFont::Bold));
     widthLabel->setPen(QPen(QColor(255, 255, 255, 0)));
     widthLabel->setBrush(QBrush(QColor(255, 255, 255, 0)));
