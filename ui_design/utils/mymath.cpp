@@ -154,3 +154,92 @@ void MyMath::myIFFT(fftw_complex *in, QVector<double> *out, int N)
     fftw_free(result);
     mutex.unlock();
 }
+
+double MyMath::linearInterpolation(double x1, double y1, double x2, double y2, double yTarget)
+{
+    return x1 + (yTarget - y1) * (x2 - x1) / (y2 - y1);
+}
+
+double MyMath::findFWHM(QVector<double> *data, QVector<double> *xValues)
+{
+    const double halfMax = 0.5;
+    std::vector<int> col_LS;
+    int size = data->size();
+
+    // 寻找 LS 在 (0.499, 0.519) 范围内的点
+    for (int i = 0; i < size; ++i)
+    {
+        if ((*data)[i] > 0.3 && (*data)[i] < 0.7)
+        {
+            col_LS.push_back(i);
+        }
+    }
+
+    if (col_LS.size() < 2)
+    {
+        // Singleton<Logger>::getInstance()->logMessage(
+        //     "Setting the laser_width within this frequency range cannot calculate width_laser. "
+        //     "Please modify the frequency range or the size of laser_width",
+        //     Logger::Warning);
+        return -1;
+    }
+
+    // 找到半高处左侧的点
+    int leftIndex = -1;
+    int rightIndex = -1;
+
+    for (size_t i = 0; i < col_LS.size() - 1; ++i)
+    {
+        int currentIndex = col_LS[i];
+        int nextIndex = col_LS[i + 1];
+
+        if ((*data)[currentIndex] < halfMax && (*data)[nextIndex] > halfMax)
+        {
+            leftIndex = currentIndex;
+            rightIndex = nextIndex;
+            break;
+        }
+    }
+
+    if (leftIndex == -1 || rightIndex == -1)
+    {
+        // Singleton<Logger>::getInstance()->logMessage("Unable to find left and right indices for interpolation.", Logger::Warning);
+        return -1;
+    }
+
+    // 插值求左侧半高宽点
+    double leftHalfMaxX = linearInterpolation((*xValues)[leftIndex], (*data)[leftIndex],
+                                              (*xValues)[rightIndex], (*data)[rightIndex],
+                                              halfMax);
+
+    // 找到半高处右侧的点
+    leftIndex = -1;
+    rightIndex = -1;
+
+    for (size_t i = col_LS.size() - 1; i > 0; --i)
+    {
+        int currentIndex = col_LS[i];
+        int prevIndex = col_LS[i - 1];
+
+        if ((*data)[currentIndex] < halfMax && (*data)[prevIndex] > halfMax)
+        {
+            leftIndex = prevIndex;
+            rightIndex = currentIndex;
+            break;
+        }
+    }
+
+    if (leftIndex == -1 || rightIndex == -1)
+    {
+        // Singleton<Logger>::getInstance()->logMessage("Unable to find left and right indices for interpolation.", Logger::Warning);
+        return -1;
+    }
+
+    // 插值求右侧半高宽点
+    double rightHalfMaxX = linearInterpolation((*xValues)[leftIndex], (*data)[leftIndex],
+                                               (*xValues)[rightIndex], (*data)[rightIndex],
+                                               halfMax);
+
+    // 计算并返回半高宽
+    return rightHalfMaxX - leftHalfMaxX;
+}

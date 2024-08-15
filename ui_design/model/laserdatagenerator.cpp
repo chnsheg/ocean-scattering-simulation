@@ -56,7 +56,7 @@ QVector<double> *LaserDataGenerator::generateLaserData()
     std::vector<int> col_LS;
     for (int i = 0; i < size; ++i)
     {
-        if ((*data)[i] > 0.499 && (*data)[i] < 0.519)
+        if ((*data)[i] > 0.49 && (*data)[i] < 0.51)
         {
             col_LS.push_back(i);
         }
@@ -66,10 +66,21 @@ QVector<double> *LaserDataGenerator::generateLaserData()
     // double width_lase = (*miu)[col_LS.back()] - (*miu)[col_LS.front()];
     if (col_LS.size() < 2)
     {
-        Singleton<Logger>::getInstance()->logMessage(
-            "Setting the laser_width within this frequency range cannot calculate width_laser. "
-            "Please modify the frequency range or the size of laser_width",
-            Logger::Warning);
+        QVector<double> *RF = FrequenceDataGenerator::generateRelativeFrequenceData();
+        // double fwhm = findFWHM(data, RF);
+        double fwhm = MyMath::findFWHM(data, RF);
+
+        if (fwhm < 0)
+        {
+            Singleton<Logger>::getInstance()->logMessage(
+                "Setting the laser_width with this frequency resolution cannot calculate width_laser. "
+                "Please increase the frequency resolution or the size of laser_width",
+                Logger::Warning);
+        }
+
+        Singleton<Logger>::getInstance()->logMessage("width_lase: " + QString::number(fwhm), Logger::Info);
+        delete RF;
+        RF = nullptr;
     }
     else
     {

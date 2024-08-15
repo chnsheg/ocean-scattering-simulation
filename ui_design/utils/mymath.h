@@ -23,6 +23,8 @@ public:
     static QVector<double> *convolution(QVector<double> *input, QVector<double> *kernel);
     static void myFFT(QVector<double> *input, fftw_complex *out, int N);
     static void myIFFT(fftw_complex *input, QVector<double> *out, int N);
+    static double linearInterpolation(double x1, double y1, double x2, double y2, double yTarget);
+    static double findFWHM(QVector<double> *data, QVector<double> *xValues);
 
     // static void convolution_fftw(const coder::array<double, 2U> &input,
     //                              const coder::array<double, 2U> &kernel,
