@@ -68,6 +68,9 @@ namespace coder
     QVector<double> *B_kernel = MyMath::convertArrayToQVector(B);
     QVector<double> *C_output = MyMath::convolution(A_input, B_kernel);
     MyMath::convertQVectorToArray(C_output, C);
+    delete A_input;
+    delete B_kernel;
+    delete C_output;
   }
 
 } // namespace coder

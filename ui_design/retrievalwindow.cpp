@@ -280,7 +280,14 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
             {
                 temperatureError.push_back(std::abs(retrievalError.temperatureError));
             }
-            int num1 = temperatureError.size() / 2 >=10 ? temperatureError.size() / 2 : 10;
+            // int num1 = temperatureError.size() / 2 >=10 ? temperatureError.size() / 2 : 10;
+
+            int num1 = temperatureError.size() / 2 <= 20 ? temperatureError.size() / 2 : 20; // 点数越多，区间越窄
+
+            if (num1 != 20)
+            {
+                num1 = temperatureError.size() / 2 >= 10 ? num1 : 10;
+            }
             
                 drawHistogram(dynamicView->getCustomPlot(0), calculateHistogramWithinRange(temperatureError, newRange.lower, newRange.upper, (int)(num1 *scale)), "Temperature Error");
                 // 缩放customPlot的x轴范围
@@ -311,7 +318,14 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
             {
                 salinityError.push_back(std::abs(retrievalError.salinityError));
             }
-            int num2 = salinityError.size() / 2 >=10 ? salinityError.size() / 2 : 10;
+            // int num2 = salinityError.size() / 2 >=10 ? salinityError.size() / 2 : 10;
+            int num2 = salinityError.size() / 2 <= 20 ? salinityError.size() / 2 : 20;
+
+
+            if (num2 != 20)
+            {
+                num2 = salinityError.size() / 2 >= 10 ? num2 : 10;
+            }
                 drawHistogram(dynamicView->getCustomPlot(1), calculateHistogramWithinRange(salinityError, newRange.lower, newRange.upper, (int)(num2 *scale)), "Salinity Error");
                 // 缩放customPlot的x轴范围
                 dynamicView->getCustomPlot(1)->xAxis->setRange(newRange);

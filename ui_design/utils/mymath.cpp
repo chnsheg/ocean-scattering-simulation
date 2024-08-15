@@ -84,6 +84,11 @@ QVector<double> *MyMath::convolution(QVector<double> *input, QVector<double> *ke
         (*L_out)[i] = temp_out->at(startIndex + i) / N;
     }
 
+    delete temp_out;
+    fftw_free(inputComplex);
+    fftw_free(kernelComplex);
+    fftw_free(outputComplex);
+
     return L_out;
 }
 

@@ -51,8 +51,8 @@ QVector<QVector<double> *> *FizeauIFGenerator::generateFizeauIFData()
 
     // 将Fizeau_spectrum和Fizeau_frequency转换为QVector<QVector<double> *>
     QVector<QVector<double> *> *result = new QVector<QVector<double> *>();
-    QVector<double> *spectrum_vector = new QVector<double>();
-    QVector<double> *frequency_vector = new QVector<double>();
+    QVector<double> *spectrum_vector;
+    QVector<double> *frequency_vector;
 
     spectrum_vector = MyMath::convertArrayToQVector(Fizeau_spectrum);
     frequency_vector = MyMath::convertArrayToQVector(Fizeau_frequency);
