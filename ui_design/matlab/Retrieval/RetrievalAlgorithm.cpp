@@ -31,6 +31,8 @@
 #include <algorithm>
 #include <cmath>
 #include <QDebug>
+#include "model/constantmap.h"
+#include "model/constantstorage.h"
 
 // Function Definitions
 //
@@ -706,6 +708,15 @@ void RetrievalAlgorithm_anonFcn1(
   int k;
   int loop_ub;
   int nm1d2;
+
+  ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
+  ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
+  double step = constantStorage->getConstant(constantMap->getConstantName(0, 6)).toDouble();
+  if (step <= 0)
+  {
+    step = 1.0E6;
+  }
+
   // UNTITLED3 Summary of this function goes here
   //    Detailed explanation goes here
   //     %% Global Variable
@@ -733,17 +744,17 @@ void RetrievalAlgorithm_anonFcn1(
   }
   else if (std::floor(a_tmp) == a_tmp)
   {
-    loop_ub = static_cast<int>((b_tmp - a_tmp) / 1.0E+6);
+    loop_ub = static_cast<int>((b_tmp - a_tmp) / step);
     miu.set_size(1, loop_ub + 1);
     for (i = 0; i <= loop_ub; i++)
     {
-      miu[i] = a_tmp + 1.0E+6 * static_cast<double>(i);
+      miu[i] = a_tmp + step * static_cast<double>(i);
     }
   }
   else
   {
-    ndbl = std::floor((b_tmp - a_tmp) / 1.0E+6 + 0.5);
-    apnd = a_tmp + ndbl * 1.0E+6;
+    ndbl = std::floor((b_tmp - a_tmp) / step + 0.5);
+    apnd = a_tmp + ndbl * step;
     cdiff = apnd - b_tmp;
     if (std::abs(cdiff) <
         4.4408920985006262E-16 * std::fmax(std::abs(a_tmp), std::abs(b_tmp)))
@@ -753,7 +764,7 @@ void RetrievalAlgorithm_anonFcn1(
     }
     else if (cdiff > 0.0)
     {
-      apnd = a_tmp + (ndbl - 1.0) * 1.0E+6;
+      apnd = a_tmp + (ndbl - 1.0) * step;
     }
     else
     {
@@ -777,7 +788,7 @@ void RetrievalAlgorithm_anonFcn1(
         nm1d2 = (idx - 1) / 2;
         for (k = 0; k <= nm1d2 - 2; k++)
         {
-          cdiff = (static_cast<double>(k) + 1.0) * 1.0E+6;
+          cdiff = (static_cast<double>(k) + 1.0) * step;
           miu[k + 1] = a_tmp + cdiff;
           miu[(idx - k) - 2] = apnd - cdiff;
         }
@@ -787,7 +798,7 @@ void RetrievalAlgorithm_anonFcn1(
         }
         else
         {
-          cdiff = static_cast<double>(nm1d2) * 1.0E+6;
+          cdiff = static_cast<double>(nm1d2) * step;
           miu[nm1d2] = a_tmp + cdiff;
           miu[nm1d2 + 1] = apnd - cdiff;
         }
@@ -902,10 +913,10 @@ void RetrievalAlgorithm_anonFcn1(
   {
     fx[i] = 0.0;
   }
-  i = static_cast<int>((b_tmp + (1.0E+6 - a_tmp)) / 1.0E+6);
+  i = static_cast<int>((b_tmp + (step - a_tmp)) / step);
   for (nm1d2 = 0; nm1d2 < i; nm1d2++)
   {
-    ndbl = (a_tmp + static_cast<double>(nm1d2) * 1.0E+6) - miu_0;
+    ndbl = (a_tmp + static_cast<double>(nm1d2) * step) - miu_0;
     fx[nm1d2] = params[2] * std::exp(-(ndbl * ndbl) / (2.0 * (cdiff * cdiff)));
   }
   if (miu.size(1) == 0)

@@ -23,7 +23,7 @@ ConstantGroup::ConstantGroup()
 QVector<QString> physicalConstantVector = QVector<QString>(
     {"SpeedOfLight", "PlanckConstant", "GravitationalConstant"});
 QVector<QString> laserConstantVector = QVector<QString>(
-    {"LaserWidth", "waveLength", "Intensity", "frequencyRange", "C", "laserEnergy"});
+    {"LaserWidth", "waveLength", "Intensity", "frequencyRange", "C", "laserEnergy", "frequencyResolution"});
 QVector<QString> spectrumConstantVector = QVector<QString>(
     {"Temperature", "Salinity", "BetaParticulate", "BetaM", "WaterRefractiveIndex", "EnergyRatio"});
 

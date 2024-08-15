@@ -44,7 +44,19 @@ QVector<double> *FrequenceDataGenerator::generateFrequenceData()
                                     Singleton<ConstantMap>::getInstance()->getConstantName(0, 3))
                                 .toDouble();
 
-    double step = 1e6;
+    // double step = 5.0E+6;
+    double step = Singleton<ConstantStorage>::getInstance(nullptr)
+                      ->getConstant(
+                          Singleton<ConstantMap>::getInstance()->getConstantName(0, 6))
+                      .toDouble();
+
+    if (step <= 0)
+    {
+        step = 1e6; // 默认值
+        // 设置内存中的值
+        Singleton<ConstantStorage>::getInstance(nullptr)
+            ->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 6), step);
+    }
     double miu_0 = c / lambda_0;
     double lowerLimit = miu_0 - frequencyRange;
     double upperLimit = miu_0 + frequencyRange;
@@ -52,7 +64,8 @@ QVector<double> *FrequenceDataGenerator::generateFrequenceData()
 
     data = new QVector<double>(size);
 
-    for (int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++)
+    {
         (*data)[i] = lowerLimit + i * step;
     }
 
@@ -107,12 +120,13 @@ QVector<double> *FrequenceDataGenerator::generateRelativeFrequenceData()
     QVector<double> *data = generateFrequenceData();
     double miu_0 = Singleton<ConstantStorage>::getInstance(nullptr)
                        ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
-                       .toDouble()
-                   / Singleton<ConstantStorage>::getInstance(nullptr)
-                         ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
-                         .toDouble();
+                       .toDouble() /
+                   Singleton<ConstantStorage>::getInstance(nullptr)
+                       ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
+                       .toDouble();
     relativeData = new QVector<double>(data->size());
-    for (int i = 0; i < data->size(); i++) {
+    for (int i = 0; i < data->size(); i++)
+    {
         (*relativeData)[i] = ((*data)[i] - miu_0) / 1e9;
     }
     delete data;
