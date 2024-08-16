@@ -231,6 +231,13 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     QCPAxis *xAxis = customPlot->xAxis2; // x轴
     QCPAxis *yAxis = customPlot->yAxis2; // y轴
 
+    // 设置当前customplot的缩放方向为左右上下
+    customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+    customPlot->axisRect()->setRangeDrag(Qt::Vertical | Qt::Horizontal);
+    customPlot->axisRect()->setRangeZoom(Qt::Vertical);
+    customPlot->axisRect()->setRangeZoomAxes(nullptr, customPlot->yAxis2);
+    customPlot->axisRect()->setRangeZoomFactor(0.5, 0.5);
+
     QCPBars *bars = nullptr; // 初始化bars为null指针
 
     // 检查是否已存在名为"Bars"的QCPBars实例
@@ -271,15 +278,17 @@ void CustomPlotManager::plotBarGraphToBuffer(const QVector<double> *xData,
     if (curve_index == 1)
     {
         bars->setObjectName("NoisedBars");
-        bars->setPen(QPen(QColor(0, 160, 140).lighter(130))); // 设置柱状图的边框颜色
+        bars->setPen(QPen(QColor(0, 160, 140).lighter(130), 2)); // 设置柱状图的边框颜色
+        // bars->setPen(QPen(QColor(224, 103, 70).lighter(130), 2)); // 设置柱状图的边框颜色
         // bars->setBrush(QColor(20, 68, 106));                  // 设置柱状图的画刷颜色
         // 设置透明度
         bars->setBrush(QColor(20, 68, 106, 128));
+        // bars->setBrush(QColor(224, 103, 70, 128));
     }
     else if (curve_index == 2)
     {
         bars->setObjectName("PureBars");
-        bars->setPen(QPen(QColor(255, 0, 0).lighter(130))); // 设置柱状图的边框颜色
+        bars->setPen(QPen(QColor(255, 0, 0).lighter(130), 2)); // 设置柱状图的边框颜色
         // bars->setBrush(QColor(255, 0, 0));                  // 设置柱状图的画刷颜色
         // 设置透明度
         bars->setBrush(QColor(123, 104, 238, 72));
