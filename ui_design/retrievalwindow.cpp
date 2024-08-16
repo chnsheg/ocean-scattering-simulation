@@ -128,6 +128,22 @@ void RetrievalWindow::initWindowStyle()
                                    "background-color: #487eb0;"
                                    "width: 10px;"
                                    "}"); // 设置样式
+
+    // 设置customPlot1和customPlot2的标题
+    customPlot1->plotLayout()->insertRow(0);
+    customPlot1->plotLayout()->addElement(0, 0, new QCPTextElement(customPlot1, "Retrieval Error", QFont("微软雅黑", 12, QFont::Bold)));
+    customPlot1->plotLayout()->element(0, 0)->setMargins(QMargins(0, 0, 0, 0));
+
+    customPlot2->plotLayout()->insertRow(0);
+    customPlot2->plotLayout()->addElement(0, 0, new QCPTextElement(customPlot2, "Mesurement Error", QFont("微软雅黑", 12, QFont::Bold)));
+    customPlot2->plotLayout()->element(0, 0)->setMargins(QMargins(0, 0, 0, 0));
+
+    // 在textEdit中，显示当前界面的各功能用法
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "水下温盐反演界面", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "1. 点击“开始反演”按钮，开始进行水下温盐反演", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "2. 点击“清除窗口”按钮，清除当前界面的数据", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "3. 点击“深度遍历”按钮，实现多深度探测或相同深度多次探测", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "4. 点击“直方图统计”按钮，对反演误差进行直方图统计", Logger::Info);
 }
 
 RetrievalWindow::~RetrievalWindow()
@@ -167,6 +183,8 @@ void RetrievalWindow::onExtendButtonClicked()
     // 清除原来的数据
     m_mesurementError.clear();
     m_retrievalError.clear();
+
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "开始进行水下温盐反演", Logger::Info);
 
     PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
     // 绑定反演结束信号
@@ -620,8 +638,13 @@ void RetrievalWindow::onRetrievalCompleted(QVariantList *args)
     }
     else if (args->at(0).toInt() == 2)
     {
-        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "开始进行各深度下的PMT数据反演！", Logger::Info);
         calculateDepthsRetrievalError(args->at(1).toInt(), args->at(2).toDouble(), args->at(3).value<QVector<double> *>());
+        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "开始进行各深度下的PMT数据反演！", Logger::Info);
+    }
+    else if (args->at(0).toInt() == 3)
+    {
+        calculateDepthsRetrievalError(args->at(1).toInt(), args->at(1).toInt(), args->at(3).value<QVector<double> *>());
+        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "相同深度下的PMT数据重复反演结束！", Logger::Info);
     }
 }
 
@@ -867,6 +890,50 @@ void RetrievalWindow::calculateRetrievalError()
     drawRetrievalErrorScatterPlot();
 }
 
+QVector<double> *RetrievalWindow::calculateAverageError()
+{
+    // 计算平均误差
+    double averageTemperatureError = 0;
+    double averageSalinityError = 0;
+    double averageBrillouinShiftError = 0;
+    double averageBrillouinWidthError = 0;
+    double averageRayleighWidthError = 0;
+
+    for (auto &&retrievalError : m_retrievalError)
+    {
+        averageTemperatureError += std::abs(retrievalError.temperatureError);
+        averageSalinityError += std::abs(retrievalError.salinityError);
+    }
+
+    for (auto &&mesurementError : m_mesurementError)
+    {
+        averageBrillouinShiftError += mesurementError.BrillouinShiftError;
+        averageBrillouinWidthError += mesurementError.BrillouinWidthError;
+        averageRayleighWidthError += mesurementError.rayleighWidthError;
+    }
+
+    int fontSize = 10;
+
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Average Error", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "-------------------------------------------------------------------------", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Parameters | Average Error", Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Temperature Error | " + QString::number(averageTemperatureError / m_retrievalError.size()), Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Salinity Error | " + QString::number(averageSalinityError / m_retrievalError.size()), Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Brillouin Shift Error | " + QString::number(averageBrillouinShiftError / m_mesurementError.size()), Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Brillouin Width Error | " + QString::number(averageBrillouinWidthError / m_mesurementError.size()), Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "Rayleigh Width Error | " + QString::number(averageRayleighWidthError / m_mesurementError.size()), Logger::Info, fontSize);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "-------------------------------------------------------------------------", Logger::Info, fontSize);
+
+    QVector<double> *averageError = new QVector<double>();
+    averageError->append(averageBrillouinShiftError / m_mesurementError.size());
+    averageError->append(averageBrillouinWidthError / m_mesurementError.size());
+    averageError->append(averageRayleighWidthError / m_mesurementError.size());
+    averageError->append(averageTemperatureError / m_retrievalError.size());
+    averageError->append(averageSalinityError / m_retrievalError.size());
+
+    return averageError;
+}
+
 // 计算反演误差
 void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVector<double> *retrievalData)
 {
@@ -889,6 +956,8 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
     double res_R_width = data->at(2);
     double REF_Tem = data->at(3);
     double REF_Sal = data->at(4);
+
+    delete data;
 
     double Bri_shift = constantStorage->getConstant(constantMap->getConstantName(6, 1)).toDouble() * 1e9;
     double Bri_width = constantStorage->getConstant(constantMap->getConstantName(6, 0)).toDouble() * 1e9;
@@ -945,45 +1014,54 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
     // constantStorage->setConstant(constantMap->getConstantName(9, 9), ui->lineEdit_1->text());
     if (m_mesurementError.size() == Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(constantMap->getConstantName(9, 9)).toInt())
     {
-        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "各深度下的PMT数据反演结束！", Logger::Info);
+        // Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "各深度下的PMT数据反演结束！", Logger::Info);
         PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
         disconnect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
+
+        QVector<double> *averageError = calculateAverageError();
+        double averageBrillouinShiftError = averageError->at(0);
+        double averageBrillouinWidthError = averageError->at(1);
+        double averageRayleighWidthError = averageError->at(2);
+        double averageTemperatureError = averageError->at(3);
+        double averageSalinityError = averageError->at(4);
+        delete averageError;
+
         // 在温盐图中绘制一条T=0.5℃的等温线和S=1‰的等盐线
         QCustomPlot *customPlot = getRetrievalCustomPlot();
         customPlot->addGraph();
         customPlot->graph(2)->setPen(QPen(Qt::yellow, 2, Qt::DashLine));
-        customPlot->graph(2)->setName("T=0.5℃");
+        customPlot->graph(2)->setName(QString("T_A=%1℃").arg(averageTemperatureError));
 
-        for (int i = 0; i < 80; i++)
+        for (int i = 0; i < m_mesurementError.size() + 1; i++) // 等温线长度
         {
-            customPlot->graph(2)->addData(i, 0.5);
+            customPlot->graph(2)->addData(i, averageTemperatureError);
         }
 
         customPlot->addGraph();
         customPlot->graph(3)->setPen(QPen(Qt::yellow, 2, Qt::DashLine));
-        customPlot->graph(3)->setName("T=-0.5℃");
+        customPlot->graph(3)->setName(QString("T_A=-%1℃").arg(averageTemperatureError));
 
-        for (int i = 0; i < 80; i++)
+        for (int i = 0; i < m_mesurementError.size() + 1; i++) // 等温线长度
         {
-            customPlot->graph(3)->addData(i, -0.5);
+            customPlot->graph(3)->addData(i, -averageTemperatureError);
         }
 
         customPlot->addGraph();
         customPlot->graph(4)->setPen(QPen(Qt::green, 2, Qt::DashLine));
-        customPlot->graph(4)->setName("S=1‰");
+        customPlot->graph(4)->setName(QString("S_A=%1‰").arg(averageSalinityError));
 
-        for (int i = 0; i < 80; i++)
+        for (int i = 0; i < m_mesurementError.size() + 1; i++)
         {
-            customPlot->graph(4)->addData(i, 1);
+            customPlot->graph(4)->addData(i, averageSalinityError);
         }
 
         customPlot->addGraph();
         customPlot->graph(5)->setPen(QPen(Qt::green, 2, Qt::DashLine));
-        customPlot->graph(5)->setName("S=-1‰");
+        customPlot->graph(5)->setName(QString("S_A=-%1‰").arg(averageSalinityError));
 
-        for (int i = 0; i < 80; i++)
+        for (int i = 0; i < m_mesurementError.size() + 1; i++)
         {
-            customPlot->graph(5)->addData(i, -1);
+            customPlot->graph(5)->addData(i, -averageSalinityError);
         }
 
         customPlot->replot();

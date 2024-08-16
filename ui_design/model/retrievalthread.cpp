@@ -44,6 +44,17 @@ void RetrievalThread::run()
         qDebug() << "_memory_index _depth" << _memory_index << _depth;
         args->append(_depth);
         args->append(QVariant::fromValue(new QVector<double>(*_receivedDataContainer->at(_memory_index))));
+        delete _receivedDataContainer->at(_memory_index);
+        emit taskCompleted(taskName, args);
+    }
+    else if (_threadType == 2) // 相同深度下的重复反演
+    {
+        callback_int(_memory_index, _N_Bri, _N_Rayleigh, _SNR, _receivedDataContainer, _depth);
+        args->append(3);
+        args->append(_memory_index);
+        args->append(_depth);
+        args->append(QVariant::fromValue(new QVector<double>(*_receivedDataContainer->at(_memory_index))));
+        delete _receivedDataContainer->at(_memory_index);
         emit taskCompleted(taskName, args);
     }
 }

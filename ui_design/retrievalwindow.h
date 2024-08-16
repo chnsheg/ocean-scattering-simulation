@@ -58,6 +58,7 @@ private:
     void drawMesurementErrorScatterPlot();
     void drawHistogram(QCustomPlot *customPlot, const QMap<double, int> &histogram, QString title);
     void calculateRetrievalError();
+    QVector<double> *calculateAverageError();
     void calculateDepthsRetrievalError(int index, double depth, QVector<double> *retrievalData);
     QMap<double, int> calculateHistogram(const QVector<double> &data, int binCount = 10);
     QMap<double, int> calculateHistogramWithinRange(const QVector<double> &data, double minRange, double maxRange, int binCount = 10);

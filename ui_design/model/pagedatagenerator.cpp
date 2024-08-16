@@ -181,11 +181,29 @@ void PageDataGenerator::caculateRetrievalErrorByDepth()
     // TaskRunner *object = TaskRunner::runTask<RetrievalThread>(PMTReceptionDataGenerator::retrievalFormPMT);
     // 分配zDepth大小的内存，每个线程计算的结果对应replace掉DataContainer中的一个位置
     receivedDataContainer = new QVector<QVector<double> *>(zDepth->size());
+
+    int thread_type = 1;
+
+    if (receivedDataContainer->size() > 1)
+    {
+        if (zDepth->at(0) == zDepth->at(1))
+        {
+            thread_type = 2; // 同一深度下的重复反演
+        }
+    }
+
     // 创建zDepth大小的线程，每个线程计算一个深度的误差
     for (int i = 0; i < zDepth->size(); i++)
     {
+        if (zDepth->size() <= 0)
+        {
+            delete receivedDataContainer;
+            delete scatteringDataContainer;
+            return;
+        }
+
         qDebug() << "zDepth:" << zDepth->at(i);
-        TaskRunner *object = TaskRunner::runTask<RetrievalThread>(PageDataGenerator::receiveSystemCallbackFunc, 1, N_Bri->at(i), N_Rayleigh->at(i), SNR->at(i), receivedDataContainer, i, zDepth->at(i));
+        TaskRunner *object = TaskRunner::runTask<RetrievalThread>(PageDataGenerator::receiveSystemCallbackFunc, thread_type, N_Bri->at(i), N_Rayleigh->at(i), SNR->at(i), receivedDataContainer, i, zDepth->at(i));
         connect(object, &TaskRunner::taskCompleted, this, &PageDataGenerator::handleTaskCompletedSlot);
     }
 }
