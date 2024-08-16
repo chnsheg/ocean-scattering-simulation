@@ -898,6 +898,7 @@ QVector<double> *RetrievalWindow::calculateAverageError()
     double averageBrillouinShiftError = 0;
     double averageBrillouinWidthError = 0;
     double averageRayleighWidthError = 0;
+    double max_length = calculateMaxDepth();
 
     for (auto &&retrievalError : m_retrievalError)
     {
@@ -930,8 +931,23 @@ QVector<double> *RetrievalWindow::calculateAverageError()
     averageError->append(averageRayleighWidthError / m_mesurementError.size());
     averageError->append(averageTemperatureError / m_retrievalError.size());
     averageError->append(averageSalinityError / m_retrievalError.size());
+    averageError->append(max_length);
 
     return averageError;
+}
+
+double RetrievalWindow::calculateMaxDepth()
+{
+    double max_depth = 0;
+    for (auto it = m_retrievalError.constBegin(); it != m_retrievalError.constEnd(); ++it)
+    {
+        if (it.key() > max_depth)
+        {
+            max_depth = it.key();
+        }
+    }
+
+    return max_depth;
 }
 
 // 计算反演误差
@@ -1024,6 +1040,7 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
         double averageRayleighWidthError = averageError->at(2);
         double averageTemperatureError = averageError->at(3);
         double averageSalinityError = averageError->at(4);
+        double max_length = averageError->at(5);
         delete averageError;
 
         // 在温盐图中绘制一条T=0.5℃的等温线和S=1‰的等盐线
@@ -1032,7 +1049,7 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
         customPlot->graph(2)->setPen(QPen(Qt::yellow, 2, Qt::DashLine));
         customPlot->graph(2)->setName(QString("T_A=%1℃").arg(averageTemperatureError));
 
-        for (int i = 0; i < m_mesurementError.size() + 1; i++) // 等温线长度
+        for (int i = 0; i < max_length + 1; i++) // 等温线长度
         {
             customPlot->graph(2)->addData(i, averageTemperatureError);
         }
@@ -1041,7 +1058,7 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
         customPlot->graph(3)->setPen(QPen(Qt::yellow, 2, Qt::DashLine));
         customPlot->graph(3)->setName(QString("T_A=-%1℃").arg(averageTemperatureError));
 
-        for (int i = 0; i < m_mesurementError.size() + 1; i++) // 等温线长度
+        for (int i = 0; i < max_length + 1; i++) // 等温线长度
         {
             customPlot->graph(3)->addData(i, -averageTemperatureError);
         }
@@ -1050,7 +1067,7 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
         customPlot->graph(4)->setPen(QPen(Qt::green, 2, Qt::DashLine));
         customPlot->graph(4)->setName(QString("S_A=%1‰").arg(averageSalinityError));
 
-        for (int i = 0; i < m_mesurementError.size() + 1; i++)
+        for (int i = 0; i < max_length + 1; i++)
         {
             customPlot->graph(4)->addData(i, averageSalinityError);
         }
@@ -1059,7 +1076,7 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
         customPlot->graph(5)->setPen(QPen(Qt::green, 2, Qt::DashLine));
         customPlot->graph(5)->setName(QString("S_A=-%1‰").arg(averageSalinityError));
 
-        for (int i = 0; i < m_mesurementError.size() + 1; i++)
+        for (int i = 0; i < max_length + 1; i++)
         {
             customPlot->graph(5)->addData(i, -averageSalinityError);
         }
