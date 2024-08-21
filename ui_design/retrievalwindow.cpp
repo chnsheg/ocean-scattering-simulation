@@ -256,10 +256,10 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
     double maxValue2 = *std::max_element(salinityError.begin(), salinityError.end());
     double minValue2 = *std::min_element(salinityError.begin(), salinityError.end());
 
-    double m_maxRange1 = maxValue1 + 0.5 * (maxValue1 - minValue1);
-    double m_minRange1 = minValue1 - 0.5 * (maxValue1 - minValue1);
-    double m_maxRange2 = maxValue2 + 0.5 * (maxValue2 - minValue2);
-    double m_minRange2 = minValue2 - 0.5 * (maxValue2 - minValue2);
+    double m_maxRange1 = maxValue1 + 0.5 * (maxValue1 - minValue1) / (temperatureError.size() - 1);
+    double m_minRange1 = minValue1 - 0.5 * (maxValue1 - minValue1) / (temperatureError.size() - 1);
+    double m_maxRange2 = maxValue2 + 0.5 * (maxValue2 - minValue2) / (salinityError.size() - 1);
+    double m_minRange2 = minValue2 - 0.5 * (maxValue2 - minValue2) / (salinityError.size() - 1);
 
     drawHistogram(dynamicView->getCustomPlot(0), calculateHistogram(temperatureError, num1), "Temperature Error");
     drawHistogram(dynamicView->getCustomPlot(1), calculateHistogram(salinityError, num2), "Salinity Error");
@@ -280,7 +280,7 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
             double newRangeSize = newRange.upper - newRange.lower;
             // double oldRangeSize = m_maxRange - m_minRange;
             double oldRangeSize = m_maxRange1 - m_minRange1;
-            if (newRangeSize > oldRangeSize * 1.5 || newRangeSize < oldRangeSize / 1.5)
+            if (newRangeSize > oldRangeSize * 1.2 || newRangeSize < oldRangeSize / 1.2)
             {
             // m_maxRange = newRange.upper;
             // m_minRange = newRange.lower;
@@ -319,7 +319,7 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
             double newRangeSize = newRange.upper - newRange.lower;
             // double oldRangeSize = m_maxRange - m_minRange;
             double oldRangeSize = m_maxRange2 - m_minRange2;
-            if (newRangeSize > oldRangeSize * 1.5 || newRangeSize < oldRangeSize / 1.5){
+            if (newRangeSize > oldRangeSize * 1.2 || newRangeSize < oldRangeSize / 1.2){
             // m_maxRange = newRange.upper;
             // m_minRange = newRange.lower;
             double scale = oldRangeSize/newRangeSize;
