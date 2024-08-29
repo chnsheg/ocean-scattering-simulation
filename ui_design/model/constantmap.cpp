@@ -28,8 +28,8 @@ QVector<QString> spectrumConstantVector = QVector<QString>(
     {"Temperature", "Salinity", "BetaParticulate", "BetaM", "WaterRefractiveIndex", "EnergyRatio"});
 
 QVector<QString> underWaterSpectrumConstantVector = QVector<QString>(
-    {"M", "AlphaWater", "Xi", "Xi_F", "radius", "N_dark", "Depth",
-     "TelescopeHeight", "beta"});
+    {"M", "AlphaWater", "detect_eff", "optical_eff", "radius", "N_dark", "Depth",
+     "TelescopeHeight", "noise_beta"});
 
 QVector<QString> fizeauConstantVector = QVector<QString>(
     {"Fizeau_lambda", "Fizeau_plate", "Fizeau_angle", "Fizeau_index", "Fizeau_albedo"});

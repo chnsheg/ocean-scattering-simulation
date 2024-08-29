@@ -235,18 +235,20 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
     QVector<double> salinityError;
     for (auto &&retrievalError : m_retrievalError)
     {
-        temperatureError.push_back(std::abs(retrievalError.temperatureError));
-        salinityError.push_back(std::abs(retrievalError.salinityError));
+        // temperatureError.push_back(std::abs(retrievalError.temperatureError));
+        temperatureError.push_back(retrievalError.temperatureError);
+        // salinityError.push_back(std::abs(retrievalError.salinityError));
+        salinityError.push_back(retrievalError.salinityError);
     }
-    int num1 = temperatureError.size() / 2 <= 20 ? temperatureError.size() / 2 : 20; // 点数越多，区间越窄
-    int num2 = salinityError.size() / 2 <= 20 ? salinityError.size() / 2 : 20;
+    int num1 = temperatureError.size() / 2 <= 40 ? temperatureError.size() / 2 : 40; // 点数越多，区间越窄
+    int num2 = salinityError.size() / 2 <= 40 ? salinityError.size() / 2 : 40;
 
-    if (num1 != 20)
+    if (num1 != 40)
     {
         num1 = temperatureError.size() / 2 >= 10 ? num1 : 10;
     }
 
-    if (num2 != 20)
+    if (num2 != 40)
     {
         num2 = salinityError.size() / 2 >= 10 ? num2 : 10;
     }
@@ -280,7 +282,7 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
             double newRangeSize = newRange.upper - newRange.lower;
             // double oldRangeSize = m_maxRange - m_minRange;
             double oldRangeSize = m_maxRange1 - m_minRange1;
-            if (newRangeSize > oldRangeSize * 1.2 || newRangeSize < oldRangeSize / 1.2)
+            if (newRangeSize > oldRangeSize * 1.1 || newRangeSize < oldRangeSize / 1.1)
             {
             // m_maxRange = newRange.upper;
             // m_minRange = newRange.lower;
@@ -296,13 +298,14 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
             QVector<double> temperatureError;
             for (auto &&retrievalError : m_retrievalError)
             {
-                temperatureError.push_back(std::abs(retrievalError.temperatureError));
+                // temperatureError.push_back(std::abs(retrievalError.temperatureError));
+                temperatureError.push_back(retrievalError.temperatureError);
             }
             // int num1 = temperatureError.size() / 2 >=10 ? temperatureError.size() / 2 : 10;
 
-            int num1 = temperatureError.size() / 2 <= 20 ? temperatureError.size() / 2 : 20; // 点数越多，区间越窄
+            int num1 = temperatureError.size() / 2 <= 40 ? temperatureError.size() / 2 : 40; // 点数越多，区间越窄
 
-            if (num1 != 20)
+            if (num1 != 40)
             {
                 num1 = temperatureError.size() / 2 >= 10 ? num1 : 10;
             }
@@ -319,7 +322,7 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
             double newRangeSize = newRange.upper - newRange.lower;
             // double oldRangeSize = m_maxRange - m_minRange;
             double oldRangeSize = m_maxRange2 - m_minRange2;
-            if (newRangeSize > oldRangeSize * 1.2 || newRangeSize < oldRangeSize / 1.2){
+            if (newRangeSize > oldRangeSize * 1.1 || newRangeSize < oldRangeSize / 1.1){
             // m_maxRange = newRange.upper;
             // m_minRange = newRange.lower;
             double scale = oldRangeSize/newRangeSize;
@@ -334,13 +337,14 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
             QVector<double> salinityError;
             for (auto &&retrievalError : m_retrievalError)
             {
-                salinityError.push_back(std::abs(retrievalError.salinityError));
+                // salinityError.push_back(std::abs(retrievalError.salinityError));
+                salinityError.push_back(retrievalError.salinityError);
             }
             // int num2 = salinityError.size() / 2 >=10 ? salinityError.size() / 2 : 10;
-            int num2 = salinityError.size() / 2 <= 20 ? salinityError.size() / 2 : 20;
+            int num2 = salinityError.size() / 2 <= 40 ? salinityError.size() / 2 : 40;
 
 
-            if (num2 != 20)
+            if (num2 != 40)
             {
                 num2 = salinityError.size() / 2 >= 10 ? num2 : 10;
             }
