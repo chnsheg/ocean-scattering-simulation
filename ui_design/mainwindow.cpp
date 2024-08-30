@@ -112,8 +112,10 @@ MainWindow::MainWindow(QWidget *parent)
                                            Singleton<PageDataGenerator>::getInstance(nullptr));
 
     QMainWindow &mainWindow = *this;
-    // 创建工具栏
-    QToolBar *toolBar = new QToolBar("Parameters", &mainWindow);
+    QToolBar *toolBar = nullptr; // 初始化为空指针
+
+    // 初始创建工具栏
+    toolBar = new QToolBar("Parameters", &mainWindow);
     mainWindow.addToolBar(Qt::LeftToolBarArea, toolBar);
 
     // 设置工具栏内容
@@ -123,15 +125,26 @@ MainWindow::MainWindow(QWidget *parent)
     toolBar->setMaximumHeight(1620);
     toolBar->setFixedWidth(484);
 
-    connect(Singleton<PlotView>::getInstance(), &PlotView::switchPageButtonClicked, this, [=](int page_index, QRect area, int from_pagex)
+    connect(Singleton<PlotView>::getInstance(), &PlotView::switchPageButtonClicked, this, [=](int page_index, QRect area, int from_pagex) mutable
             {
-    if (page_index != 0)
-    {
-        toolBar->hide();
-    }
-    else
-    {
-        toolBar->show();
+    if (page_index != 0) {
+        // 删除旧的工具栏
+        if (toolBar != nullptr) {
+            delete toolBar;
+            toolBar = nullptr;
+        }
+    } else {
+        QMainWindow &mainWindow = *this;
+        // 再次创建工具栏
+        toolBar = new QToolBar("Parameters", &mainWindow);
+        mainWindow.addToolBar(Qt::LeftToolBarArea, toolBar);
+
+        // 设置工具栏内容
+        setToolBarContent(toolBar);
+
+        // 设置工具栏的高度
+        toolBar->setMaximumHeight(1620);
+        toolBar->setFixedWidth(484);
     } }, Qt::DirectConnection);
 }
 
