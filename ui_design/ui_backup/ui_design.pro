@@ -39,14 +39,14 @@ SOURCES += \
     matlab/Retrieval/computeFiniteDifferences.cpp \
     matlab/Retrieval/conv.cpp \
     matlab/Retrieval/driver.cpp \
-    matlab/Retrieval/eml_rand_mt19937ar_1.cpp \
-    matlab/Retrieval/eml_rand_mt19937ar_stateful_1.cpp \
+    # matlab/Retrieval/eml_rand_mt19937ar_1.cpp \
+    # matlab/Retrieval/eml_rand_mt19937ar_stateful_1.cpp \
     matlab/Retrieval/error_fitted_power.cpp \
     matlab/Retrieval/factoryConstruct.cpp \
     matlab/Retrieval/hasFiniteBounds.cpp \
     matlab/Retrieval/linearLeastSquares.cpp \
     matlab/Retrieval/minOrMax.cpp \
-    matlab/Retrieval/poissrnd.cpp \
+    # matlab/Retrieval/poissrnd.cpp \
     matlab/Retrieval/projectBox.cpp \
     matlab/Retrieval/rtGetInf.cpp \
     matlab/Retrieval/rtGetNaN.cpp \
@@ -144,14 +144,14 @@ HEADERS += \
     matlab/Retrieval/computeFiniteDifferences.h \
     matlab/Retrieval/conv.h \
     matlab/Retrieval/driver.h \
-    matlab/Retrieval/eml_rand_mt19937ar_1.h \
-    matlab/Retrieval/eml_rand_mt19937ar_stateful_1.h \
+    # matlab/Retrieval/eml_rand_mt19937ar_1.h \
+    # matlab/Retrieval/eml_rand_mt19937ar_stateful_1.h \
     matlab/Retrieval/error_fitted_power.h \
     matlab/Retrieval/factoryConstruct.h \
     matlab/Retrieval/hasFiniteBounds.h \
     matlab/Retrieval/linearLeastSquares.h \
     matlab/Retrieval/minOrMax.h \
-    matlab/Retrieval/poissrnd.h \
+    # matlab/Retrieval/poissrnd.h \
     matlab/Retrieval/projectBox.h \
     matlab/Retrieval/rtGetInf.h \
     matlab/Retrieval/rtGetNaN.h \

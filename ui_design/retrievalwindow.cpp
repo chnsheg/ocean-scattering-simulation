@@ -822,6 +822,194 @@ void RetrievalWindow::drawMesurementErrorScatterPlot()
         customPlot->graph(2)->setName("Rayleigh Width Error");
         customPlot->replot();
     }
+
+    // 绘制散点图
+    // QCustomPlot *customPlot = getMesurementCustomPlot();
+    // if (customPlot)
+    // {
+    //     // 拿到理论的BrillouinShift、BrillouinWidth和RayleighWidth
+    //     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
+    //     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
+    //     double res_B_shift = constantStorage->getConstant(constantMap->getConstantName(6, 1)).toDouble();
+    //     double res_B_width = constantStorage->getConstant(constantMap->getConstantName(6, 0)).toDouble();
+    //     double res_R_width = constantStorage->getConstant(constantMap->getConstantName(6, 9)).toDouble();
+
+    //     // 将m_mesurementError中所有的MesurementError数据中的BrillouinShiftError、BrillouinWidthError和rayleighWidthError提取出来
+    //     QVector<double> BrillouinShiftError;
+    //     QVector<double> BrillouinWidthError;
+    //     QVector<double> rayleighWidthError;
+    //     QVector<double> retrievalTimes;
+    //     double max_y = std::abs(m_mesurementError.value(0).BrillouinShiftError);
+    //     double max_x = 0;
+
+    //     for (auto &&mesurementError : m_mesurementError)
+    //     {
+    //         BrillouinShiftError.push_back(mesurementError.BrillouinShiftError + res_B_shift);
+    //         BrillouinWidthError.push_back(mesurementError.BrillouinWidthError + res_B_width);
+    //         rayleighWidthError.push_back(mesurementError.rayleighWidthError + res_R_width);
+    //         // retrievalTimes.push_back(m_mesurementError.key(mesurementError));
+
+    //         for (auto it = m_mesurementError.constBegin(); it != m_mesurementError.constEnd(); ++it)
+    //         {
+    //             if (it.value() == mesurementError && retrievalTimes.contains(it.key()) == false)
+    //             {
+    //                 retrievalTimes.push_back(it.key());
+    //             }
+    //         }
+
+    //         qDebug() << "retrievalTimes" << retrievalTimes.back();
+
+    //         // 顺便查找在所有数据中的绝对值的最大值
+    //         if (std::abs(mesurementError.BrillouinShiftError) > max_y)
+    //         {
+    //             max_y = std::abs(mesurementError.BrillouinShiftError);
+    //         }
+    //         if (std::abs(mesurementError.BrillouinWidthError) > max_y)
+    //         {
+    //             max_y = std::abs(mesurementError.BrillouinWidthError);
+    //         }
+    //         if (std::abs(mesurementError.rayleighWidthError) > max_y)
+    //         {
+    //             max_y = std::abs(mesurementError.rayleighWidthError);
+    //         }
+    //         if (retrievalTimes.back() > max_x)
+    //         {
+    //             max_x = retrievalTimes.back();
+    //         }
+    //     }
+
+    //     // 清空原来的散点图
+    //     customPlot->clearGraphs();
+
+    //     // 创建折线图
+    //     customPlot->addGraph();
+    //     customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 16));
+    //     customPlot->graph(0)->setLineStyle(QCPGraph::lsLine);
+    //     // customPlot->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 255)));
+    //     // customPlot->graph(0)->setData(retrievalTimes, BrillouinShiftError);
+    //     customPlot->graph(0)->setData(retrievalTimes, BrillouinWidthError);
+    //     customPlot->graph(0)->setPen(QPen(Qt::blue));
+    //     // customPlot->graph(0)->setName("Brillouin Shift Error");
+    //     customPlot->graph(0)->setName("Reconstructed Brillouin Width");
+    //     customPlot->xAxis->setLabel("Depth");
+    //     customPlot->yAxis->setLabel("Frequency (GHz)");
+    //     // customPlot->xAxis->setRange(0, retrievalTimes.size() + 1);
+    //     customPlot->xAxis->setRange(-0.1 * max_x, max_x * 1.1);
+
+    //     if (max_y == 0)
+    //     {
+    //         max_y = 1;
+    //     }
+    //     else if (max_y < 0)
+    //     {
+    //         max_y = -max_y;
+    //     }
+    //     customPlot->yAxis->setRange(-1.2 * max_y, 1.2 * max_y);
+
+    //     // 画一条理论值的线和平均值的线，再画两条距离理论值误差为正负10MHz的线
+    //     // 画理论值的线
+    //     customPlot->addGraph();
+    //     QVector<double> theoryY(retrievalTimes.size(), res_B_width); // 所有点的y值都设为理论值
+    //     customPlot->graph(1)->setData(retrievalTimes, theoryY);
+    //     customPlot->graph(1)->setPen(QPen(Qt::red, 2));
+    //     customPlot->graph(1)->setName("Theoretical Brillouin Width");
+
+    //     // 画平均值的线
+    //     double avg_B_width = std::accumulate(BrillouinWidthError.begin(), BrillouinWidthError.end(), 0.0) / BrillouinWidthError.size();
+    //     QVector<double> avgY(retrievalTimes.size(), avg_B_width);
+    //     customPlot->addGraph();
+    //     customPlot->graph(2)->setData(retrievalTimes, avgY);
+    //     customPlot->graph(2)->setPen(QPen(Qt::green, 2, Qt::DashLine));
+    //     customPlot->graph(2)->setName("Average Brillouin Width(GHz): " + QString::number(avg_B_width, 'f', 3));
+
+    //     // 画正负10MHz误差的线
+    //     QVector<double> upperBound(retrievalTimes.size(), res_B_width + 0.01); // +10MHz
+    //     QVector<double> lowerBound(retrievalTimes.size(), res_B_width - 0.01); // -10MHz
+    //     customPlot->addGraph();
+    //     customPlot->graph(3)->setData(retrievalTimes, upperBound);
+    //     customPlot->graph(3)->setPen(QPen(Qt::yellow, 2, Qt::DotLine));
+    //     customPlot->graph(3)->setName("+10 MHz Bound");
+
+    //     customPlot->addGraph();
+    //     customPlot->graph(4)->setData(retrievalTimes, lowerBound);
+    //     customPlot->graph(4)->setPen(QPen(Qt::yellow, 2, Qt::DotLine));
+    //     customPlot->graph(4)->setName("-10 MHz Bound");
+
+    /*布里渊频移*/
+    // // 创建折线图
+    // customPlot->addGraph();
+    // customPlot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 16));
+    // customPlot->graph(0)->setLineStyle(QCPGraph::lsLine);
+    // // customPlot->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 255)));
+    // // customPlot->graph(0)->setData(retrievalTimes, BrillouinShiftError);
+    // customPlot->graph(0)->setData(retrievalTimes, BrillouinShiftError);
+    // customPlot->graph(0)->setPen(QPen(Qt::blue));
+    // // customPlot->graph(0)->setName("Brillouin Shift Error");
+    // customPlot->graph(0)->setName("Reconstructed Brillouin Shift");
+    // customPlot->xAxis->setLabel("Depth");
+    // customPlot->yAxis->setLabel("Frequency (GHz)");
+    // // customPlot->xAxis->setRange(0, retrievalTimes.size() + 1);
+    // customPlot->xAxis->setRange(-0.1 * max_x, max_x * 1.1);
+
+    // if (max_y == 0)
+    // {
+    //     max_y = 1;
+    // }
+    // else if (max_y < 0)
+    // {
+    //     max_y = -max_y;
+    // }
+    // customPlot->yAxis->setRange(-1.2 * max_y, 1.2 * max_y);
+
+    // // 画一条理论值的线和平均值的线，再画两条距离理论值误差为正负10MHz的线
+    // // 画理论值的线
+    // customPlot->addGraph();
+    // QVector<double> theoryY(retrievalTimes.size(), res_B_shift); // 所有点的y值都设为理论值
+    // customPlot->graph(1)->setData(retrievalTimes, theoryY);
+    // customPlot->graph(1)->setPen(QPen(Qt::red, 2));
+    // customPlot->graph(1)->setName("Theoretical Brillouin Shift");
+
+    // // 画平均值的线
+    // double avg_B_width = std::accumulate(BrillouinShiftError.begin(), BrillouinShiftError.end(), 0.0) / BrillouinShiftError.size();
+    // QVector<double> avgY(retrievalTimes.size(), avg_B_width);
+    // customPlot->addGraph();
+    // customPlot->graph(2)->setData(retrievalTimes, avgY);
+    // customPlot->graph(2)->setPen(QPen(Qt::green, 2, Qt::DashLine));
+    // customPlot->graph(2)->setName("Average Brillouin Shift(GHz): " + QString::number(avg_B_width, 'f', 3));
+
+    // // 画正负10MHz误差的线
+    // QVector<double> upperBound(retrievalTimes.size(), res_B_shift + 0.01); // +10MHz
+    // QVector<double> lowerBound(retrievalTimes.size(), res_B_shift - 0.01); // -10MHz
+    // customPlot->addGraph();
+    // customPlot->graph(3)->setData(retrievalTimes, upperBound);
+    // customPlot->graph(3)->setPen(QPen(Qt::yellow, 2, Qt::DotLine));
+    // customPlot->graph(3)->setName("+10 MHz Bound");
+
+    // customPlot->addGraph();
+    // customPlot->graph(4)->setData(retrievalTimes, lowerBound);
+    // customPlot->graph(4)->setPen(QPen(Qt::yellow, 2, Qt::DotLine));
+    // customPlot->graph(4)->setName("-10 MHz Bound");
+
+    // 重新绘制图表
+    // customPlot->replot();
+
+    // customPlot->addGraph();
+    // customPlot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 16));
+    // customPlot->graph(1)->setLineStyle(QCPGraph::lsNone);
+    // customPlot->graph(1)->setBrush(QBrush(QColor(0, 0, 255, 255)));
+    // customPlot->graph(1)->setData(retrievalTimes, BrillouinWidthError);
+    // customPlot->graph(1)->setPen(QPen(Qt::red));
+    // customPlot->graph(1)->setName("Brillouin Width Error");
+
+    // customPlot->addGraph();
+    // customPlot->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 16));
+    // customPlot->graph(2)->setLineStyle(QCPGraph::lsNone);
+    // customPlot->graph(2)->setBrush(QBrush(QColor(0, 0, 255, 255)));
+    // customPlot->graph(2)->setData(retrievalTimes, rayleighWidthError);
+    // customPlot->graph(2)->setPen(QPen(Qt::green));
+    // customPlot->graph(2)->setName("Rayleigh Width Error");
+    // customPlot->replot();
+    // }
 }
 
 // 计算反演误差
@@ -906,8 +1094,10 @@ QVector<double> *RetrievalWindow::calculateAverageError()
 
     for (auto &&retrievalError : m_retrievalError)
     {
-        averageTemperatureError += std::abs(retrievalError.temperatureError);
-        averageSalinityError += std::abs(retrievalError.salinityError);
+        // averageTemperatureError += std::abs(retrievalError.temperatureError);
+        // averageSalinityError += std::abs(retrievalError.salinityError);
+        averageTemperatureError += retrievalError.temperatureError;
+        averageSalinityError += retrievalError.salinityError;
     }
 
     for (auto &&mesurementError : m_mesurementError)
@@ -1058,32 +1248,32 @@ void RetrievalWindow::calculateDepthsRetrievalError(int index, double depth, QVe
             customPlot->graph(2)->addData(i, averageTemperatureError);
         }
 
-        customPlot->addGraph();
-        customPlot->graph(3)->setPen(QPen(Qt::yellow, 2, Qt::DashLine));
-        customPlot->graph(3)->setName(QString("T_A=-%1℃").arg(averageTemperatureError));
+        // customPlot->addGraph();
+        // customPlot->graph(3)->setPen(QPen(Qt::yellow, 2, Qt::DashLine));
+        // customPlot->graph(3)->setName(QString("T_A=-%1℃").arg(averageTemperatureError));
 
-        for (int i = 0; i < max_length + 1; i++) // 等温线长度
-        {
-            customPlot->graph(3)->addData(i, -averageTemperatureError);
-        }
+        // for (int i = 0; i < max_length + 1; i++) // 等温线长度
+        // {
+        //     customPlot->graph(3)->addData(i, -averageTemperatureError);
+        // }
 
         customPlot->addGraph();
-        customPlot->graph(4)->setPen(QPen(Qt::green, 2, Qt::DashLine));
-        customPlot->graph(4)->setName(QString("S_A=%1‰").arg(averageSalinityError));
+        customPlot->graph(3)->setPen(QPen(Qt::green, 2, Qt::DashLine));
+        customPlot->graph(3)->setName(QString("S_A=%1‰").arg(averageSalinityError));
 
         for (int i = 0; i < max_length + 1; i++)
         {
-            customPlot->graph(4)->addData(i, averageSalinityError);
+            customPlot->graph(3)->addData(i, averageSalinityError);
         }
 
-        customPlot->addGraph();
-        customPlot->graph(5)->setPen(QPen(Qt::green, 2, Qt::DashLine));
-        customPlot->graph(5)->setName(QString("S_A=-%1‰").arg(averageSalinityError));
+        // customPlot->addGraph();
+        // customPlot->graph(5)->setPen(QPen(Qt::green, 2, Qt::DashLine));
+        // customPlot->graph(5)->setName(QString("S_A=-%1‰").arg(averageSalinityError));
 
-        for (int i = 0; i < max_length + 1; i++)
-        {
-            customPlot->graph(5)->addData(i, -averageSalinityError);
-        }
+        // for (int i = 0; i < max_length + 1; i++)
+        // {
+        //     customPlot->graph(5)->addData(i, -averageSalinityError);
+        // }
 
         customPlot->replot();
     }

@@ -16,7 +16,6 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 COMPONENTS Core Gui Widgets PrintSupport SerialPort REQUIRED)
 
-
 # if(MSVC)
 #     add_compile_options(/execution-charset:utf-8)
 #     add_compile_options(/source-charset:utf-8)

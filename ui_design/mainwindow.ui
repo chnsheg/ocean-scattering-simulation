@@ -20,7 +20,7 @@
    <property name="styleSheet">
     <string notr="true"/>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_15">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="minimumSize">
@@ -41,208 +41,199 @@
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <item>
-         <widget class="QWidget" name="widget" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="autoFillBackground">
-           <bool>false</bool>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">border-image: url(:/backgroundImage.png);</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <property name="leftMargin">
-            <number>9</number>
-           </property>
-           <property name="topMargin">
-            <number>9</number>
-           </property>
-           <property name="rightMargin">
-            <number>9</number>
-           </property>
-           <property name="bottomMargin">
-            <number>9</number>
-           </property>
-           <property name="spacing">
-            <number>6</number>
-           </property>
-           <item row="0" column="0">
-            <widget class="HoverButton" name="homeButton_1">
-             <property name="maximumSize">
-              <size>
-               <width>200</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color:rgb(78, 81, 97);
-font: 14pt &quot;Microsoft YaHei UI&quot;;
-color: rgb(255, 255, 255);
-font-color:white;
-border-image: none;</string>
-             </property>
-             <property name="text">
-              <string>Laser</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="HoverButton" name="homeButton_4">
-             <property name="maximumSize">
-              <size>
-               <width>200</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color:rgb(78, 81, 97);
-font: 14pt &quot;Microsoft YaHei UI&quot;;
-color: rgb(255, 255, 255);
-font-color:white;
-border-image: none;</string>
-             </property>
-             <property name="text">
-              <string>Fizeau</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="HoverButton" name="homeButton_5">
-             <property name="maximumSize">
-              <size>
-               <width>200</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color:rgb(78, 81, 97);
-font: 14pt &quot;Microsoft YaHei UI&quot;;
-color: rgb(255, 255, 255);
-font-color:white;
-border-image: none;</string>
-             </property>
-             <property name="text">
-              <string>PMT</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="HoverButton" name="homeButton_2">
+         <widget class="QWidget" name="widget_2" native="true">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QWidget" name="widget" native="true">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-             <property name="maximumSize">
-              <size>
-               <width>500</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="baseSize">
-              <size>
-               <width>280</width>
-               <height>33</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color:rgb(78, 81, 97);
-font: 14pt &quot;Microsoft YaHei UI&quot;;
-color: rgb(255, 255, 255);
-font-color:white;
-border-image: none;</string>
-             </property>
-             <property name="text">
-              <string>Spectrum Generation</string>
-             </property>
-             <property name="flat">
+             <property name="autoFillBackground">
               <bool>false</bool>
              </property>
-            </widget>
-           </item>
-           <item row="2" column="2">
-            <widget class="HoverButton" name="homeButton_6">
-             <property name="maximumSize">
-              <size>
-               <width>500</width>
-               <height>16777215</height>
-              </size>
-             </property>
              <property name="styleSheet">
-              <string notr="true">background-color:rgb(78, 81, 97);
+              <string notr="true">border-image: url(:/backgroundImage.png);</string>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_2">
+              <item row="0" column="0">
+               <widget class="HoverButton" name="homeButton_1">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(78, 81, 97);
 font: 14pt &quot;Microsoft YaHei UI&quot;;
 color: rgb(255, 255, 255);
 font-color:white;
 border-image: none;</string>
-             </property>
-             <property name="text">
-              <string>Introduce Noise</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="HoverButton" name="homeButton_3">
-             <property name="maximumSize">
-              <size>
-               <width>500</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color:rgb(78, 81, 97);
+                </property>
+                <property name="text">
+                 <string>Laser</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="HoverButton" name="homeButton_4">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(78, 81, 97);
 font: 14pt &quot;Microsoft YaHei UI&quot;;
 color: rgb(255, 255, 255);
 font-color:white;
 border-image: none;</string>
-             </property>
-             <property name="text">
-              <string>Laser Induced Spectra</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="HoverButton" name="homeButton_7">
-             <property name="maximumSize">
-              <size>
-               <width>500</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color:rgb(78, 81, 97);
+                </property>
+                <property name="text">
+                 <string>Fizeau</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="HoverButton" name="homeButton_5">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(78, 81, 97);
 font: 14pt &quot;Microsoft YaHei UI&quot;;
 color: rgb(255, 255, 255);
 font-color:white;
 border-image: none;</string>
-             </property>
-             <property name="text">
-              <string>Reserve1</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="HoverButton" name="homeButton_8">
-             <property name="maximumSize">
-              <size>
-               <width>500</width>
-               <height>16777215</height>
-              </size>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">background-color:rgb(78, 81, 97);
+                </property>
+                <property name="text">
+                 <string>PMT</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="HoverButton" name="homeButton_2">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>500</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="baseSize">
+                 <size>
+                  <width>280</width>
+                  <height>33</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(78, 81, 97);
 font: 14pt &quot;Microsoft YaHei UI&quot;;
 color: rgb(255, 255, 255);
 font-color:white;
 border-image: none;</string>
-             </property>
-             <property name="text">
-              <string>Reserve2</string>
-             </property>
+                </property>
+                <property name="text">
+                 <string>Spectrum Generation</string>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="HoverButton" name="homeButton_6">
+                <property name="maximumSize">
+                 <size>
+                  <width>500</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(78, 81, 97);
+font: 14pt &quot;Microsoft YaHei UI&quot;;
+color: rgb(255, 255, 255);
+font-color:white;
+border-image: none;</string>
+                </property>
+                <property name="text">
+                 <string>Introduce Noise</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="HoverButton" name="homeButton_3">
+                <property name="maximumSize">
+                 <size>
+                  <width>500</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(78, 81, 97);
+font: 14pt &quot;Microsoft YaHei UI&quot;;
+color: rgb(255, 255, 255);
+font-color:white;
+border-image: none;</string>
+                </property>
+                <property name="text">
+                 <string>Laser Induced Spectra</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="HoverButton" name="homeButton_7">
+                <property name="maximumSize">
+                 <size>
+                  <width>500</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(78, 81, 97);
+font: 14pt &quot;Microsoft YaHei UI&quot;;
+color: rgb(255, 255, 255);
+font-color:white;
+border-image: none;</string>
+                </property>
+                <property name="text">
+                 <string>Reserve1</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="3">
+               <widget class="HoverButton" name="homeButton_8">
+                <property name="maximumSize">
+                 <size>
+                  <width>500</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:rgb(78, 81, 97);
+font: 14pt &quot;Microsoft YaHei UI&quot;;
+color: rgb(255, 255, 255);
+font-color:white;
+border-image: none;</string>
+                </property>
+                <property name="text">
+                 <string>Reserve2</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>

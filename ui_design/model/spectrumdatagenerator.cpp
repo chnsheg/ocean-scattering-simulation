@@ -14,6 +14,7 @@ double SpectrumDataGenerator::BrillouinLine()
     double t = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 0)).toDouble();
     double S = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 1)).toDouble();
     double a = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1)).toDouble() * 1e9; // 激光波长
+    double theta = 180 / 180 * MY_PI;                                                                                                                        // 角度
 
     // 计算折射率n
     double n0 = 1.31405;
@@ -62,7 +63,7 @@ double SpectrumDataGenerator::BrillouinLine()
                  S * sqrt(S) * (c0 + c1 * t + c2 * t * t) + d0 * S * S;
 
     // 计算线宽linew
-    double linew = 1.9850e18 * (1.0 / (4.0 * MY_PI * rho)) * qPow((4.0 * MY_PI * n / a), 2) * (4.0 / 3.0 * gs + gb);
+    double linew = 1.9850e18 * (1.0 / (4.0 * MY_PI * rho)) * qPow((4.0 * MY_PI * n / a) * qSin(theta / 2), 2) * (4.0 / 3.0 * gs + gb);
 
     linew = linew / 1e9; // 单位转换为GHz
 
@@ -78,6 +79,7 @@ double SpectrumDataGenerator::BrillouinShift()
     double t = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 0)).toDouble();
     double S = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(1, 1)).toDouble();
     double a = Singleton<ConstantStorage>::getInstance(nullptr)->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1)).toDouble() * 1e9; // 激光波长
+    double theta = 180 / 180 * MY_PI;                                                                                                                        // 角度
     // 计算声速
     double c0 = 1402.392, c1 = 5.01109398873, c2 = -0.0550946843172, c3 = 0.00022153596924,
            c4 = 1.32952290781, c5 = 0.000128955756844, c6 = -0.0127562783426, c7 = 0.000096840315641;
@@ -91,7 +93,7 @@ double SpectrumDataGenerator::BrillouinShift()
 
     // 计算 Brillouin 频移
     // double v = 2 * n * c / a / 1e-9; // p25面式(2.27)
-    double v = 2 * n * c / a; // p25面式(2.27)
+    double v = 2 * n * c / a * qSin(theta / 2); // p25面式(2.27)
     Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(6, 1), v);
 
     Singleton<Logger>::getInstance()->logMessage("BrillouinShift: " + QString::number(v), Logger::Info);

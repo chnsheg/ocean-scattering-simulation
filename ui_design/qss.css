@@ -4,6 +4,13 @@ QWidget#centralWidget
     /* background-color: rgba(52, 73, 94, 0.1); */
 }
 
+QWidget#widget_2
+{
+    /* 灰色#f0f0f0 */
+    background-color: rgba(240, 240, 240, 1);
+    /* background-color: rgba(52, 73, 94, 0.1); */
+}
+
 QWidget#cebianlan_1,
 QWidget#cebianlan_2,
 QWidget#cebianlan_3,
