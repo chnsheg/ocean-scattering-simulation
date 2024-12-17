@@ -116,7 +116,7 @@ void RetrievalWindow::initWindowStyle()
     // 初始化进度条控件
     ui->progressBar->setRange(0, 100);
     ui->progressBar->setValue(0);
-    ui->progressBar->setFormat("PMT反演进度：%p%");
+    ui->progressBar->setFormat("Model inversion progress:%p%");
     ui->progressBar->setAlignment(Qt::AlignCenter);
     // 美化进度条样式
     ui->progressBar->setStyleSheet("QProgressBar{"
@@ -139,11 +139,28 @@ void RetrievalWindow::initWindowStyle()
     customPlot2->plotLayout()->element(0, 0)->setMargins(QMargins(0, 0, 0, 0));
 
     // 在textEdit中，显示当前界面的各功能用法
-    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "水下温盐反演界面", Logger::Info);
-    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "1. 点击“开始反演”按钮，开始进行水下温盐反演", Logger::Info);
-    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "2. 点击“清除窗口”按钮，清除当前界面的数据", Logger::Info);
-    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "3. 点击“深度遍历”按钮，实现多深度探测或相同深度多次探测", Logger::Info);
-    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "4. 点击“直方图统计”按钮，对反演误差进行直方图统计", Logger::Info);
+    Singleton<Logger>::getInstance()
+        ->logMessage(getRetrievalTextEdit(),
+                     "Underwater temperature and salinity inversion interface usage:",
+                     Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(),
+                                                 "1. Click the \"Start inversion\" button to begin "
+                                                 "underwater temperature and salinity inversion",
+                                                 Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(
+        getRetrievalTextEdit(),
+        "2. Click the \"Clear Window\" button to clear the data on the current interface",
+        Logger::Info);
+    Singleton<Logger>::getInstance()
+        ->logMessage(getRetrievalTextEdit(),
+                     "3. Click the \"Depth Traverse\" button to achieve multi depth detection or "
+                     "multiple detections at the same depth",
+                     Logger::Info);
+    Singleton<Logger>::getInstance()
+        ->logMessage(getRetrievalTextEdit(),
+                     "4. Click the \"Histogram Statistics\" button to perform histogram statistics "
+                     "on the inversion error",
+                     Logger::Info);
 }
 
 RetrievalWindow::~RetrievalWindow()
@@ -184,7 +201,10 @@ void RetrievalWindow::onExtendButtonClicked()
     m_mesurementError.clear();
     m_retrievalError.clear();
 
-    Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "开始进行水下温盐反演", Logger::Info);
+    Singleton<Logger>::getInstance()
+        ->logMessage(getRetrievalTextEdit(),
+                     "Start underwater temperature and salinity inversion",
+                     Logger::Info);
 
     PageDataGenerator *model = Singleton<PageDataGenerator>::getInstance(nullptr);
     // 绑定反演结束信号
@@ -263,8 +283,8 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
     double m_maxRange2 = maxValue2 + 0.5 * (maxValue2 - minValue2) / (salinityError.size() - 1);
     double m_minRange2 = minValue2 - 0.5 * (maxValue2 - minValue2) / (salinityError.size() - 1);
 
-    drawHistogram(dynamicView->getCustomPlot(0), calculateHistogram(temperatureError, num1), "Temperature Error");
-    drawHistogram(dynamicView->getCustomPlot(1), calculateHistogram(salinityError, num2), "Salinity Error");
+    drawHistogram(dynamicView->getCustomPlot(0), calculateHistogram(temperatureError, num1), "Salinity Error");
+    drawHistogram(dynamicView->getCustomPlot(1), calculateHistogram(salinityError, num2), "Temperature Error");
 
     // 设置坐标轴范围
     dynamicView->getCustomPlot(0)->rescaleAxes(true);
@@ -631,24 +651,33 @@ void RetrievalWindow::onRetrievalCompleted(QVariantList *args)
     disconnect(model, &PageDataGenerator::retrievalCompleted, this, &RetrievalWindow::onRetrievalCompleted);
     if (args->at(0).toInt() == 1)
     {
-        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "PMT反演成功！", Logger::Info);
+        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(),
+                                                     "PMT inversion successful!",
+                                                     Logger::Info);
         // 绘制散点图
         // drawRetrievalErrorScatterPlot();
         calculateRetrievalError();
     }
     else if (args->at(0).toInt() == 0)
     {
-        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "PMT反演失败！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(),
+                                                     "PMT inversion failed!",
+                                                     Logger::Warning);
     }
     else if (args->at(0).toInt() == 2)
     {
         calculateDepthsRetrievalError(args->at(1).toInt(), args->at(2).toDouble(), args->at(3).value<QVector<double> *>());
-        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "开始进行各深度下的PMT数据反演！", Logger::Info);
+        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(),
+                                                     "Start PMT data inversion at various depths!",
+                                                     Logger::Info);
     }
     else if (args->at(0).toInt() == 3)
     {
         calculateDepthsRetrievalError(args->at(1).toInt(), args->at(1).toInt(), args->at(3).value<QVector<double> *>());
-        Singleton<Logger>::getInstance()->logMessage(getRetrievalTextEdit(), "相同深度下的PMT数据重复反演结束！", Logger::Info);
+        Singleton<Logger>::getInstance()
+            ->logMessage(getRetrievalTextEdit(),
+                         "Repeated inversion of PMT data at the same depth has ended!",
+                         Logger::Info);
     }
 }
 
@@ -705,7 +734,7 @@ void RetrievalWindow::drawRetrievalErrorScatterPlot()
         customPlot->graph(0)->setBrush(QBrush(QColor(0, 0, 255, 255)));
         customPlot->graph(0)->setData(retrievalTimes, temperatureError);
         customPlot->graph(0)->setPen(QPen(Qt::blue));
-        customPlot->graph(0)->setName("Temperature Error");
+        customPlot->graph(0)->setName("Salinity Error");
         customPlot->xAxis->setLabel("Retrieval Times");
         customPlot->yAxis->setLabel("Error (°C/‰)");
         customPlot->xAxis->setRange(-0.1 * max_x, max_x * 1.1);
@@ -725,7 +754,7 @@ void RetrievalWindow::drawRetrievalErrorScatterPlot()
         customPlot->graph(1)->setBrush(QBrush(QColor(0, 0, 255, 255)));
         customPlot->graph(1)->setData(retrievalTimes, salinityError);
         customPlot->graph(1)->setPen(QPen(Qt::red));
-        customPlot->graph(1)->setName("Salinity Error");
+        customPlot->graph(1)->setName("Temperature Error");
         customPlot->replot();
     }
 }

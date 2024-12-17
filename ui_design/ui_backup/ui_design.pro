@@ -228,10 +228,13 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+TRANSLATIONS = english.ts chinese.ts
+
 RESOURCES += \
     data_csv.qrc \
     images.qrc \
-    qss.qrc
+    qss.qrc \
+    qt_language.qrc
 
 
 LIBS += -L$$PWD/lib/ -llibfftw3-3

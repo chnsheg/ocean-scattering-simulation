@@ -257,7 +257,9 @@ QVector<QVector<double> *> *SpectrumDataGenerator::generateLaserLineWidthEffectD
     dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, 0)).value<QSharedPointer<QCPGraphDataContainer>>();
     if (dataContainer.isNull())
     {
-        Singleton<Logger>::getInstance()->logMessage("激光光谱为空！请先生成激光光谱！", Logger::Warning);
+        Singleton<Logger>::getInstance()
+            ->logMessage("The laser spectrum is empty! Please create a laser spectrum first!",
+                         Logger::Warning);
         return nullptr;
     }
     constantStorage->convertQSharedPointerToQVector(dataContainer, xDataVectorContainer->at(0), yDataVectorContainer->at(0));
@@ -268,7 +270,9 @@ QVector<QVector<double> *> *SpectrumDataGenerator::generateLaserLineWidthEffectD
         dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, i + 1)).value<QSharedPointer<QCPGraphDataContainer>>();
         if (dataContainer.isNull())
         {
-            Singleton<Logger>::getInstance()->logMessage("散射光谱为空！请先生成散射光谱！", Logger::Warning);
+            Singleton<Logger>::getInstance()->logMessage(
+                "The scattering spectrum is empty! Please create a scattering spectrum first!",
+                Logger::Warning);
             return nullptr;
         }
         constantStorage->convertQSharedPointerToQVector(dataContainer, xDataVectorContainer->at(i + 1), yDataVectorContainer->at(i + 1));

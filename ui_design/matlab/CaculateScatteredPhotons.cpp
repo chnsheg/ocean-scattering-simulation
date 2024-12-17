@@ -97,7 +97,10 @@ void CaculateScatteredPhotons(double energe, double Alpha_water, double Beta_p,
   //  纯水中瑞利散射和布里渊散射的能量比小于
   //  0.04，这意味着瑞利光的强度明显低于水中的布里渊光
   // Signal Noise Ratio
-  N_SP = M * (*N_Rayleigh + *N_Brillouin);
+  // N_SP = M * (*N_Rayleigh + *N_Brillouin);
+  *N_Rayleigh = M * *N_Rayleigh;
+  *N_Brillouin = M * *N_Brillouin;
+  N_SP = 1 * (*N_Rayleigh + *N_Brillouin);
   //  Day time
   //  dark current
   // M = 1; % Integration times

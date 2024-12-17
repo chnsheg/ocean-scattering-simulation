@@ -136,7 +136,8 @@ void ButtonGroupsManager::updateButtonStatus(int index, const ButtonStatus &stat
 void ButtonGroupsManager::updateTracerButtonText(int index, bool isVisible)
 {
     // Update tracer button accordingly
-    buttonGroups->at(index - 1).tracerButton->setText(isVisible ? "隐藏光标" : "显示光标");
+    // buttonGroups->at(index - 1).tracerButton->setText(isVisible ? "隐藏光标" : "显示光标");
+    buttonGroups->at(index - 1).tracerButton->setText(isVisible ? "hide cursor" : "show cursor");
 }
 
 void ButtonGroupsManager::onEventAction(const QString &event, int status, const QVariant &param)

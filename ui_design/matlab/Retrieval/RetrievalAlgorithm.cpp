@@ -1116,7 +1116,9 @@ void RetrievalAlgorithm_anonFcn1(
           (2.99792458E+8 * (1.0 / params[3]) / (2.0 * params[9])) * params[17] *
           params[18]; // params[14]是M，积分次数
   // number of output Brillouin photons
+
   ndbl = params[12] * cdiff;
+  qDebug() << "nums: " << ndbl;
   // S_r =  0.04 * S_m;
   //  纯水中瑞利散射和布里渊散射的能量比小于
   //  0.04，这意味着瑞利光的强度明显低于水中的布里渊光

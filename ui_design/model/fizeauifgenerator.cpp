@@ -10,7 +10,8 @@ FizeauIFGenerator::FizeauIFGenerator() {}
 
 QVector<QVector<double> *> *FizeauIFGenerator::generateFizeauIFData()
 {
-    Singleton<Logger>::getInstance()->logMessage("生成菲涅尔干涉仪数据", Logger::Log);
+    Singleton<Logger>::getInstance()->logMessage("Generate Fresnel interferometer data.",
+                                                 Logger::Log);
 
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
@@ -38,14 +39,18 @@ QVector<QVector<double> *> *FizeauIFGenerator::generateFizeauIFData()
 
     if (Fizeau_angle > alpha_cal)
     {
-        Singleton<Logger>::getInstance()->logMessage("菲涅尔干涉仪角度大于计算角度，无法计算", Logger::Warning);
+        Singleton<Logger>::getInstance()
+            ->logMessage("The angle of the Fresnel interferometer is greater than the calculated "
+                         "angle and cannot be calculated",
+                         Logger::Warning);
         return nullptr;
     }
 
     //[FSR, FizeauFunction, ~] = FizeauInstrument(alpha_cal, Frequency, lambda, Fizeau_plate, Fizeau_angle, Fizeau_index, Fizeau_albedo);
     FizeauInstrument(alpha_cal, frequency, lambda, Fizeau_plate, Fizeau_angle, Fizeau_index, Fizeau_albedo, Fizeau_FSR, Fizeau_spectrum, Fizeau_frequency);
 
-    Singleton<Logger>::getInstance()->logMessage("菲涅尔干涉仪数据生成完成", Logger::Log);
+    Singleton<Logger>::getInstance()->logMessage("Fizeau interferometer data generation completed",
+                                                 Logger::Log);
     // 打印FSR
     Singleton<Logger>::getInstance()->logMessage("FSR: " + QString::number(*Fizeau_FSR), Logger::Log);
 
@@ -131,7 +136,9 @@ QVector<double> *FizeauIFGenerator::getAfterFizeauSpectrumData(QVector<double> *
 
 QVector<QVector<double> *> *FizeauIFGenerator::calculateSpectrumAfterFizeau(QVector<double> *fizeau_IF)
 {
-    Singleton<Logger>::getInstance()->logMessage("计算通过菲涅尔干涉仪后的光谱", Logger::Log);
+    Singleton<Logger>::getInstance()
+        ->logMessage("Calculate the spectrum after passing through a Fizeau interferometer",
+                     Logger::Log);
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
 
@@ -141,7 +148,9 @@ QVector<QVector<double> *> *FizeauIFGenerator::calculateSpectrumAfterFizeau(QVec
 
     if (dataContainer.isNull())
     {
-        Singleton<Logger>::getInstance()->logMessage("水下光谱数据为空！请先生成水下光谱数据！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage(
+            "The underwater spectral data is empty! Please provide underwater spectral data!",
+            Logger::Warning);
         return nullptr;
     }
 

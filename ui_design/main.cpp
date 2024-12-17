@@ -4,15 +4,18 @@
 #include <QIODevice>
 #include <QStringList>
 #include <QTextStream>
+#include <QTranslator>
+#include "base/taskrunner.h"
 #include "mainwindow.h"
 #include "model/screencapturetask.h"
-#include "base/taskrunner.h"
 #include "retrievalwindow.h"
+
+QTranslator tran; //翻译器
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+
     // RetrievalWindow rw;
 
     QFile file(":/qss.css");
@@ -28,11 +31,14 @@ int main(int argc, char *argv[])
         qDebug() << "open file failed";
     }
 
+    //加载翻译文件
+    tran.load(":/English/English.qm");
+    a.installTranslator(&tran);
     // 打印当前线程ID
     // qDebug() << "Main thread ID:" << QThread::currentThreadId();
 
     // TaskRunner::runTask<ScreenCaptureTask>(); // Start a new task
-
+    MainWindow w;
     w.show();
     // rw.show();
     QThreadPool::globalInstance()->setMaxThreadCount(16);

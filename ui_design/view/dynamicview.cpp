@@ -43,16 +43,15 @@ void DynamicPage::setupUi()
     stackedWidget = new QStackedWidget(this);
     mainLayout->addWidget(stackedWidget);
 
-    for (int i = 0; i < pageCount; ++i)
-    {
+    for (int i = 0; i < pageCount + 1; ++i) {
         createPage(i);
     }
 
     QHBoxLayout *buttonLayout = new QHBoxLayout();
-    prevPageButton = new QPushButton("上一面", this);
-    nextPageButton = new QPushButton("下一面", this);
-    showCursorButton = new QPushButton("显示光标", this);
-    closeButton = new QPushButton("关闭", this);
+    prevPageButton = new QPushButton("Previous page", this);
+    nextPageButton = new QPushButton("Next page", this);
+    showCursorButton = new QPushButton("Show cursor", this);
+    closeButton = new QPushButton("close", this);
 
     buttonLayout->addWidget(prevPageButton);
     buttonLayout->addWidget(nextPageButton);

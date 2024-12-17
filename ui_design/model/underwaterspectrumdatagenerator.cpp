@@ -91,7 +91,9 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateUnderWaterS
         dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, i + 4)).value<QSharedPointer<QCPGraphDataContainer>>();
         if (dataContainer.isNull())
         {
-            Singleton<Logger>::getInstance()->logMessage("散射光谱为空！请先生成散射光谱！", Logger::Warning);
+            Singleton<Logger>::getInstance()->logMessage(
+                "The scattering spectrum is empty! Please create a scattering spectrum, sir!",
+                Logger::Warning);
             return nullptr;
         }
         constantStorage->convertQSharedPointerToQVector(dataContainer, xDataVectorContainer->at(i), yDataVectorContainer->at(i));
@@ -188,7 +190,9 @@ QVector<double> *UnderWaterSpectrumDataGenerator::getUnderWaterSpectrumDataByNAn
         dataContainer = constantStorage->getConstant(constantMap->getConstantName(5, i + 4)).value<QSharedPointer<QCPGraphDataContainer>>();
         if (dataContainer.isNull())
         {
-            Singleton<Logger>::getInstance()->logMessage("散射光谱为空！请先生成散射光谱！", Logger::Warning);
+            Singleton<Logger>::getInstance()->logMessage(
+                "The scattering spectrum is empty! Please create a scattering spectrum, sir!",
+                Logger::Warning);
             return nullptr;
         }
         constantStorage->convertQSharedPointerToQVector(dataContainer, xDataVectorContainer->at(i), yDataVectorContainer->at(i));

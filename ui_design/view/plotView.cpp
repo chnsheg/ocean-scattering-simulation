@@ -41,9 +41,12 @@ PlotView::PlotView(Ui::MainWindow *_ui, QWidget *parent)
     Singleton<ButtonGroupsManager>::getInstance(buttonGroup);
 
     // 添加动态按钮
-    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget2_3, "激光展宽图");
-    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget3_3, "扩展分析");
-    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget5_3, "模型反演");
+    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget2_3,
+                                                                    "Laser broadening diagram");
+    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget3_3,
+                                                                    "extended analysis");
+    Singleton<ButtonGroupsManager>::getInstance()->addDynamicButton(ui->widget5_3,
+                                                                    "model inversion");
 
     // 挂载show1ButtonGroupManager单例
     Show1ButtonGroup *show1ButtonGroup = new Show1ButtonGroup(_ui->homeButton_1,
@@ -229,19 +232,23 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
         switch (plotInterfaceIndex)
         {
         case 1:
-            Singleton<Logger>::getInstance()->logMessage("激光发射系统", Logger::Title);
+            Singleton<Logger>::getInstance()->logMessage("Laser emission system", Logger::Title);
             break;
         case 2:
-            Singleton<Logger>::getInstance()->logMessage("散射光谱生成系统", Logger::Title);
+            Singleton<Logger>::getInstance()->logMessage("Scattering Spectral Generation System",
+                                                         Logger::Title);
             break;
         case 3:
-            Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱生成系统", Logger::Title);
+            Singleton<Logger>::getInstance()
+                ->logMessage("Laser induced scattering spectroscopy generation system",
+                             Logger::Title);
             break;
         case 4:
-            Singleton<Logger>::getInstance()->logMessage("Fizeau干涉仪系统", Logger::Title);
+            Singleton<Logger>::getInstance()->logMessage("Fizeau interferometer system",
+                                                         Logger::Title);
             break;
         case 5:
-            Singleton<Logger>::getInstance()->logMessage("PMT系统", Logger::Title);
+            Singleton<Logger>::getInstance()->logMessage("PMT system", Logger::Title);
             break;
         default:
             break;
@@ -264,7 +271,7 @@ void PlotView::updateViewStyleSlot(int plotInterfaceIndex)
     }
     else if (showPageIndex.contains(plotInterfaceIndex))
     {
-        Singleton<Logger>::getInstance()->logMessage("返回主界面!", Logger::Log);
+        Singleton<Logger>::getInstance()->logMessage("Return to the main interface!", Logger::Log);
         Singleton<MenuManager>::getInstance()->showPageMenuStatus();
         // Update view style accordingly
         ui->stackedWidget->setCurrentIndex(plotInterfaceIndex);
@@ -287,28 +294,36 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
     }
     else if (anchor == 5 && curve_index == 1)
     {
-        Singleton<CustomPlotManager>::getInstance()->plotBarGraphToBuffer(xData, yData, curve_index, "加噪后的PMT接收光谱");
+        Singleton<CustomPlotManager>::getInstance()->plotBarGraphToBuffer(xData,
+                                                                          yData,
+                                                                          curve_index,
+                                                                          "PMT with noise");
     }
     else if (anchor == 5 && curve_index == 2)
     {
-        Singleton<CustomPlotManager>::getInstance()->plotBarGraphToBuffer(xData, yData, curve_index, "未加噪的PMT接收光谱");
+        Singleton<CustomPlotManager>::getInstance()->plotBarGraphToBuffer(xData,
+                                                                          yData,
+                                                                          curve_index,
+                                                                          "PMT without noise");
     }
     // 根据index设定对应坐标轴样式，包括设置第二条坐标轴的范围和曲线的legend名称
     switch (anchor)
     {
     case 1:
-        Singleton<CustomPlotManager>::getInstance()->setLegendName("激光光谱", 0);
+        Singleton<CustomPlotManager>::getInstance()->setLegendName("Laser spectrum", 0);
         Singleton<CustomPlotManager>::getInstance()->refreshPlot();
-        Singleton<Logger>::getInstance()->logMessage("激光光谱绘制完毕！", Logger::Log);
+        Singleton<Logger>::getInstance()->logMessage("Laser spectrum drawing completed!",
+                                                     Logger::Log);
         break;
     case 2:
         if (curve_index == 2)
         {
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("布里渊散射曲线", 0);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("瑞利散射曲线", 1);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("米散射曲线", 2);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Brillouin curve", 0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Rayleigh curve", 1);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Mie curve", 2);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot(); // 在最后一条曲线绘制完毕后刷新
-            Singleton<Logger>::getInstance()->logMessage("散射光谱绘制完毕！", Logger::Log);
+            Singleton<Logger>::getInstance()->logMessage("Scattering spectrum drawing completed!",
+                                                         Logger::Log);
         }
         break;
 
@@ -316,12 +331,14 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         Singleton<CustomPlotManager>::getInstance()->setPenToRunFluently(curve_index);
         if (curve_index == 3)
         {
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激瑞利散射光谱", 0);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激米散射光谱", 1);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激布里渊散射光谱", 2);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("水下受激散射光谱", 3);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Brillouin curve", 0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Rayleigh curve", 1);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Mie curve", 2);
+            Singleton<CustomPlotManager>::getInstance()
+                ->setLegendName("Underwater stimulated scattering spectra", 3);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot();
-            Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱绘制完毕", Logger::Log);
+            Singleton<Logger>::getInstance()
+                ->logMessage("Laser induced scattering spectrum drawing completed", Logger::Log);
         }
         break;
     case 4:
@@ -330,14 +347,18 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         {
             Singleton<CustomPlotManager>::getInstance()->createSecondAxis(0, 1, "y2");
             Singleton<CustomPlotManager>::getInstance()->switchToSecondAxis(0);
-            Singleton<Logger>::getInstance()->logMessage("Fizeau干涉仪器函数绘制完毕", Logger::Log);
+            Singleton<Logger>::getInstance()
+                ->logMessage("Fizeau interferometer function drawing completed", Logger::Log);
         }
         else if (curve_index == 1)
         {
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("Fizeau仪器函数", 0);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("通过Fizeau后的光谱", 1);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Fizeau instrument function",
+                                                                       0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Spectrum after Fizeau", 1);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot();
-            Singleton<Logger>::getInstance()->logMessage("激光诱导散射光谱通过Fizeau后的光谱绘制完毕", Logger::Log);
+            Singleton<Logger>::getInstance()
+                ->logMessage("The laser-induced scattering spectrum has been plotted using Fizeau",
+                             Logger::Log);
         }
         break;
     case 5:
@@ -345,9 +366,10 @@ void PlotView::updateViewCurveSlot(const QVector<double> *xData,
         {
             // 改变线宽，使得曲线绘制过程更加流畅
             Singleton<CustomPlotManager>::getInstance()->setPenToRunFluently(curve_index);
-            Singleton<CustomPlotManager>::getInstance()->setLegendName("原光谱", 0);
+            Singleton<CustomPlotManager>::getInstance()->setLegendName("Original spectrum", 0);
             Singleton<CustomPlotManager>::getInstance()->refreshPlot();
-            Singleton<Logger>::getInstance()->logMessage("PMT接收光谱绘制完毕", Logger::Log);
+            Singleton<Logger>::getInstance()->logMessage("PMT received spectrum drawing completed",
+                                                         Logger::Log);
         }
         break;
     default:
@@ -393,7 +415,7 @@ void PlotView::updateViewPageSlot(int page_index)
 void PlotView::startButtonClicked()
 {
     int page_index = ui->stackedWidget->currentIndex();
-    Singleton<Logger>::getInstance()->logMessage("开始绘图...", Logger::Log);
+    Singleton<Logger>::getInstance()->logMessage("Start drawing...", Logger::Log);
     Singleton<CustomPlotManager>::getInstance()->clearPlot();
     Singleton<LineEditGroupManager>::getInstance()->saveLineEditGroupsText(page_index - 1);
 

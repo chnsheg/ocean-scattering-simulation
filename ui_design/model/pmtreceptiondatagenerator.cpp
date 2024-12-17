@@ -38,7 +38,10 @@ QVector<QVector<double> *> *PMTReceptionDataGenerator::generatePMTReceptionData(
 
     if (dataContainer.isNull())
     {
-        Singleton<Logger>::getInstance()->logMessage("菲涅尔干涉仪数据为空！请先生成菲涅尔干涉仪数据！", Logger::Warning);
+        Singleton<Logger>::getInstance()
+            ->logMessage("Fizeau interferometer data is empty! Please provide data from the "
+                         "Fresnel interferometer.",
+                         Logger::Warning);
         return nullptr;
     }
 
@@ -252,7 +255,8 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
 
     if (PMT_energy_vector == nullptr || PMT_energy_vector->isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("PMT_Energy为空！请先生成PMT接收数据！", Logger::Warning);
+        Singleton<Logger>::getInstance()
+            ->logMessage("PMT'Energy is empty! Please become PMT to receive data!", Logger::Warning);
         return;
     }
 
@@ -268,7 +272,8 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
 
     if (dataContainer.isNull())
     {
-        Singleton<Logger>::getInstance()->logMessage("请先生成Fizeau仪器函数！", Logger::Warning);
+        Singleton<Logger>::getInstance()
+            ->logMessage("Please generate the Fizeau instrument function!", Logger::Warning);
         return;
     }
 

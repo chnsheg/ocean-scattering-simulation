@@ -42,7 +42,15 @@ set(RESOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/data_csv.qrc
     ${CMAKE_CURRENT_SOURCE_DIR}/images.qrc
     ${CMAKE_CURRENT_SOURCE_DIR}/qss.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/language.qrc
 )
+
+SET(TS_FILES
+${CMAKE_CURRENT_SOURCE_DIR}/English.ts
+)
+find_package(Qt5LinguistTools)
+qt5_create_translation(QM_FILES ${CMAKE_CURRENT_SOURCE_DIR} ${TS_FILES} OPTIONS -source-language zh_CN -target-language en_US)
+
 
 # Run uic on .ui files
 qt5_wrap_ui(UI_HEADERS ${FORMS})
@@ -254,7 +262,8 @@ view/plotView.h
 
 
 # Add the executable (including the processed files)
-add_executable(ui_design ${UI_HEADERS} ${RCC_SOURCES} ${SOURCES} ${HEADERS} )
+add_executable(ui_design ${UI_HEADERS} ${RCC_SOURCES} ${SOURCES} ${HEADERS} ${QM_FILES}
+)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/module)
 target_include_directories(ui_design PRIVATE module/)

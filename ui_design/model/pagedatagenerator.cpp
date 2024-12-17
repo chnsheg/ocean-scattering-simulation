@@ -101,7 +101,10 @@ void PageDataGenerator::generatePairOfData(int page_index)
         laserLineWidthEffectData = UnderWaterSpectrumDataGenerator::generateUnderWaterSpectrumData();
         if (laserLineWidthEffectData == nullptr || laserLineWidthEffectData->size() != 4)
         {
-            Singleton<Logger>::getInstance()->logMessage("激光线宽对三种散射谱的影响数据生成失败！", Logger::Warning);
+            Singleton<Logger>::getInstance()
+                ->logMessage("The impact of laser linewidth on three types of scattering spectra "
+                             "data generation failed!",
+                             Logger::Warning);
             return;
         }
         xDataVector->append(generateData(DataType::Frequence));
@@ -330,11 +333,12 @@ void PageDataGenerator::handleTaskCompletedSlot(QString taskName, QVariantList *
         }
         else if (args->at(0).toInt() == 0)
         {
-            Singleton<Logger>::getInstance()->logMessage("截图失败！", Logger::Warning);
+            Singleton<Logger>::getInstance()->logMessage("Screenshot failed!", Logger::Warning);
         }
         else if (args->at(0).toInt() == -1)
         {
-            Singleton<Logger>::getInstance()->logMessage("无法获取屏幕！", Logger::Warning);
+            Singleton<Logger>::getInstance()->logMessage("Unable to retrieve screen!",
+                                                         Logger::Warning);
         }
     }
     else if (taskName.contains("RetrievalThread"))
@@ -424,7 +428,7 @@ void PageDataGenerator::storeConstantByGroupIndex(int index)
     QStringList filePaths = fileBrowser.saveJsonFilesDialog(QDir::currentPath(), false);
     if (filePaths.isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("No file path selected!", Logger::Warning);
         return;
     }
     Singleton<ConstantStorage>::getInstance(nullptr)->savePageConstantToJsonFile(index, filePaths);
@@ -436,7 +440,7 @@ void PageDataGenerator::storeAllConstant()
     QStringList filePaths = fileBrowser.saveJsonFilesDialog(QDir::currentPath(), false);
     if (filePaths.isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("No file path selected!", Logger::Warning);
         return;
     }
     Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageConstantToJsonFile(filePaths);
@@ -448,7 +452,7 @@ void PageDataGenerator::storeRuntimeDataByGroupIndex(int index)
     QStringList filePaths = fileBrowser.saveCsvFilesDialog(QDir::currentPath(), false);
     if (filePaths.isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("No file path selected!", Logger::Warning);
         return;
     }
     Singleton<ConstantStorage>::getInstance(nullptr)->savePageRuntimeDataToCSVFile(index, filePaths);
@@ -460,7 +464,7 @@ void PageDataGenerator::storeAllRuntimeData()
     QStringList filePaths = fileBrowser.saveCsvFilesDialog(QDir::currentPath(), true);
     if (filePaths.isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("No file path selected!", Logger::Warning);
         return;
     }
     Singleton<ConstantStorage>::getInstance(nullptr)->saveAllPageRuntimeDataToCSVFile(filePaths);
@@ -472,7 +476,7 @@ void PageDataGenerator::importConstantByGroupIndex(int index)
     QStringList filePaths = fileBrowser.openJsonFilesDialog(QDir::currentPath(), false);
     if (filePaths.isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("No file path selected!", Logger::Warning);
         return;
     }
     Singleton<ConstantStorage>::getInstance(nullptr)->importPageConstantFromJsonFile(filePaths);
@@ -484,7 +488,7 @@ void PageDataGenerator::importAllConstant()
     QStringList filePaths = fileBrowser.openJsonFilesDialog(QDir::currentPath(), false);
     if (filePaths.isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("No file path selected!", Logger::Warning);
         return;
     }
     Singleton<ConstantStorage>::getInstance(nullptr)->importAllPageConstantFromJsonFile(filePaths);
@@ -502,7 +506,7 @@ void PageDataGenerator::importRuntimeDataByGroupIndex(int index)
     QStringList filePaths = fileBrowser.openCsvFilesDialog(QDir::currentPath(), false);
     if (filePaths.isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("No file path selected!", Logger::Warning);
         return;
     }
     Singleton<ConstantStorage>::getInstance(nullptr)->importPageRuntimeDataFromCSVFile(index, filePaths, xDataVector->at(0), yDataVector->at(0));
@@ -519,13 +523,15 @@ void PageDataGenerator::importAllRuntimeData()
     QStringList filePaths = fileBrowser.openCsvFilesDialog(QDir::currentPath(), true);
     if (filePaths.isEmpty())
     {
-        Singleton<Logger>::getInstance()->logMessage("未选择文件路径！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("No file path selected!", Logger::Warning);
         return;
     }
 
     // 提示选择了多少个文件
-    Singleton<Logger>::getInstance()->logMessage("已选择" + QString::number(filePaths.size()) + "个文件！", Logger::Info);
-
+    // Singleton<Logger>::getInstance()->logMessage("已选择" + QString::number(filePaths.size()) + "个文件！", Logger::Info);
+    Singleton<Logger>::getInstance()->logMessage(QString::number(filePaths.size())
+                                                     + "files have been selected!",
+                                                 Logger::Info);
     // 给xDataVector和yDataVector内部的QVector<QVector<double> *>分配filePaths.size()的内存
     for (int i = 0; i < filePaths.size(); ++i)
     {

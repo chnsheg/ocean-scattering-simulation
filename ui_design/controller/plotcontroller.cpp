@@ -67,10 +67,11 @@ void PlotController::handleDataGenerated(QVector<QVector<double> *> *xDataVector
 {
     QVector<double> *xData;
     QVector<double> *yData;
-    Singleton<Logger>::getInstance()->logMessage("数据生成完毕！", Logger::Log);
+    Singleton<Logger>::getInstance()->logMessage("Data generation completed!", Logger::Log);
     if (xDataVector->size() == 0 || yDataVector->size() == 0)
     {
-        Singleton<Logger>::getInstance()->logMessage("请设置所有输入变量！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("Please set all input variables!",
+                                                     Logger::Warning);
         return;
     }
     if (xDataVector->size() == yDataVector->size()) // 有多条非共用x轴数据的曲线需要绘制
@@ -137,7 +138,7 @@ void PlotController::handleStoreRuntimeDataSignal(QSharedPointer<QCPGraphDataCon
     }
     else
     {
-        Singleton<Logger>::getInstance()->logMessage("未知的信号发送者！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("Unknown signal sender!", Logger::Warning);
     }
 }
 
@@ -428,12 +429,12 @@ void PlotController::handleImportConstantCompleted(const int page_index, const Q
 
     if (xDataVector->size() == 0 || yDataVector->size() == 0)
     {
-        Singleton<Logger>::getInstance()->logMessage("导入数据为空！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("The imported data is empty!", Logger::Warning);
         return;
     }
     else if (xDataVector->size() != yDataVector->size())
     {
-        Singleton<Logger>::getInstance()->logMessage("导入数据不匹配！", Logger::Warning);
+        Singleton<Logger>::getInstance()->logMessage("Import data does not match!", Logger::Warning);
         return;
     }
     else if (xDataVector->size() == 1 && yDataVector->size() == 1)

@@ -174,7 +174,9 @@ MainWindow::MainWindow(QWidget *parent)
     int width = rect.width();
     int height = rect.height();
     // 设置窗口大小
-    this->resize(0.8 * width, 0.8 * height);
+    // this->resize(0.8 * width, 0.8 * height);
+    this->resize(1600, 1200);
+    // 挂载视图层
     // 挂载视图层
     Singleton<PlotView>::getInstance(ui);
     // 挂载模型层
@@ -256,4 +258,17 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+//调用installTranslator后，系统会给窗体发送信号将产生了changeEvent槽产生event
+void MainWindow::changeEvent(QEvent *e)
+{
+    QWidget::changeEvent(e);
+    switch (e->type()) {
+    case QEvent::LanguageChange:
+        ui->retranslateUi(this);
+        break;
+    default:
+        break;
+    }
 }

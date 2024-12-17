@@ -17,13 +17,13 @@ ConstantStorage::ConstantStorage(QObject *parent)
         m_constants.insert(constantMap->getConstantName(0, 2), 1);
         m_constants.insert(constantMap->getConstantName(0, 3), 12000000000);
         m_constants.insert(constantMap->getConstantName(0, 4), 299792458.0);
-        m_constants.insert(constantMap->getConstantName(0, 5), 20e-3);
+        m_constants.insert(constantMap->getConstantName(0, 5), 20e-2);
         m_constants.insert(constantMap->getConstantName(0, 6), 2.4e6);
-        m_constants.insert(constantMap->getConstantName(1, 0), 29.8); // 水温
-        m_constants.insert(constantMap->getConstantName(1, 1), 0.2);  // 水盐度
+        m_constants.insert(constantMap->getConstantName(1, 0), 25); // 水温
+        m_constants.insert(constantMap->getConstantName(1, 1), 15); // 水盐度
         m_constants.insert(constantMap->getConstantName(1, 2), 0.00);
         m_constants.insert(constantMap->getConstantName(1, 3), 2.4e-4);
-        m_constants.insert(constantMap->getConstantName(1, 4), 1.56); // 水折射率
+        m_constants.insert(constantMap->getConstantName(1, 4), 1.33); // 水折射率
         m_constants.insert(constantMap->getConstantName(1, 5), 0.04);
         m_constants.insert(constantMap->getConstantName(2, 0), 5.32e-7);
         m_constants.insert(constantMap->getConstantName(2, 1), 6e-3);
@@ -34,14 +34,14 @@ ConstantStorage::ConstantStorage(QObject *parent)
         m_constants.insert(constantMap->getConstantName(3, 1), 0.8e-3);
         m_constants.insert(constantMap->getConstantName(3, 2), 0.2e-3);
         m_constants.insert(constantMap->getConstantName(3, 3), 2e20);
-        m_constants.insert(constantMap->getConstantName(7, 0), 1);
-        m_constants.insert(constantMap->getConstantName(7, 1), 0.08);
+        m_constants.insert(constantMap->getConstantName(7, 0), 10000);
+        m_constants.insert(constantMap->getConstantName(7, 1), 0.02);
         m_constants.insert(constantMap->getConstantName(7, 2), 0.13);
         m_constants.insert(constantMap->getConstantName(7, 3), 0.4);
-        m_constants.insert(constantMap->getConstantName(7, 4), 0.05);
+        m_constants.insert(constantMap->getConstantName(7, 4), 5);
         m_constants.insert(constantMap->getConstantName(7, 5), 10);
-        m_constants.insert(constantMap->getConstantName(7, 6), 1.8);
-        m_constants.insert(constantMap->getConstantName(7, 7), 1);
+        m_constants.insert(constantMap->getConstantName(7, 6), 100);
+        m_constants.insert(constantMap->getConstantName(7, 7), 400000);
         m_constants.insert(constantMap->getConstantName(7, 8), 2);
         // m_constants.insert(constantMap->getConstantName(1, 2), 1.0);
         // m_constants.insert(constantMap->getConstantName(1, 3), 12e9);
