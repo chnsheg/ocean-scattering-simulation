@@ -641,6 +641,28 @@ void RetrievalWindow::drawHistogram(QCustomPlot *customPlot, const QMap<double, 
     // customPlot->rescaleAxes();
 
     // customPlot->replot();
+
+    // 对直方图数据保存到csv文件中
+    // 根据 title 构造 CSV 文件名（将空格替换为下划线，并追加“.csv”后缀）
+    QString filename = title.simplified().replace(" ", "_") + ".csv";
+
+    QFile file(filename);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QTextStream out(&file);
+        // 写入 CSV 文件头
+        out << "BinCenter,Frequency\n";
+        // 遍历 histogram，将每个数据点写入文件
+        for (auto it = histogram.begin(); it != histogram.end(); ++it)
+        {
+            out << QString::number(it.key(), 'f', 2) << "," << it.value() << "\n";
+        }
+        file.close();
+    }
+    else
+    {
+        qDebug() << "无法打开文件" << filename << "进行写入";
+    }
 }
 
 // 反演完毕后的事件处理
