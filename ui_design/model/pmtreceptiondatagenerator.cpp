@@ -249,7 +249,7 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     // QVector<double> *PMT_energy_vector = new QVector<double>();
     // 0.000500951818447207	0.00126892042344298	0.00418905457824441	0.00363221019365598	0.00110851062510006	0.000566371696804416	0.000442973766125158	0.000638886278194898	0.000629230476113756	0.000443742611150079	0.000577954102157679	0.00114477405738897	0.00373425200890559	0.00409628632197294	0.00121853330725838	0.000488091198032589
     // QVector<double> *PMT_energy_vector = new QVector<double>(
-    //     {0.000481349812890324, 0.00115600087686415, 0.00366448196335308, 0.00403615874800880, 0.00130673405407780, 0.000646618950177882, 0.000485579648168674, 0.000661343988317603, 0.000652450122068401, 0.000477275657879331, 0.000645090618930230, 0.00133582055472497, 0.00410742981808581, 0.00357553374168214, 0.00111753722374564, 0.000471019177273276});
+    //     {1.10962987373873e-06, 2.71159079728691e-06, 8.49160479010532e-06, 8.93001024370390e-06, 2.90651903591139e-06, 1.43400633054405e-06, 1.08438543583255e-06, 1.49592452078876e-06, 1.47630377433742e-06, 1.08473645356769e-06, 1.47180863081417e-06, 2.99930430123726e-06, 9.10732563551645e-06, 8.30161205584375e-06, 2.60592218118288e-06, 1.08482420668239e-06});
 
     QVector<double> *PMT_energy_vector = constantStorage->getConstant(constantMap->getConstantName(5, 14)).value<QVector<double> *>();
 
@@ -327,7 +327,7 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     double freq_range = constantStorage->getConstant(constantMap->getConstantName(0, 3)).toDouble();
     double intensity = constantStorage->getConstant(constantMap->getConstantName(0, 2)).toDouble();
     double laser_width = constantStorage->getConstant(constantMap->getConstantName(0, 0)).toDouble();
-    double laser_energy = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double laser_energy = constantStorage->getConstant(constantMap->getConstantName(0, 4)).toDouble();
     double alpha = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
     double beta_p = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble(); // 有一个参数没用到
     double beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
@@ -340,11 +340,14 @@ void PMTReceptionDataGenerator::retrievalFormPMT()
     double beta = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
     double xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
     double xi_f = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
+    double sampling_interval = constantStorage->getConstant(constantMap->getConstantName(7, 9)).toDouble();
+    double slice_thickness = constantStorage->getConstant(constantMap->getConstantName(7, 10)).toDouble();
+
     double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
     double tolerance = constantStorage->getConstant(constantMap->getConstantName(9, 12)).toDouble();
 
-    double params[19] = {wave_length, freq_range, intensity, laser_width, laser_energy, alpha, beta_p, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f};
-
+    // double params[19] = {wave_length, freq_range, laser_width, laser_energy, alpha, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f, sampling_interval, slice_thickness};
+    double params[19] = {wave_length, freq_range, intensity, laser_width, laser_energy, alpha, 0, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f};
     double fitted_value[3];
     double resnorm;
     double exitflag;
@@ -484,7 +487,7 @@ QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<dou
     double freq_range = constantStorage->getConstant(constantMap->getConstantName(0, 3)).toDouble();
     double intensity = constantStorage->getConstant(constantMap->getConstantName(0, 2)).toDouble();
     double laser_width = constantStorage->getConstant(constantMap->getConstantName(0, 0)).toDouble();
-    double laser_energy = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double laser_energy = constantStorage->getConstant(constantMap->getConstantName(0, 4)).toDouble();
     double alpha = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
     double beta_p = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble(); // 有一个参数没用到
     double beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
@@ -497,10 +500,25 @@ QVector<double> *PMTReceptionDataGenerator::retrievalBySpecializePMT(QVector<dou
     double beta = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
     double xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
     double xi_f = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
+    double sampling_interval = constantStorage->getConstant(constantMap->getConstantName(7, 9))
+                                   .toDouble();
+    double slice_thickness = constantStorage->getConstant(constantMap->getConstantName(7, 10))
+                                 .toDouble();
     double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
     double tolerance = constantStorage->getConstant(constantMap->getConstantName(9, 12)).toDouble();
 
-    double params[19] = {wave_length, freq_range, intensity, laser_width, laser_energy, alpha, beta_p, beta_m, beta_p, n, z, H, energy_ratio, r, M, N_dark, beta, xi, xi_f};
+    // double params[19] = {wave_length, freq_range, laser_width,
+    //                      laser_energy, alpha, beta_m,
+    //                      beta_p, n, z, H,
+    //                      energy_ratio, r, M, N_dark,
+    //                      beta, xi, xi_f, sampling_interval,
+    //                      slice_thickness};
+
+    double params[19] = {wave_length, freq_range, intensity, laser_width,
+                         laser_energy, alpha, 0, beta_m,
+                         beta_p, n, z, H,
+                         energy_ratio, r, M, N_dark,
+                         beta, xi, xi_f};
 
     double fitted_value[3];
     double resnorm;

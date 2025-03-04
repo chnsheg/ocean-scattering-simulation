@@ -2,7 +2,7 @@
 // File: RetrievalAlgorithm_terminate.h
 //
 // MATLAB Coder version            : 5.4
-// C/C++ source code generated on  : 07-Apr-2024 21:32:44
+// C/C++ source code generated on  : 04-Mar-2025 09:14:41
 //
 
 #ifndef RETRIEVALALGORITHM_TERMINATE_H

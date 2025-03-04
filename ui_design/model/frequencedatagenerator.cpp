@@ -36,9 +36,7 @@ QVector<double> *FrequenceDataGenerator::generateFrequenceData()
     double lambda_0 = Singleton<ConstantStorage>::getInstance(nullptr)
                           ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
                           .toDouble();
-    double c = Singleton<ConstantStorage>::getInstance(nullptr)
-                   ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
-                   .toDouble();
+    double c = 299792458.0;
     double frequencyRange = Singleton<ConstantStorage>::getInstance(nullptr)
                                 ->getConstant(
                                     Singleton<ConstantMap>::getInstance()->getConstantName(0, 3))
@@ -46,8 +44,7 @@ QVector<double> *FrequenceDataGenerator::generateFrequenceData()
 
     // double step = 5.0E+6;
     double step = Singleton<ConstantStorage>::getInstance(nullptr)
-                      ->getConstant(
-                          Singleton<ConstantMap>::getInstance()->getConstantName(0, 6))
+                      ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 5))
                       .toDouble();
 
     if (step <= 0)
@@ -55,7 +52,7 @@ QVector<double> *FrequenceDataGenerator::generateFrequenceData()
         step = 1e6; // 默认值
         // 设置内存中的值
         Singleton<ConstantStorage>::getInstance(nullptr)
-            ->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 6), step);
+            ->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 5), step);
     }
     double miu_0 = c / lambda_0;
     double lowerLimit = miu_0 - frequencyRange;
@@ -118,12 +115,10 @@ QVector<double> *FrequenceDataGenerator::generateRelativeFrequenceData()
     // }
     QVector<double> *relativeData = nullptr;
     QVector<double> *data = generateFrequenceData();
-    double miu_0 = Singleton<ConstantStorage>::getInstance(nullptr)
-                       ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
-                       .toDouble() /
-                   Singleton<ConstantStorage>::getInstance(nullptr)
-                       ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
-                       .toDouble();
+    double miu_0 = 299792458
+                   / Singleton<ConstantStorage>::getInstance(nullptr)
+                         ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
+                         .toDouble();
     relativeData = new QVector<double>(data->size());
     for (int i = 0; i < data->size(); i++)
     {

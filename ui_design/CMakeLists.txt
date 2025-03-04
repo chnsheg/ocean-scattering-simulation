@@ -105,6 +105,7 @@ matlab/Retrieval/xgemv.cpp
 matlab/Retrieval/xnrm2.cpp 
 matlab/Retrieval/xzlarf.cpp 
 matlab/Retrieval/xzlarfg.cpp 
+matlab/Retrieval/colon.cpp
 matlab/SpectrumGeneration.cpp 
 matlab/colon.cpp 
 matlab/convolution.cpp 
@@ -117,7 +118,8 @@ matlab/eml_rand_mt19937ar.cpp
 matlab/eml_rand_mt19937ar_stateful.cpp 
 matlab/rand.cpp
 matlab/randn.cpp 
-matlab/sum.cpp 
+matlab/sum.cpp
+matlab/VerticalResolution.cpp 
 model/constantmap.cpp 
 model/constantstorage.cpp
 model/constantstorage.cpp 
@@ -182,12 +184,14 @@ matlab/Retrieval/RetrievalAlgorithm_initialize.h
 matlab/Retrieval/RetrievalAlgorithm_internal_types.h 
 matlab/Retrieval/RetrievalAlgorithm_internal_types1.h 
 matlab/Retrieval/RetrievalAlgorithm_internal_types11.h 
+matlab/Retrieval/RetrievalAlgorithm_internal_types2.h
 matlab/Retrieval/RetrievalAlgorithm_types.h 
 matlab/Retrieval/anonymous_function.h 
 matlab/Retrieval/anonymous_function1.h 
 matlab/Retrieval/checkStoppingCriteria.h 
 matlab/Retrieval/computeFiniteDifferences.h 
-matlab/Retrieval/conv.h 
+matlab/Retrieval/conv.h
+matlab/Retrieval/colon.h
 matlab/Retrieval/driver.h 
 matlab/Retrieval/error_fitted_power.h 
 matlab/Retrieval/factoryConstruct.h 
@@ -220,7 +224,8 @@ matlab/rtGetNaN.h
 matlab/rt_nonfinite.h 
 matlab/rtwtypes.h 
 matlab/sum.h 
-matlab/tmwtypes.h 
+matlab/tmwtypes.h
+matlab/VerticalResolution.h 
 # model/CaculateScatteredPhotons.h 
 # model/FizeauInstrument.h 
 # model/PMTReceive.h 

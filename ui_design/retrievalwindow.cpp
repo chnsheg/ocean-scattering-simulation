@@ -283,8 +283,8 @@ void RetrievalWindow::calculateTSStatistics(DynamicPage *dynamicView)
     double m_maxRange2 = maxValue2 + 0.5 * (maxValue2 - minValue2) / (salinityError.size() - 1);
     double m_minRange2 = minValue2 - 0.5 * (maxValue2 - minValue2) / (salinityError.size() - 1);
 
-    drawHistogram(dynamicView->getCustomPlot(0), calculateHistogram(temperatureError, num1), "Salinity Error");
-    drawHistogram(dynamicView->getCustomPlot(1), calculateHistogram(salinityError, num2), "Temperature Error");
+    drawHistogram(dynamicView->getCustomPlot(0), calculateHistogram(temperatureError, num1), "Temperature Error");
+    drawHistogram(dynamicView->getCustomPlot(1), calculateHistogram(salinityError, num2), "Salinity Error");
 
     // 设置坐标轴范围
     dynamicView->getCustomPlot(0)->rescaleAxes(true);

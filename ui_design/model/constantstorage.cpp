@@ -16,9 +16,10 @@ ConstantStorage::ConstantStorage(QObject *parent)
         m_constants.insert(constantMap->getConstantName(0, 1), 5.32e-07);
         m_constants.insert(constantMap->getConstantName(0, 2), 1);
         m_constants.insert(constantMap->getConstantName(0, 3), 12000000000);
-        m_constants.insert(constantMap->getConstantName(0, 4), 299792458.0);
-        m_constants.insert(constantMap->getConstantName(0, 5), 20e-2);
-        m_constants.insert(constantMap->getConstantName(0, 6), 2.4e6);
+        // m_constants.insert(constantMap->getConstantName(0, 4), 299792458.0);
+        m_constants.insert(constantMap->getConstantName(0, 4), 50e-2);
+        m_constants.insert(constantMap->getConstantName(0, 5), 2.4e6);
+
         m_constants.insert(constantMap->getConstantName(1, 0), 25); // 水温
         m_constants.insert(constantMap->getConstantName(1, 1), 15); // 水盐度
         m_constants.insert(constantMap->getConstantName(1, 2), 0.00);
@@ -38,11 +39,13 @@ ConstantStorage::ConstantStorage(QObject *parent)
         m_constants.insert(constantMap->getConstantName(7, 1), 0.02);
         m_constants.insert(constantMap->getConstantName(7, 2), 0.13);
         m_constants.insert(constantMap->getConstantName(7, 3), 0.4);
-        m_constants.insert(constantMap->getConstantName(7, 4), 5);
+        m_constants.insert(constantMap->getConstantName(7, 4), 2);
         m_constants.insert(constantMap->getConstantName(7, 5), 10);
         m_constants.insert(constantMap->getConstantName(7, 6), 100);
         m_constants.insert(constantMap->getConstantName(7, 7), 400000);
         m_constants.insert(constantMap->getConstantName(7, 8), 2);
+        m_constants.insert(constantMap->getConstantName(7, 9), 2e-9);
+        m_constants.insert(constantMap->getConstantName(7, 10), 5);
         // m_constants.insert(constantMap->getConstantName(1, 2), 1.0);
         // m_constants.insert(constantMap->getConstantName(1, 3), 12e9);
 

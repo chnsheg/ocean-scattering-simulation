@@ -14,9 +14,7 @@ QVector<double> *LaserDataGenerator::generateLaserData()
     double lambda_0 = Singleton<ConstantStorage>::getInstance(nullptr)
                           ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
                           .toDouble();
-    double c = Singleton<ConstantStorage>::getInstance(nullptr)
-                   ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
-                   .toDouble();
+    double c = 299792458;
     double intensity = Singleton<ConstantStorage>::getInstance(nullptr)
                            ->getConstant(
                                Singleton<ConstantMap>::getInstance()->getConstantName(0, 2))

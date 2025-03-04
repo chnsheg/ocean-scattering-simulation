@@ -1,12 +1,12 @@
 //
-// File: xzlarfg.h
+// File: colon.h
 //
 // MATLAB Coder version            : 5.4
 // C/C++ source code generated on  : 04-Mar-2025 09:14:41
 //
 
-#ifndef XZLARFG_H
-#define XZLARFG_H
+#ifndef COLON_H
+#define COLON_H
 
 // Include Files
 #include "rtwtypes.h"
@@ -16,17 +16,13 @@
 
 // Function Declarations
 namespace coder {
-namespace internal {
-namespace reflapack {
-double xzlarfg(int n, double *alpha1, ::coder::array<double, 2U> &x, int ix0);
+void eml_float_colon(double a, double b, ::coder::array<double, 2U> &y);
 
 }
-} // namespace internal
-} // namespace coder
 
 #endif
 //
-// File trailer for xzlarfg.h
+// File trailer for colon.h
 //
 // [EOF]
 //

@@ -1,13 +1,14 @@
 #include "underwaterspectrumdatagenerator.h"
-#include "model/constantstorage.h"
-#include "model/constantmap.h"
-#include "utils/logger.h"
-#include "utils/readfiledata.h"
-#include "utils/mymath.h"
 #include "matlab/AddNoiseNondB.h"
-#include "matlab/drawSNRDepthByM.h"
-#include "matlab/drawSNRDepthByAlpha.h"
+#include "matlab/VerticalResolution.h"
 #include "matlab/drawNsMByDepth.h"
+#include "matlab/drawSNRDepthByAlpha.h"
+#include "matlab/drawSNRDepthByM.h"
+#include "model/constantmap.h"
+#include "model/constantstorage.h"
+#include "utils/logger.h"
+#include "utils/mymath.h"
+#include "utils/readfiledata.h"
 
 UnderWaterSpectrumDataGenerator::UnderWaterSpectrumDataGenerator() {}
 
@@ -21,7 +22,7 @@ QVector<double> *UnderWaterSpectrumDataGenerator::caculateScatteredPhotonsByMatl
 
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
-    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 4)).toDouble();
     double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
     double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble();
     double Beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
@@ -42,6 +43,10 @@ QVector<double> *UnderWaterSpectrumDataGenerator::caculateScatteredPhotonsByMatl
     double beta = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
     double Xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
     double Xi_F = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
+    double sampling_interval = constantStorage->getConstant(constantMap->getConstantName(7, 9))
+                                   .toDouble();
+    double slice_thickness = constantStorage->getConstant(constantMap->getConstantName(7, 10))
+                                 .toDouble();
 
     // void CaculateScatteredPhotons(double energe, double Alpha_water, double Beta_p,
     //                           double Beta_m, double lambda, double n, double z,
@@ -51,7 +56,29 @@ QVector<double> *UnderWaterSpectrumDataGenerator::caculateScatteredPhotonsByMatl
     //                           double *N_Mie, double *N_Rayleigh, double *SNR)
 
     // CaculateScatteredPhotons(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, energy_ratio, &N_Brillouin, &N_Mie, &N_Rayleigh, &SNR);
-    CaculateScatteredPhotons(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, tau, r, M, energy_ratio, N_dark, beta, Xi, Xi_F, &N_Brillouin, &N_Mie, &N_Rayleigh, &SNR);
+    // CaculateScatteredPhotons(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, tau, r, M, energy_ratio, N_dark, beta, Xi, Xi_F, &N_Brillouin, &N_Mie, &N_Rayleigh, &SNR);
+    VerticalResolution(energe,
+                       Alpha_water,
+                       Beta_particulate,
+                       Beta_m,
+                       lambda,
+                       n,
+                       z,
+                       H,
+                       tau,
+                       r,
+                       M,
+                       energy_ratio,
+                       N_dark,
+                       beta,
+                       Xi,
+                       Xi_F,
+                       sampling_interval,
+                       slice_thickness,
+                       &N_Brillouin,
+                       &N_Mie,
+                       &N_Rayleigh,
+                       &SNR);
     QVector<double> *result = new QVector<double>({N_Brillouin, N_Rayleigh, N_Mie, SNR});
 
     Singleton<ConstantStorage>::getInstance(nullptr)->setConstant(Singleton<ConstantMap>::getInstance()->getConstantName(6, 2), N_Brillouin);
@@ -268,7 +295,7 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateSNRDepthByM
 {
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
-    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 4)).toDouble();
     double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
     double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble();
     double Beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
@@ -352,7 +379,7 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateSNRDepthByA
 {
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
-    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 4)).toDouble();
     // double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
     double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble();
     double Beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
@@ -417,7 +444,7 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::generateNsMByDepthD
 {
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
-    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 4)).toDouble();
     double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
     double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble();
     double Beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
@@ -501,19 +528,20 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::getNsByDepthData()
 {
     ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
     ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
-    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
+    double energe = constantStorage->getConstant(constantMap->getConstantName(0, 4)).toDouble();
     double Alpha_water = constantStorage->getConstant(constantMap->getConstantName(7, 1)).toDouble();
     double Beta_particulate = constantStorage->getConstant(constantMap->getConstantName(1, 2)).toDouble();
     double Beta_m = constantStorage->getConstant(constantMap->getConstantName(1, 3)).toDouble();
     double lambda = constantStorage->getConstant(constantMap->getConstantName(0, 1)).toDouble();
     double n = constantStorage->getConstant(constantMap->getConstantName(1, 4)).toDouble();
-    // double z = constantStorage->getConstant(constantMap->getConstantName(7, 6)).toDouble();
     double H = constantStorage->getConstant(constantMap->getConstantName(7, 7)).toDouble();
     double energy_ratio = constantStorage->getConstant(constantMap->getConstantName(1, 5)).toDouble();
     // double N_Brillouin;
     // double N_Mie;
     // double N_Rayleigh;
     // double SNR;
+    double dep;
+    double M_single;
     double laser_width = constantStorage->getConstant(constantMap->getConstantName(0, 0)).toDouble();
     double tau = 1 / laser_width;
     double r = constantStorage->getConstant(constantMap->getConstantName(7, 4)).toDouble();
@@ -522,6 +550,8 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::getNsByDepthData()
     double beta = constantStorage->getConstant(constantMap->getConstantName(7, 8)).toDouble();
     double Xi = constantStorage->getConstant(constantMap->getConstantName(7, 2)).toDouble();
     double Xi_F = constantStorage->getConstant(constantMap->getConstantName(7, 3)).toDouble();
+    double sampling_interval = constantStorage->getConstant(constantMap->getConstantName(7, 9)).toDouble();
+    double vertical_resolution = constantStorage->getConstant(constantMap->getConstantName(7, 10)).toDouble();
 
     // void drawSNRDepthByM(double energe, double Alpha_water, double Beta_p,
     //                  double Beta_m, double lambda, double n,
@@ -532,6 +562,10 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::getNsByDepthData()
     //                  coder::array<double, 2U> &N_Mie,
     //                  coder::array<double, 2U> &N_Rayleigh,
     //                  coder::array<double, 2U> &SNR_db)
+    double N_R;
+    double SNR_out;
+    double N_B;
+    double N_M;
 
     coder::array<double, 2U> z;
     coder::array<double, 2U> M;
@@ -574,30 +608,61 @@ QVector<QVector<double> *> *UnderWaterSpectrumDataGenerator::getNsByDepthData()
     MyMath::convertQVectorToArray(zVector, z);
     MyMath::convertQVectorToArray(MVector, M);
 
-    drawNsMByDepth(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, tau, r, M, energy_ratio, N_dark, beta, Xi, Xi_F, N_Brillouin, N_Mie, N_Rayleigh, Ns, SNR);
+    // drawNsMByDepth(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, z, H, tau, r, M, energy_ratio, N_dark, beta, Xi, Xi_F, N_Brillouin, N_Mie, N_Rayleigh, Ns, SNR);
+    N_BrillouinVector = new QVector<QVector<double> *>();
+    N_MieVector = new QVector<QVector<double> *>();
+    N_RayleighVector = new QVector<QVector<double> *>();
+    SNRVector = new QVector<QVector<double> *>();
+    QVector<double> *temp1 = new QVector<double>();
+    QVector<double> *temp2 = new QVector<double>();
+    QVector<double> *temp3 = new QVector<double>();
+    QVector<double> *temp4 = new QVector<double>();
+    for (int j = 0; j < MVector->size(); ++j)
+    {
+        M_single = MVector->at(j);
+        for (int i = 0; i < zVector->size(); ++i)
+        {
+            dep = zVector->at(i);
+            VerticalResolution(energe, Alpha_water, Beta_particulate, Beta_m, lambda, n, dep, H, tau, r, M_single, energy_ratio, N_dark, beta, Xi, Xi_F, sampling_interval, vertical_resolution, &N_B, &N_M, &N_R, &SNR_out);
+            temp1->append(N_B);
+            temp2->append(N_M);
+            temp3->append(N_R);
+            temp4->append(SNR_out);
+        }
+
+        N_BrillouinVector->append(new QVector<double>(*temp1));
+        N_MieVector->append(new QVector<double>(*temp2));
+        N_RayleighVector->append(new QVector<double>(*temp3));
+        SNRVector->append(new QVector<double>(*temp4));
+    }
+    delete temp1;
+    delete temp2;
+    delete temp3;
+    delete temp4;
 
     // N_BrillouinVector = MyMath::convertArrayToQVector(N_Brillouin);
     // N_MieVector = MyMath::convertArrayToQVector(N_Mie);
     // N_RayleighVector = MyMath::convertArrayToQVector(N_Rayleigh);
-    N_BrillouinVector = MyMath::convertMultiArrayToQVector(N_Brillouin);
-    N_MieVector = MyMath::convertMultiArrayToQVector(N_Mie);
-    N_RayleighVector = MyMath::convertMultiArrayToQVector(N_Rayleigh);
-    NsVector = MyMath::convertMultiArrayToQVector(Ns);
-    SNRVector = MyMath::convertMultiArrayToQVector(SNR);
+
+    // N_BrillouinVector = MyMath::convertMultiArrayToQVector(N_Brillouin);
+    // N_MieVector = MyMath::convertMultiArrayToQVector(N_Mie);
+    // N_RayleighVector = MyMath::convertMultiArrayToQVector(N_Rayleigh);
+    // NsVector = MyMath::convertMultiArrayToQVector(Ns);
+    // SNRVector = MyMath::convertMultiArrayToQVector(SNR);
 
     QVector<QVector<double> *> *resultContainer = new QVector<QVector<double> *>();
     resultContainer->append(zVector);
 
     // 每个深度的N值乘对应的M值
-    for (int i = 0; i < MVector->size(); ++i)
-    {
-        for (int j = 0; j < depthNum; ++j)
-        {
-            N_BrillouinVector->at(i)->replace(j, N_BrillouinVector->at(i)->at(j) * MVector->at(i));
-            N_MieVector->at(i)->replace(j, N_MieVector->at(i)->at(j) * MVector->at(i));
-            N_RayleighVector->at(i)->replace(j, N_RayleighVector->at(i)->at(j) * MVector->at(i));
-        }
-    }
+    // for (int i = 0; i < MVector->size(); ++i)
+    // {
+    //     for (int j = 0; j < depthNum; ++j)
+    //     {
+    //         N_BrillouinVector->at(i)->replace(j, N_BrillouinVector->at(i)->at(j) * MVector->at(i));
+    //         N_MieVector->at(i)->replace(j, N_MieVector->at(i)->at(j) * MVector->at(i));
+    //         N_RayleighVector->at(i)->replace(j, N_RayleighVector->at(i)->at(j) * MVector->at(i));
+    //     }
+    // }
 
     for (int i = 0; i < MVector->size(); ++i)
     {

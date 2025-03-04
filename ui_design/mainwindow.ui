@@ -672,25 +672,15 @@ li.checked::marker { content: &quot;\2612&quot;; }
               <string notr="true"/>
              </property>
              <layout class="QGridLayout" name="gridLayout_5">
-              <item row="7" column="1">
-               <widget class="QLineEdit" name="lineEdit_24"/>
+              <item row="6" column="1">
+               <widget class="QLineEdit" name="lineEdit_23"/>
               </item>
-              <item row="6" column="0">
-               <widget class="QLabel" name="label3_6">
+              <item row="1" column="0">
+               <widget class="QLabel" name="label3_1">
                 <property name="text">
-                 <string>脉冲宽度：</string>
+                 <string>入射波长：</string>
                 </property>
                </widget>
-              </item>
-              <item row="7" column="0">
-               <widget class="QLabel" name="label3_7">
-                <property name="text">
-                 <string>脉冲频率：</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLineEdit" name="lineEdit_20"/>
               </item>
               <item row="0" column="0" colspan="2">
                <widget class="QGroupBox" name="text_3">
@@ -727,39 +717,11 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 </layout>
                </widget>
               </item>
-              <item row="9" column="0">
-               <widget class="QLabel" name="label3_8">
-                <property name="text">
-                 <string>大气衰减系数：</string>
-                </property>
-               </widget>
+              <item row="4" column="1">
+               <widget class="QLineEdit" name="lineEdit_21"/>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label3_1">
-                <property name="text">
-                 <string>入射波长：</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QLineEdit" name="lineEdit_22"/>
-              </item>
-              <item row="4" column="0">
-               <widget class="QLabel" name="label3_4">
-                <property name="text">
-                 <string>激光中心频率：</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label3_2">
-                <property name="text">
-                 <string>激光脉冲峰强度：</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="lineEdit_19"/>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="lineEdit_20"/>
               </item>
               <item row="5" column="0">
                <widget class="QLabel" name="label3_5">
@@ -768,21 +730,21 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 </property>
                </widget>
               </item>
-              <item row="6" column="1">
-               <widget class="QLineEdit" name="lineEdit_23"/>
+              <item row="9" column="1">
+               <widget class="QLineEdit" name="lineEdit_25"/>
               </item>
-              <item row="4" column="1">
-               <widget class="QLineEdit" name="lineEdit_21"/>
-              </item>
-              <item row="1" column="1">
-               <widget class="QLineEdit" name="lineEdit_18"/>
-              </item>
-              <item row="3" column="0">
-               <widget class="QLabel" name="label3_3">
+              <item row="2" column="0">
+               <widget class="QLabel" name="label3_2">
                 <property name="text">
-                 <string>激光能量：</string>
+                 <string>激光脉冲峰强度：</string>
                 </property>
                </widget>
+              </item>
+              <item row="10" column="1">
+               <widget class="QLineEdit" name="lineEdit_26"/>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="lineEdit_19"/>
               </item>
               <item row="10" column="0">
                <widget class="QLabel" name="label3_9">
@@ -791,11 +753,69 @@ li.checked::marker { content: &quot;\2612&quot;; }
                 </property>
                </widget>
               </item>
-              <item row="10" column="1">
-               <widget class="QLineEdit" name="lineEdit_3"/>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label3_3">
+                <property name="text">
+                 <string>激光能量：</string>
+                </property>
+               </widget>
               </item>
-              <item row="9" column="1">
-               <widget class="QLineEdit" name="lineEdit_25"/>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label3_4">
+                <property name="text">
+                 <string>激光中心频率：</string>
+                </property>
+               </widget>
+              </item>
+              <item row="9" column="0">
+               <widget class="QLabel" name="label3_8">
+                <property name="text">
+                 <string>大气衰减系数：</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QLineEdit" name="lineEdit_18"/>
+              </item>
+              <item row="7" column="1">
+               <widget class="QLineEdit" name="lineEdit_24"/>
+              </item>
+              <item row="7" column="0">
+               <widget class="QLabel" name="label3_7">
+                <property name="text">
+                 <string>脉冲频率：</string>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QLabel" name="label3_6">
+                <property name="text">
+                 <string>脉冲宽度：</string>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="0">
+               <widget class="QLabel" name="label3_91">
+                <property name="text">
+                 <string>TextLabel：</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="lineEdit_22"/>
+              </item>
+              <item row="12" column="0">
+               <widget class="QLabel" name="label3_92">
+                <property name="text">
+                 <string>TextLabel：</string>
+                </property>
+               </widget>
+              </item>
+              <item row="11" column="1">
+               <widget class="QLineEdit" name="lineEdit_27"/>
+              </item>
+              <item row="12" column="1">
+               <widget class="QLineEdit" name="lineEdit_28"/>
               </item>
              </layout>
             </widget>

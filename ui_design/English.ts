@@ -72,12 +72,12 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="258"/>
-        <location filename="mainwindow.ui" line="688"/>
-        <location filename="mainwindow.ui" line="887"/>
-        <location filename="mainwindow.ui" line="1149"/>
-        <location filename="mainwindow.ui" line="1344"/>
-        <location filename="mainwindow.ui" line="1536"/>
-        <location filename="mainwindow.ui" line="1697"/>
+        <location filename="mainwindow.ui" line="786"/>
+        <location filename="mainwindow.ui" line="907"/>
+        <location filename="mainwindow.ui" line="1169"/>
+        <location filename="mainwindow.ui" line="1364"/>
+        <location filename="mainwindow.ui" line="1556"/>
+        <location filename="mainwindow.ui" line="1717"/>
         <location filename="ui_backup/mainwindow.ui" line="267"/>
         <location filename="ui_backup/mainwindow.ui" line="697"/>
         <location filename="ui_backup/mainwindow.ui" line="896"/>
@@ -91,12 +91,12 @@
     <message>
         <location filename="mainwindow.ui" line="265"/>
         <location filename="mainwindow.ui" line="506"/>
-        <location filename="mainwindow.ui" line="757"/>
-        <location filename="mainwindow.ui" line="880"/>
-        <location filename="mainwindow.ui" line="1072"/>
-        <location filename="mainwindow.ui" line="1337"/>
-        <location filename="mainwindow.ui" line="1519"/>
-        <location filename="mainwindow.ui" line="1704"/>
+        <location filename="mainwindow.ui" line="739"/>
+        <location filename="mainwindow.ui" line="900"/>
+        <location filename="mainwindow.ui" line="1092"/>
+        <location filename="mainwindow.ui" line="1357"/>
+        <location filename="mainwindow.ui" line="1539"/>
+        <location filename="mainwindow.ui" line="1724"/>
         <location filename="ui_backup/mainwindow.ui" line="274"/>
         <location filename="ui_backup/mainwindow.ui" line="515"/>
         <location filename="ui_backup/mainwindow.ui" line="766"/>
@@ -110,12 +110,12 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="272"/>
-        <location filename="mainwindow.ui" line="750"/>
-        <location filename="mainwindow.ui" line="964"/>
-        <location filename="mainwindow.ui" line="1156"/>
-        <location filename="mainwindow.ui" line="1264"/>
-        <location filename="mainwindow.ui" line="1505"/>
-        <location filename="mainwindow.ui" line="1725"/>
+        <location filename="mainwindow.ui" line="766"/>
+        <location filename="mainwindow.ui" line="984"/>
+        <location filename="mainwindow.ui" line="1176"/>
+        <location filename="mainwindow.ui" line="1284"/>
+        <location filename="mainwindow.ui" line="1525"/>
+        <location filename="mainwindow.ui" line="1745"/>
         <location filename="ui_backup/mainwindow.ui" line="281"/>
         <location filename="ui_backup/mainwindow.ui" line="759"/>
         <location filename="ui_backup/mainwindow.ui" line="973"/>
@@ -129,12 +129,12 @@
     <message>
         <location filename="mainwindow.ui" line="279"/>
         <location filename="mainwindow.ui" line="464"/>
-        <location filename="mainwindow.ui" line="698"/>
-        <location filename="mainwindow.ui" line="901"/>
-        <location filename="mainwindow.ui" line="1079"/>
-        <location filename="mainwindow.ui" line="1271"/>
-        <location filename="mainwindow.ui" line="1463"/>
-        <location filename="mainwindow.ui" line="1648"/>
+        <location filename="mainwindow.ui" line="688"/>
+        <location filename="mainwindow.ui" line="921"/>
+        <location filename="mainwindow.ui" line="1099"/>
+        <location filename="mainwindow.ui" line="1291"/>
+        <location filename="mainwindow.ui" line="1483"/>
+        <location filename="mainwindow.ui" line="1668"/>
         <location filename="ui_backup/mainwindow.ui" line="288"/>
         <location filename="ui_backup/mainwindow.ui" line="473"/>
         <location filename="ui_backup/mainwindow.ui" line="707"/>
@@ -149,12 +149,12 @@
     <message>
         <location filename="mainwindow.ui" line="297"/>
         <location filename="mainwindow.ui" line="482"/>
-        <location filename="mainwindow.ui" line="716"/>
-        <location filename="mainwindow.ui" line="919"/>
-        <location filename="mainwindow.ui" line="1097"/>
-        <location filename="mainwindow.ui" line="1289"/>
-        <location filename="mainwindow.ui" line="1481"/>
-        <location filename="mainwindow.ui" line="1666"/>
+        <location filename="mainwindow.ui" line="706"/>
+        <location filename="mainwindow.ui" line="939"/>
+        <location filename="mainwindow.ui" line="1117"/>
+        <location filename="mainwindow.ui" line="1309"/>
+        <location filename="mainwindow.ui" line="1501"/>
+        <location filename="mainwindow.ui" line="1686"/>
         <location filename="ui_backup/mainwindow.ui" line="306"/>
         <location filename="ui_backup/mainwindow.ui" line="491"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -169,12 +169,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </message>
     <message>
         <location filename="mainwindow.ui" line="314"/>
-        <location filename="mainwindow.ui" line="783"/>
-        <location filename="mainwindow.ui" line="894"/>
-        <location filename="mainwindow.ui" line="1121"/>
-        <location filename="mainwindow.ui" line="1313"/>
-        <location filename="mainwindow.ui" line="1456"/>
-        <location filename="mainwindow.ui" line="1711"/>
+        <location filename="mainwindow.ui" line="759"/>
+        <location filename="mainwindow.ui" line="914"/>
+        <location filename="mainwindow.ui" line="1141"/>
+        <location filename="mainwindow.ui" line="1333"/>
+        <location filename="mainwindow.ui" line="1476"/>
+        <location filename="mainwindow.ui" line="1731"/>
         <location filename="ui_backup/mainwindow.ui" line="323"/>
         <location filename="ui_backup/mainwindow.ui" line="792"/>
         <location filename="ui_backup/mainwindow.ui" line="903"/>
@@ -187,12 +187,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </message>
     <message>
         <location filename="mainwindow.ui" line="321"/>
-        <location filename="mainwindow.ui" line="681"/>
-        <location filename="mainwindow.ui" line="936"/>
-        <location filename="mainwindow.ui" line="1142"/>
-        <location filename="mainwindow.ui" line="1330"/>
-        <location filename="mainwindow.ui" line="1512"/>
-        <location filename="mainwindow.ui" line="1718"/>
+        <location filename="mainwindow.ui" line="793"/>
+        <location filename="mainwindow.ui" line="956"/>
+        <location filename="mainwindow.ui" line="1162"/>
+        <location filename="mainwindow.ui" line="1350"/>
+        <location filename="mainwindow.ui" line="1532"/>
+        <location filename="mainwindow.ui" line="1738"/>
         <location filename="ui_backup/mainwindow.ui" line="330"/>
         <location filename="ui_backup/mainwindow.ui" line="690"/>
         <location filename="ui_backup/mainwindow.ui" line="945"/>
@@ -205,12 +205,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </message>
     <message>
         <location filename="mainwindow.ui" line="328"/>
-        <location filename="mainwindow.ui" line="740"/>
-        <location filename="mainwindow.ui" line="950"/>
-        <location filename="mainwindow.ui" line="1135"/>
-        <location filename="mainwindow.ui" line="1351"/>
-        <location filename="mainwindow.ui" line="1526"/>
-        <location filename="mainwindow.ui" line="1732"/>
+        <location filename="mainwindow.ui" line="681"/>
+        <location filename="mainwindow.ui" line="970"/>
+        <location filename="mainwindow.ui" line="1155"/>
+        <location filename="mainwindow.ui" line="1371"/>
+        <location filename="mainwindow.ui" line="1546"/>
+        <location filename="mainwindow.ui" line="1752"/>
         <location filename="ui_backup/mainwindow.ui" line="337"/>
         <location filename="ui_backup/mainwindow.ui" line="749"/>
         <location filename="ui_backup/mainwindow.ui" line="959"/>
@@ -223,12 +223,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     </message>
     <message>
         <location filename="mainwindow.ui" line="335"/>
-        <location filename="mainwindow.ui" line="767"/>
-        <location filename="mainwindow.ui" line="943"/>
-        <location filename="mainwindow.ui" line="1128"/>
-        <location filename="mainwindow.ui" line="1320"/>
-        <location filename="mainwindow.ui" line="1498"/>
-        <location filename="mainwindow.ui" line="1690"/>
+        <location filename="mainwindow.ui" line="729"/>
+        <location filename="mainwindow.ui" line="963"/>
+        <location filename="mainwindow.ui" line="1148"/>
+        <location filename="mainwindow.ui" line="1340"/>
+        <location filename="mainwindow.ui" line="1518"/>
+        <location filename="mainwindow.ui" line="1710"/>
         <location filename="ui_backup/mainwindow.ui" line="344"/>
         <location filename="ui_backup/mainwindow.ui" line="776"/>
         <location filename="ui_backup/mainwindow.ui" line="952"/>
@@ -242,13 +242,13 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <message>
         <location filename="mainwindow.ui" line="342"/>
         <location filename="mainwindow.ui" line="457"/>
-        <location filename="mainwindow.ui" line="733"/>
-        <location filename="mainwindow.ui" line="790"/>
-        <location filename="mainwindow.ui" line="957"/>
-        <location filename="mainwindow.ui" line="1114"/>
-        <location filename="mainwindow.ui" line="1306"/>
-        <location filename="mainwindow.ui" line="1546"/>
-        <location filename="mainwindow.ui" line="1683"/>
+        <location filename="mainwindow.ui" line="752"/>
+        <location filename="mainwindow.ui" line="773"/>
+        <location filename="mainwindow.ui" line="977"/>
+        <location filename="mainwindow.ui" line="1134"/>
+        <location filename="mainwindow.ui" line="1326"/>
+        <location filename="mainwindow.ui" line="1566"/>
+        <location filename="mainwindow.ui" line="1703"/>
         <location filename="ui_backup/mainwindow.ui" line="351"/>
         <location filename="ui_backup/mainwindow.ui" line="466"/>
         <location filename="ui_backup/mainwindow.ui" line="742"/>
@@ -264,12 +264,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <message>
         <location filename="mainwindow.ui" line="407"/>
         <location filename="mainwindow.ui" line="631"/>
-        <location filename="mainwindow.ui" line="833"/>
-        <location filename="mainwindow.ui" line="1025"/>
-        <location filename="mainwindow.ui" line="1217"/>
-        <location filename="mainwindow.ui" line="1409"/>
-        <location filename="mainwindow.ui" line="1601"/>
-        <location filename="mainwindow.ui" line="1793"/>
+        <location filename="mainwindow.ui" line="853"/>
+        <location filename="mainwindow.ui" line="1045"/>
+        <location filename="mainwindow.ui" line="1237"/>
+        <location filename="mainwindow.ui" line="1429"/>
+        <location filename="mainwindow.ui" line="1621"/>
+        <location filename="mainwindow.ui" line="1813"/>
         <location filename="ui_backup/mainwindow.ui" line="416"/>
         <location filename="ui_backup/mainwindow.ui" line="640"/>
         <location filename="ui_backup/mainwindow.ui" line="842"/>
@@ -284,12 +284,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <message>
         <location filename="mainwindow.ui" line="414"/>
         <location filename="mainwindow.ui" line="638"/>
-        <location filename="mainwindow.ui" line="840"/>
-        <location filename="mainwindow.ui" line="1032"/>
-        <location filename="mainwindow.ui" line="1224"/>
-        <location filename="mainwindow.ui" line="1416"/>
-        <location filename="mainwindow.ui" line="1608"/>
-        <location filename="mainwindow.ui" line="1800"/>
+        <location filename="mainwindow.ui" line="860"/>
+        <location filename="mainwindow.ui" line="1052"/>
+        <location filename="mainwindow.ui" line="1244"/>
+        <location filename="mainwindow.ui" line="1436"/>
+        <location filename="mainwindow.ui" line="1628"/>
+        <location filename="mainwindow.ui" line="1820"/>
         <location filename="ui_backup/mainwindow.ui" line="423"/>
         <location filename="ui_backup/mainwindow.ui" line="647"/>
         <location filename="ui_backup/mainwindow.ui" line="849"/>
@@ -304,12 +304,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <message>
         <location filename="mainwindow.ui" line="421"/>
         <location filename="mainwindow.ui" line="645"/>
-        <location filename="mainwindow.ui" line="847"/>
-        <location filename="mainwindow.ui" line="1039"/>
-        <location filename="mainwindow.ui" line="1231"/>
-        <location filename="mainwindow.ui" line="1423"/>
-        <location filename="mainwindow.ui" line="1615"/>
-        <location filename="mainwindow.ui" line="1807"/>
+        <location filename="mainwindow.ui" line="867"/>
+        <location filename="mainwindow.ui" line="1059"/>
+        <location filename="mainwindow.ui" line="1251"/>
+        <location filename="mainwindow.ui" line="1443"/>
+        <location filename="mainwindow.ui" line="1635"/>
+        <location filename="mainwindow.ui" line="1827"/>
         <location filename="ui_backup/mainwindow.ui" line="430"/>
         <location filename="ui_backup/mainwindow.ui" line="654"/>
         <location filename="ui_backup/mainwindow.ui" line="856"/>
@@ -324,12 +324,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
     <message>
         <location filename="mainwindow.ui" line="428"/>
         <location filename="mainwindow.ui" line="652"/>
-        <location filename="mainwindow.ui" line="854"/>
-        <location filename="mainwindow.ui" line="1046"/>
-        <location filename="mainwindow.ui" line="1238"/>
-        <location filename="mainwindow.ui" line="1430"/>
-        <location filename="mainwindow.ui" line="1622"/>
-        <location filename="mainwindow.ui" line="1814"/>
+        <location filename="mainwindow.ui" line="874"/>
+        <location filename="mainwindow.ui" line="1066"/>
+        <location filename="mainwindow.ui" line="1258"/>
+        <location filename="mainwindow.ui" line="1450"/>
+        <location filename="mainwindow.ui" line="1642"/>
+        <location filename="mainwindow.ui" line="1834"/>
         <location filename="ui_backup/mainwindow.ui" line="437"/>
         <location filename="ui_backup/mainwindow.ui" line="661"/>
         <location filename="ui_backup/mainwindow.ui" line="863"/>
@@ -426,6 +426,12 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <translation></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="800"/>
+        <location filename="mainwindow.ui" line="810"/>
+        <source>TextLabel：</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="ui_backup/mainwindow.ui" line="725"/>
         <location filename="ui_backup/mainwindow.ui" line="928"/>
         <location filename="ui_backup/mainwindow.ui" line="1106"/>
@@ -443,114 +449,114 @@ li.checked::marker { content: &quot;\2612&quot;; }
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1876"/>
+        <location filename="mainwindow.ui" line="1896"/>
         <location filename="ui_backup/mainwindow.ui" line="1885"/>
         <source>保存</source>
         <translation>save</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1880"/>
+        <location filename="mainwindow.ui" line="1900"/>
         <location filename="ui_backup/mainwindow.ui" line="1889"/>
         <source>参数保存</source>
         <translation>Parameter saving</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1888"/>
+        <location filename="mainwindow.ui" line="1908"/>
         <location filename="ui_backup/mainwindow.ui" line="1897"/>
         <source>曲线保存</source>
         <translation>Curve saving</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1899"/>
+        <location filename="mainwindow.ui" line="1919"/>
         <location filename="ui_backup/mainwindow.ui" line="1908"/>
         <source>导入</source>
         <translation>import</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1903"/>
+        <location filename="mainwindow.ui" line="1923"/>
         <location filename="ui_backup/mainwindow.ui" line="1912"/>
         <source>导入参数</source>
         <translation>Import parameters</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1911"/>
+        <location filename="mainwindow.ui" line="1931"/>
         <location filename="ui_backup/mainwindow.ui" line="1920"/>
         <source>导入曲线</source>
         <translation>Import Curve</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1922"/>
+        <location filename="mainwindow.ui" line="1942"/>
         <location filename="ui_backup/mainwindow.ui" line="1931"/>
         <source>帮助</source>
         <translation>help</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1927"/>
+        <location filename="mainwindow.ui" line="1947"/>
         <location filename="ui_backup/mainwindow.ui" line="1936"/>
         <source>退出</source>
         <translation>exit</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1937"/>
+        <location filename="mainwindow.ui" line="1957"/>
         <location filename="ui_backup/mainwindow.ui" line="1946"/>
         <source>保存当前页参数</source>
         <translation>Save current page parameters</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1942"/>
+        <location filename="mainwindow.ui" line="1962"/>
         <location filename="ui_backup/mainwindow.ui" line="1951"/>
         <source>保存所有页参数</source>
         <translation>Save all page parameters</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1947"/>
+        <location filename="mainwindow.ui" line="1967"/>
         <location filename="ui_backup/mainwindow.ui" line="1956"/>
         <source>保存当前页曲线</source>
         <translation>Save the current page curve</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1952"/>
+        <location filename="mainwindow.ui" line="1972"/>
         <location filename="ui_backup/mainwindow.ui" line="1961"/>
         <source>保存所有页曲线</source>
         <translation>Save all page curves</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1957"/>
+        <location filename="mainwindow.ui" line="1977"/>
         <location filename="ui_backup/mainwindow.ui" line="1966"/>
         <source>按页导入参数</source>
         <translation>Import parameters by page</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1960"/>
-        <location filename="mainwindow.ui" line="1963"/>
+        <location filename="mainwindow.ui" line="1980"/>
+        <location filename="mainwindow.ui" line="1983"/>
         <location filename="ui_backup/mainwindow.ui" line="1969"/>
         <location filename="ui_backup/mainwindow.ui" line="1972"/>
         <source>导入当前页参数</source>
         <translation>Import current page parameters</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1968"/>
+        <location filename="mainwindow.ui" line="1988"/>
         <location filename="ui_backup/mainwindow.ui" line="1977"/>
         <source>2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1973"/>
+        <location filename="mainwindow.ui" line="1993"/>
         <location filename="ui_backup/mainwindow.ui" line="1982"/>
         <source>导入所有页参数</source>
         <translation>导入当前页面参数</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1978"/>
-        <location filename="mainwindow.ui" line="1981"/>
+        <location filename="mainwindow.ui" line="1998"/>
+        <location filename="mainwindow.ui" line="2001"/>
         <location filename="ui_backup/mainwindow.ui" line="1987"/>
         <location filename="ui_backup/mainwindow.ui" line="1990"/>
         <source>导入曲线到当前页</source>
         <translation>Import the curve to the current page</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="1986"/>
-        <location filename="mainwindow.ui" line="1989"/>
+        <location filename="mainwindow.ui" line="2006"/>
+        <location filename="mainwindow.ui" line="2009"/>
         <location filename="ui_backup/mainwindow.ui" line="1995"/>
         <location filename="ui_backup/mainwindow.ui" line="1998"/>
         <source>导入多条曲线到多个页面</source>

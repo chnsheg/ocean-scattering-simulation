@@ -61,7 +61,7 @@ void RetrievalAlgorithm(double number,
                         const coder::array<double, 2U> &Fizeau_spectrum,
                         const double Initial_lower[3],
                         const double Initial_upper[3],
-                        const double Initial_value[3], const double params[19],
+                        const double Initial_value[3], const double params[21],
                         double fitted_value[3], double *resnorm,
                         coder::array<double, 2U> &residual, double *exitflag,
                         struct0_T *output, struct1_T *lambda,
@@ -160,7 +160,7 @@ void RetrievalAlgorithm(double number,
   {
     b_this.workspace.fun.workspace.Fizeau_spectrum[i] = Fizeau_spectrum[i];
   }
-  std::copy(&params[0], &params[19], &b_this.workspace.fun.workspace.params[0]);
+  std::copy(&params[0], &params[21], &b_this.workspace.fun.workspace.params[0]);
   funDiff = rtInf;
   iter = 0;
   indActive[0] = false;
@@ -273,7 +273,7 @@ void RetrievalAlgorithm(double number,
   }
   funcCount = FiniteDifferences.numEvals + 1;
   // b_gamma = 1.0E-100; // InitDamping
-  b_gamma = 1.0E-30;
+  b_gamma = 1.0E-100;
   for (int b_i{0}; b_i < 3; b_i++)
   {
     aIdx = (m_temp + 3) * (b_i + 1);
@@ -684,7 +684,7 @@ void RetrievalAlgorithm(double number,
 //
 void RetrievalAlgorithm_anonFcn1(
     const coder::array<double, 2U> &MeasurementEnergy, double ChannelNumber,
-    const coder::array<double, 2U> &Fizeau_spectrum, const double params[19],
+    const coder::array<double, 2U> &Fizeau_spectrum, const double params[21],
     const double Initial_value[3], coder::array<double, 2U> &varargout_1)
 {
   coder::array<double, 2U> L_b;
@@ -711,7 +711,7 @@ void RetrievalAlgorithm_anonFcn1(
 
   ConstantMap *constantMap = Singleton<ConstantMap>::getInstance();
   ConstantStorage *constantStorage = Singleton<ConstantStorage>::getInstance(nullptr);
-  double step = constantStorage->getConstant(constantMap->getConstantName(0, 6)).toDouble();
+  double step = constantStorage->getConstant(constantMap->getConstantName(0, 5)).toDouble();
   if (step <= 0)
   {
     step = 1.0E6;

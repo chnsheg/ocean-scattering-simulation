@@ -20,7 +20,7 @@ extern void
 RetrievalAlgorithm(double number, const coder::array<double, 2U> &PMT_energy,
                    const coder::array<double, 2U> &Fizeau_spectrum,
                    const double Initial_lower[3], const double Initial_upper[3],
-                   const double Initial_value[3], const double params[19],
+                   const double Initial_value[3], const double params[21],
                    double fitted_value[3], double *resnorm,
                    coder::array<double, 2U> &residual, double *exitflag,
                    struct0_T *output, struct1_T *lambda,

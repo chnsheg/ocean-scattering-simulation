@@ -102,12 +102,10 @@ double SpectrumDataGenerator::BrillouinShift()
 
 QVector<double> *SpectrumDataGenerator::generateBriScatteringData()
 {
-    double vr = Singleton<ConstantStorage>::getInstance(nullptr)
-                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
-                    .toDouble() /
-                Singleton<ConstantStorage>::getInstance(nullptr)
-                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
-                    .toDouble();
+    double vr = 299792458
+                / Singleton<ConstantStorage>::getInstance(nullptr)
+                      ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
+                      .toDouble();
     double v_b = BrillouinShift();
     double v_b1 = vr - v_b;
     double v_b2 = vr + v_b;
@@ -140,12 +138,10 @@ QVector<double> *SpectrumDataGenerator::generateBriScatteringData()
 QVector<double> *SpectrumDataGenerator::generateMieScatteringData()
 {
     double delta_m = 0.04e9; // 米散射线宽(20~30MHz)，单位GHz,和激光线宽一样
-    double vr = Singleton<ConstantStorage>::getInstance(nullptr)
-                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
-                    .toDouble() /
-                Singleton<ConstantStorage>::getInstance(nullptr)
-                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
-                    .toDouble();
+    double vr = 299792458
+                / Singleton<ConstantStorage>::getInstance(nullptr)
+                      ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
+                      .toDouble();
 
     QVector<double> *miu = FrequenceDataGenerator::generateFrequenceData();
     int size = miu->size();
@@ -169,12 +165,10 @@ QVector<double> *SpectrumDataGenerator::generateMieScatteringData()
 QVector<double> *SpectrumDataGenerator::generateRayScatteringData()
 {
     double delta_r = 0.15e9; // 瑞利线宽(150MHz)，单位GHz %瑞利线宽比米散射宽
-    double vr = Singleton<ConstantStorage>::getInstance(nullptr)
-                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
-                    .toDouble() /
-                Singleton<ConstantStorage>::getInstance(nullptr)
-                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
-                    .toDouble();
+    double vr = 299792458
+                / Singleton<ConstantStorage>::getInstance(nullptr)
+                      ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
+                      .toDouble();
 
     QVector<double> *miu = FrequenceDataGenerator::generateFrequenceData();
     int size = miu->size();
@@ -197,12 +191,10 @@ QVector<double> *SpectrumDataGenerator::generateRayScatteringData()
 
 QVector<QVector<double> *> *SpectrumDataGenerator::generateSpectrumDataByMatlabCode()
 {
-    double vr = Singleton<ConstantStorage>::getInstance(nullptr)
-                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 4))
-                    .toDouble() /
-                Singleton<ConstantStorage>::getInstance(nullptr)
-                    ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
-                    .toDouble();
+    double vr = 299792458
+                / Singleton<ConstantStorage>::getInstance(nullptr)
+                      ->getConstant(Singleton<ConstantMap>::getInstance()->getConstantName(0, 1))
+                      .toDouble();
     double v_b = BrillouinShift();
 
     double delta_b = BrillouinLine();
